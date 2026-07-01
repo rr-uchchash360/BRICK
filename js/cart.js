@@ -276,41 +276,180 @@ const CART = (() => {
     }
   }
 
-  function validateForm() {
-    const name = document.getElementById('checkoutName');
-    const email = document.getElementById('checkoutEmail');
-    const nameVal = name.value.trim();
-    const emailVal = email.value.trim();
+  var errorElements = [];
 
-    clearErrors();
-
-    if (!nameVal) {
-      showFieldError(name, 'Name is required');
-      name.focus();
-      return false;
-    }
-    if (!emailVal || !emailVal.includes('@')) {
-      showFieldError(email, 'Valid email is required');
-      if (!emailVal) email.focus();
-      return false;
-    }
-    return { name: nameVal, email: emailVal };
+  function clearFieldError(input) {
+    input.style.borderColor = '';
+    input.removeAttribute('aria-invalid');
+    var err = input.parentNode.querySelector('.field-error');
+    if (err) { err.remove(); }
   }
 
   function showFieldError(input, message) {
     input.style.borderColor = '#C62828';
     input.setAttribute('aria-invalid', 'true');
+
+    var existing = input.parentNode.querySelector('.field-error');
+    if (existing) { existing.textContent = message; return; }
+
+    var err = document.createElement('span');
+    err.className = 'field-error';
+    err.textContent = message;
+    input.parentNode.appendChild(err);
   }
 
-  function clearErrors() {
-    document.querySelectorAll('.checkout-form .form-input').forEach(el => {
-      el.style.borderColor = '';
-      el.removeAttribute('aria-invalid');
-    });
+  function clearAllErrors() {
+    document.querySelectorAll('.checkout-form .form-input').forEach(clearFieldError);
+    document.querySelectorAll('.field-error').forEach(function(e) { e.remove(); });
+  }
+
+  function getVal(id) {
+    var el = document.getElementById(id);
+    return { el: el, val: el ? el.value.trim() : '' };
+  }
+
+  function validateForm() {
+    clearAllErrors();
+
+    var name = getVal('checkoutName');
+    var email = getVal('checkoutEmail');
+    var phone = getVal('checkoutPhone');
+    var country = getVal('checkoutCountry');
+    var city = getVal('checkoutCity');
+    var address = getVal('checkoutAddress');
+    var card = getVal('checkoutCard');
+    var expiry = getVal('checkoutExpiry');
+    var cvc = getVal('checkoutCVC');
+
+    var errors = [];
+
+    // Name
+    if (!name.val) {
+      showFieldError(name.el, 'Full name is required');
+      errors.push(name.el);
+    } else if (name.val.length < 2) {
+      showFieldError(name.el, 'Name must be at least 2 characters');
+      errors.push(name.el);
+    } else if (/[0-9]/.test(name.val)) {
+      showFieldError(name.el, 'Name should not contain numbers');
+      errors.push(name.el);
+    }
+
+    // Email
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.val) {
+      showFieldError(email.el, 'Email address is required');
+      if (!errors.length) errors.push(email.el);
+    } else if (!emailRegex.test(email.val)) {
+      showFieldError(email.el, 'Enter a valid email address (e.g. name@domain.com)');
+      if (!errors.length) errors.push(email.el);
+    }
+
+    // Phone (optional — validate format if provided)
+    if (phone.val && !/^[\d\s\-\+\(\)]{7,20}$/.test(phone.val)) {
+      showFieldError(phone.el, 'Enter a valid phone number (e.g. +1 555 000 0000)');
+      if (!errors.length) errors.push(phone.el);
+    }
+
+    // Country
+    if (!country.val) {
+      showFieldError(country.el, 'Please select your country');
+      if (!errors.length) errors.push(country.el);
+    }
+
+    // City
+    if (!city.val) {
+      showFieldError(city.el, 'City is required');
+      if (!errors.length) errors.push(city.el);
+    } else if (city.val.length < 2) {
+      showFieldError(city.el, 'City must be at least 2 characters');
+      if (!errors.length) errors.push(city.el);
+    }
+
+    // Address
+    if (!address.val) {
+      showFieldError(address.el, 'Street address is required');
+      if (!errors.length) errors.push(address.el);
+    } else if (address.val.length < 5) {
+      showFieldError(address.el, 'Please enter a full street address');
+      if (!errors.length) errors.push(address.el);
+    }
+
+    // Payment method check
+    var selectedPayment = document.querySelector('.payment-method.active input');
+    var isCard = selectedPayment && selectedPayment.value === 'card';
+
+    if (isCard) {
+      // Card number
+      var cardDigits = card.val.replace(/\s/g, '');
+      if (!cardDigits) {
+        showFieldError(card.el, 'Card number is required');
+        if (!errors.length) errors.push(card.el);
+      } else if (!/^\d{13,19}$/.test(cardDigits)) {
+        showFieldError(card.el, 'Enter a valid card number (13-19 digits)');
+        if (!errors.length) errors.push(card.el);
+      }
+
+      // Expiry
+      if (!expiry.val) {
+        showFieldError(expiry.el, 'Expiry date is required');
+        if (!errors.length) errors.push(expiry.el);
+      } else {
+        var expParts = expiry.val.split('/');
+        if (expParts.length !== 2) {
+          showFieldError(expiry.el, 'Use MM/YY format');
+          if (!errors.length) errors.push(expiry.el);
+        } else {
+          var expMonth = parseInt(expParts[0], 10);
+          var expYear = parseInt(expParts[1], 10);
+          if (isNaN(expMonth) || isNaN(expYear) || expMonth < 1 || expMonth > 12) {
+            showFieldError(expiry.el, 'Enter a valid month (MM)');
+            if (!errors.length) errors.push(expiry.el);
+          } else {
+            var now = new Date();
+            var currentYear = parseInt(now.getFullYear().toString().slice(-2), 10);
+            var currentMonth = now.getMonth() + 1;
+            var fullExpYear = 2000 + expYear;
+            var expDate = new Date(fullExpYear, expMonth, 0);
+            var currentDate = new Date(now.getFullYear(), currentMonth, 0);
+            if (expDate < currentDate) {
+              showFieldError(expiry.el, 'Card has expired');
+              if (!errors.length) errors.push(expiry.el);
+            }
+          }
+        }
+      }
+
+      // CVC
+      if (!cvc.val) {
+        showFieldError(cvc.el, 'CVC is required');
+        if (!errors.length) errors.push(cvc.el);
+      } else if (!/^\d{3,4}$/.test(cvc.val)) {
+        showFieldError(cvc.el, 'CVC must be 3 or 4 digits');
+        if (!errors.length) errors.push(cvc.el);
+      }
+    }
+
+    if (errors.length > 0) {
+      errors[0].focus();
+      if (errors[0].type === 'select-one') errors[0].focus();
+      return false;
+    }
+
+    // Also set focus to the first field on the page if none are errored but we need general validation
+    return {
+      name: name.val,
+      email: email.val,
+      phone: phone.val,
+      country: country.val,
+      city: city.val,
+      address: address.val,
+      payment: selectedPayment ? selectedPayment.value : 'card',
+    };
   }
 
   function completePurchase() {
-    const result = validateForm();
+    var result = validateForm();
     if (!result) return;
 
     closeCheckout();
@@ -334,7 +473,10 @@ const CART = (() => {
       updateCartUI();
     }, 600);
 
-    document.querySelector('.checkout-form .form-input').value = '';
+    document.querySelectorAll('.checkout-form .form-input').forEach(function(el) {
+      if (el.tagName !== 'SELECT') el.value = '';
+    });
+    document.querySelectorAll('.field-error').forEach(function(e) { e.remove(); });
   }
 
   function createConfetti() {
@@ -367,45 +509,159 @@ const CART = (() => {
   }
 
   function downloadCertificate() {
-    const cert = document.getElementById('certificate');
-    if (!cert) return;
+    var name = certOwner.textContent;
+    var number = certNumber.textContent;
+    var date = certDate.textContent;
+    if (!name || name === '—') { showNotification('No certificate data', 'Complete a purchase first'); return; }
 
-    showNotification('Certificate ready', 'Your certificate of authenticity has been generated');
+    showNotification('Generating certificate…', 'Preparing your PDF');
 
-    const certData = {
-      owner: certOwner.textContent,
-      number: certNumber.textContent,
-      product: 'The Original Brick',
-      date: certDate.textContent,
-    };
+    setTimeout(function() {
+      try {
+        generateProfessionalPdf(name, number, date);
+        showNotification('Certificate ready', 'Your PDF has been downloaded');
+      } catch(e) {
+        showNotification('PDF generation failed', 'Please try again');
+      }
+    }, 200);
+  }
 
-    try {
-      const blob = new Blob([
-        'BRICK — Certificate of Authenticity\n',
-        'Owner: ' + certData.owner + '\n',
-        'Number: ' + certData.number + '\n',
-        'Product: ' + certData.product + '\n',
-        'Date: ' + certData.date + '\n',
-        '\n' + 'The world has enough ordinary things.'
-      ], { type: 'text/plain' });
-      const link = document.createElement('a');
-      link.download = 'BRICK-Certificate-' + certData.number + '.txt';
-      link.href = URL.createObjectURL(blob);
-      link.click();
-      URL.revokeObjectURL(link.href);
-    } catch (e) {
-      // Silent fallback
-    }
+  function generateProfessionalPdf(name, number, date) {
+    var doc = new jspdf.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    var w = doc.internal.pageSize.getWidth();
+    var h = doc.internal.pageSize.getHeight();
 
-    // Also try canvas approach
-    if (typeof html2canvas !== 'undefined') {
-      html2canvas(cert).then(canvas => {
-        const link = document.createElement('a');
-        link.download = 'BRICK-Certificate-' + certNumber.textContent + '.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      }).catch(() => {});
-    }
+    var gold = [212, 168, 67];
+    var red = [198, 40, 40];
+    var dark = [20, 20, 20];
+
+    // Background
+    doc.setFillColor(250, 248, 242);
+    doc.rect(0, 0, w, h, 'F');
+
+    // Outer decorative border
+    doc.setDrawColor(gold[0], gold[1], gold[2]);
+    doc.setLineWidth(2);
+    doc.rect(8, 8, w - 16, h - 16);
+
+    // Inner border
+    doc.setDrawColor(gold[0], gold[1], gold[2]);
+    doc.setLineWidth(0.5);
+    doc.rect(14, 14, w - 28, h - 28);
+
+    // Corner ornaments (simple diamonds)
+    var cSize = 6;
+    [18, w - 18].forEach(function(cx) {
+      [18, h - 18].forEach(function(cy) {
+        doc.setFillColor(gold[0], gold[1], gold[2]);
+        doc.circle(cx, cy, cSize, 'F');
+      });
+    });
+
+    // Top gold divider line
+    doc.setDrawColor(gold[0], gold[1], gold[2]);
+    doc.setLineWidth(1);
+    doc.line(50, 42, w - 50, 42);
+
+    // Red seal emblem (centered, above title)
+    doc.setFillColor(red[0], red[1], red[2]);
+    doc.circle(w / 2, 32, 10, 'F');
+
+    // Title: "CERTIFICATE"
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(26);
+    doc.setTextColor(dark[0], dark[1], dark[2]);
+    doc.text('CERTIFICATE', w / 2, 62, { align: 'center' });
+
+    // Subtitle: "of Authenticity"
+    doc.setFont('times', 'italic');
+    doc.setFontSize(16);
+    doc.setTextColor(gold[0], gold[1], gold[2]);
+    doc.text('of Authenticity', w / 2, 76, { align: 'center' });
+
+    // Gold separator
+    doc.setDrawColor(gold[0], gold[1], gold[2]);
+    doc.setLineWidth(0.7);
+    doc.line(70, 86, w - 70, 86);
+
+    // "This is to certify that"
+    doc.setFont('times', 'italic');
+    doc.setFontSize(13);
+    doc.setTextColor(100, 100, 100);
+    doc.text('This is to certify that', w / 2, 106, { align: 'center' });
+
+    // Owner name
+    doc.setFont('times', 'bold');
+    doc.setFontSize(28);
+    doc.setTextColor(dark[0], dark[1], dark[2]);
+    doc.text(name, w / 2, 130, { align: 'center' });
+
+    // "is the exclusive owner of"
+    doc.setFont('times', 'italic');
+    doc.setFontSize(13);
+    doc.setTextColor(100, 100, 100);
+    doc.text('is the exclusive owner of', w / 2, 150, { align: 'center' });
+
+    // Product name
+    doc.setFont('times', 'bold');
+    doc.setFontSize(20);
+    doc.setTextColor(red[0], red[1], red[2]);
+    doc.text('The Original Brick', w / 2, 172, { align: 'center' });
+
+    // Description line
+    doc.setFont('times', 'italic');
+    doc.setFontSize(11);
+    doc.setTextColor(120, 120, 120);
+    doc.text('A limited edition piece crafted by time. Forged by fire.', w / 2, 188, { align: 'center' });
+
+    // Details table - centered layout
+    var detailX = w / 2;
+
+    // Certificate Number row
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(120, 120, 120);
+    doc.text('Certificate No.', detailX - 55, 215);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(dark[0], dark[1], dark[2]);
+    doc.text(number, detailX + 55, 215, { align: 'right' });
+
+    // Date row
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(120, 120, 120);
+    doc.text('Date Issued', detailX - 55, 228);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(dark[0], dark[1], dark[2]);
+    doc.text(date, detailX + 55, 228, { align: 'right' });
+
+    // Edition row
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(120, 120, 120);
+    doc.text('Edition', detailX - 55, 241);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(dark[0], dark[1], dark[2]);
+    doc.text('Limited — 1 of 100', detailX + 55, 241, { align: 'right' });
+
+    // Bottom gold line
+    doc.setDrawColor(gold[0], gold[1], gold[2]);
+    doc.setLineWidth(0.7);
+    doc.line(60, 258, w - 60, 258);
+
+    // Footer motto
+    doc.setFont('times', 'italic');
+    doc.setFontSize(10);
+    doc.setTextColor(150, 150, 150);
+    doc.text('"The world has enough ordinary things."', w / 2, 274, { align: 'center' });
+
+    // Bottom brand
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.setTextColor(180, 180, 180);
+    doc.text('BRICK — Exclusive Limited Edition | Authenticated by BRICK', w / 2, 283, { align: 'center' });
+
+    doc.save('BRICK-Certificate-' + number.replace('#', '') + '.pdf');
   }
 
   var toastTimer = null;

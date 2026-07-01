@@ -52,6 +52,10 @@
   --z-modal: 3000;
   --z-loader: 5000;
   --z-cursor: 10000;
+
+  --section-padding: 160px 40px;
+  --section-padding-mobile: 80px 20px;
+  --section-padding-footer: 160px 40px 40px;
 }
 
 /* ----------------------------------------------
@@ -445,10 +449,6 @@ input::placeholder {
   font-weight: 500;
 }
 
-.section-label.light .label-text {
-  color: var(--accent-gold-light);
-}
-
 .section-title {
   font-family: var(--font-display);
   font-size: clamp(36px, 6vw, 80px);
@@ -459,10 +459,6 @@ input::placeholder {
 
 .section-title .accent {
   color: var(--accent-red);
-}
-
-.section-title.light .accent {
-  color: var(--accent-gold);
 }
 
 .title-reveal {
@@ -1170,7 +1166,7 @@ input::placeholder {
    EXPLORE — The Brick in Detail
    ============================================ */
 .explore {
-  padding: 120px 40px;
+  padding: var(--section-padding);
   background: var(--bg-surface);
 }
 
@@ -1598,6 +1594,7 @@ input::placeholder {
   text-transform: uppercase;
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   padding: 3px 8px;
   border-radius: 4px;
   white-space: nowrap;
@@ -1847,7 +1844,7 @@ input::placeholder {
    FEATURES SECTION
    ---------------------------------------------- */
 .features {
-  padding: 160px 40px;
+  padding: var(--section-padding);
   background: var(--bg-primary);
 }
 
@@ -1930,7 +1927,7 @@ input::placeholder {
    GAME SECTION
    ---------------------------------------------- */
 .game {
-  padding: 160px 40px;
+  padding: var(--section-padding);
   background: var(--bg-surface);
   text-align: center;
 }
@@ -2079,6 +2076,7 @@ input::placeholder {
   inset: 0;
   background: rgba(5, 5, 5, 0.8);
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .result-modal {
@@ -2168,7 +2166,7 @@ input::placeholder {
    TESTIMONIALS SECTION
    ---------------------------------------------- */
 .testimonials {
-  padding: 160px 40px;
+  padding: var(--section-padding);
   background: var(--bg-primary);
   overflow: hidden;
 }
@@ -2265,7 +2263,7 @@ input::placeholder {
    PRODUCT SECTION
    ---------------------------------------------- */
 .product {
-  padding: 160px 40px;
+  padding: var(--section-padding);
   background: var(--bg-surface);
 }
 
@@ -2301,6 +2299,7 @@ input::placeholder {
   padding: 6px 14px;
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: 6px;
   font-size: 11px;
   letter-spacing: 1px;
@@ -2568,7 +2567,8 @@ input::placeholder {
   position: fixed;
   inset: 0;
   background: rgba(5, 5, 5, 0.6);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   z-index: calc(var(--z-overlay) - 1);
   opacity: 0;
   pointer-events: none;
@@ -2910,6 +2910,13 @@ input::placeholder {
   box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.15);
 }
 
+.field-error {
+  display: block;
+  color: #C62828;
+  font-size: 11px;
+  margin-top: 4px;
+}
+
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -3020,8 +3027,8 @@ input::placeholder {
   position: fixed;
   inset: 0;
   background: rgba(5, 5, 5, 0.9);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   z-index: calc(var(--z-modal) + 1);
   opacity: 0;
   pointer-events: none;
@@ -3201,7 +3208,7 @@ input::placeholder {
    FOOTER
    ---------------------------------------------- */
 .footer {
-  padding: 100px 40px 40px;
+  padding: 160px 40px 40px;
   background: var(--bg-surface);
   border-top: 1px solid var(--border-color);
   position: relative;
@@ -3321,6 +3328,7 @@ input::placeholder {
   pointer-events: none;
   transition: var(--transition-medium);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .back-to-top.show {
@@ -3393,8 +3401,8 @@ input::placeholder {
     position: fixed;
     inset: 0;
     background: rgba(5, 5, 5, 0.98);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     z-index: calc(var(--z-nav) - 1);
     display: flex;
     align-items: center;
@@ -3449,7 +3457,7 @@ input::placeholder {
   }
 
   .section {
-    padding: 80px 20px;
+    padding: var(--section-padding-mobile);
   }
 
   .section-title {
