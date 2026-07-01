@@ -163,25 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ============================================
-  // AMBIENT AUDIO
-  // ============================================
-  const audio = document.getElementById('ambientAudio');
-  let isAudioPlaying = false;
-
-  document.querySelectorAll('.audio-toggle').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (isAudioPlaying) {
-        audio.pause();
-        btn.querySelector('i').className = 'fa-solid fa-music';
-      } else {
-        audio.play().catch(() => {});
-        btn.querySelector('i').className = 'fa-solid fa-volume-high';
-      }
-      isAudioPlaying = !isAudioPlaying;
-    });
-  });
-
-  // ============================================
   // HERO PARTICLES
   // ============================================
   function createParticles(containerId, count = 60) {

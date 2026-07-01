@@ -988,7 +988,7 @@ input::placeholder {
   font-weight: 300;
   color: var(--text-secondary);
   opacity: 0;
-  margin-top: 40px;
+  margin-top: 80px;
   font-style: italic;
 }
 
@@ -2527,8 +2527,8 @@ input::placeholder {
 
 /* Product 3D Brick Container */
 .brick-3d-container {
-  width: 400px;
-  height: 225px;
+  width: 800px;
+  height: 550px;
   position: relative;
   overflow: hidden;
 }

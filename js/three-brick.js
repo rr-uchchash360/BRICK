@@ -96,12 +96,12 @@ function initBrick(selector, isGold) {
     mat = new THREE.MeshStandardMaterial({
       color: 0xFFD700,
       metalness: 0.35,
-      roughness: 0.12,
+      roughness: 0.5,
       envMapIntensity: 1.5,
     });
   } else {
     mat = new THREE.MeshStandardMaterial({
-      color: 0xB0412E,
+      color: 0x701611,
       roughness: 0.8,
       metalness: 0.0,
       envMapIntensity: 0.6,
