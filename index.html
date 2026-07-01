@@ -1013,9 +1013,27 @@
       </button>
     </div>
 
+    <div class="checkout-steps">
+      <div class="checkout-step active" data-step="1">
+        <span class="step-number">1</span>
+        <span class="step-label">Contact</span>
+      </div>
+      <div class="checkout-step-connector"></div>
+      <div class="checkout-step" data-step="2">
+        <span class="step-number">2</span>
+        <span class="step-label">Shipping</span>
+      </div>
+      <div class="checkout-step-connector"></div>
+      <div class="checkout-step" data-step="3">
+        <span class="step-number">3</span>
+        <span class="step-label">Payment</span>
+      </div>
+    </div>
+
     <div class="checkout-layout">
       <div class="checkout-form">
-        <div class="form-section">
+
+        <div class="form-section" data-step-section="1">
           <h4 class="form-section-title">Contact Information</h4>
           <div class="form-group">
             <label for="checkoutName">Full Name</label>
@@ -1026,12 +1044,13 @@
             <input type="email" id="checkoutEmail" class="form-input" placeholder="your@email.com" required aria-required="true" autocomplete="email">
           </div>
           <div class="form-group">
-            <label for="checkoutPhone">Phone</label>
-            <input type="tel" id="checkoutPhone" class="form-input" placeholder="+1 (555) 000-0000" autocomplete="tel" aria-required="false">
+            <label for="checkoutPhone">Phone <span class="text-muted">(optional)</span></label>
+            <input type="tel" id="checkoutPhone" class="form-input" placeholder="+1 (555) 000-0000" autocomplete="tel">
           </div>
+          <button type="button" class="btn btn-primary step-btn" data-step-next="1">Continue <i class="fa-solid fa-arrow-right"></i></button>
         </div>
 
-        <div class="form-section">
+        <div class="form-section" data-step-section="2" style="display:none">
           <h4 class="form-section-title">Shipping Address</h4>
           <div class="form-row">
             <div class="form-group">
@@ -1055,9 +1074,13 @@
             <label for="checkoutAddress">Address</label>
             <input type="text" id="checkoutAddress" class="form-input" placeholder="Street address">
           </div>
+          <div class="step-nav">
+            <button type="button" class="btn btn-outline step-btn" data-step-prev="2"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <button type="button" class="btn btn-primary step-btn" data-step-next="2">Continue <i class="fa-solid fa-arrow-right"></i></button>
+          </div>
         </div>
 
-        <div class="form-section">
+        <div class="form-section" data-step-section="3" style="display:none">
           <h4 class="form-section-title">Payment</h4>
           <div class="payment-methods">
             <label class="payment-method active">
@@ -1089,6 +1112,13 @@
               <label for="checkoutCVC">CVC</label>
               <input type="text" id="checkoutCVC" class="form-input" placeholder="000" inputmode="numeric">
             </div>
+          </div>
+          <div class="step-nav">
+            <button type="button" class="btn btn-outline step-btn" data-step-prev="3"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <button type="button" class="btn btn-primary checkout-complete-step-btn" id="completePurchaseStep">
+              <span>Complete Purchase</span>
+              <i class="fa-solid fa-lock"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -1124,10 +1154,7 @@
           <span>Total</span>
           <span id="checkoutTotal">$0</span>
         </div>
-        <button class="btn btn-primary checkout-complete-btn" id="completePurchase">
-          <span>Complete Purchase</span>
-          <i class="fa-solid fa-lock"></i>
-        </button>
+
         <p class="checkout-secure">
           <i class="fa-solid fa-shield-halved"></i> Secured with 256-bit encryption
         </p>
@@ -1162,7 +1189,22 @@
           You are now owner #<span id="ownerNumber">001</span> of 100. The brick will arrive within 14 business days. Some things are worth waiting for.
         </p>
 
-        <div class="certificate" id="certificate">
+          <div class="confirmation-order-details">
+            <div class="confirmation-order-row">
+              <span>Order</span>
+              <span id="confOrderNumber">BRK-20260701-0001</span>
+            </div>
+            <div class="confirmation-order-row">
+              <span>Total</span>
+              <span id="confOrderTotal">$1,999</span>
+            </div>
+            <div class="confirmation-order-row">
+              <span>Delivery</span>
+              <span>14 business days</span>
+            </div>
+          </div>
+
+          <div class="certificate" id="certificate">
           <div class="certificate-badge">
             <i class="fa-solid fa-award"></i>
           </div>

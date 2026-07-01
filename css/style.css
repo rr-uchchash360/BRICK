@@ -2858,6 +2858,76 @@ input::placeholder {
   color: var(--text-primary);
 }
 
+.checkout-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 32px 40px 0;
+}
+
+.checkout-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0.4;
+  transition: var(--transition-medium);
+}
+
+.checkout-step.active {
+  opacity: 1;
+}
+
+.checkout-step .step-number {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  border: 2px solid var(--text-muted);
+  color: var(--text-muted);
+  transition: var(--transition-medium);
+}
+
+.checkout-step.active .step-number {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: #fff;
+}
+
+.checkout-step .step-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .checkout-step .step-label {
+    display: inline;
+  }
+}
+
+.checkout-step-connector {
+  width: 60px;
+  height: 1px;
+  background: var(--border-color);
+  margin: 0 16px;
+}
+
+.step-nav {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.step-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .checkout-layout {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
@@ -3131,6 +3201,33 @@ input::placeholder {
   line-height: 1.8;
   margin-bottom: 32px;
   font-size: 15px;
+}
+
+.confirmation-order-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 20px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  margin-bottom: 32px;
+}
+
+.confirmation-order-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.confirmation-order-row span:first-child {
+  color: var(--text-muted);
+}
+
+.confirmation-order-row span:last-child {
+  color: var(--text-primary);
+  font-weight: 500;
 }
 
 .certificate {

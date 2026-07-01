@@ -726,85 +726,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.legacy-number[data-target]').forEach(el => legacyObserver.observe(el));
 
   // ============================================
-  // FAKE LIVE PURCHASES
-  // ============================================
-  const fakeNames = [
-    'Alex M.', 'Sarah K.', 'David C.', 'Emma W.',
-    'James L.', 'Sophia R.', 'Oliver T.', 'Isabella N.',
-    'Lucas P.', 'Mia H.', 'Ethan G.', 'Aria F.',
-  ];
-  const fakeLocations = [
-    'New York', 'London', 'Tokyo', 'Paris', 'Berlin',
-    'Dubai', 'Milan', 'Sydney', 'Seoul', 'Singapore',
-  ];
-
-  function createFakePurchase() {
-    const toast = document.createElement('div');
-    toast.setAttribute('aria-live', 'polite');
-    toast.setAttribute('aria-atomic', 'true');
-    const name = fakeNames[Math.floor(Math.random() * fakeNames.length)];
-    const location = fakeLocations[Math.floor(Math.random() * fakeLocations.length)];
-    toast.style.cssText = `
-      position: fixed; bottom: 30px; left: 30px;
-      background: rgba(20, 20, 20, 0.9);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px; padding: 14px 20px;
-      display: flex; align-items: center; gap: 12px;
-      z-index: 100; font-size: 13px;
-      opacity: 1; transition: all 0.5s ease;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      max-width: 280px; pointer-events: none;
-    `;
-    toast.innerHTML = `
-      <div style="width:8px;height:8px;border-radius:50%;background:#4CAF50;flex-shrink:0;animation:pulse-dot 2s infinite;"></div>
-      <div>
-        <strong style="color:white;font-weight:500;">${name}</strong>
-        <span style="color:rgba(255,255,255,0.5);"> from ${location}</span>
-        <span style="color:rgba(255,255,255,0.7);display:block;font-size:12px;">secured their brick</span>
-      </div>
-    `;
-    document.body.appendChild(toast);
-    setTimeout(() => {
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateX(-20px)';
-      setTimeout(() => toast.remove(), 500);
-    }, 4000);
-  }
-
-  let fakePurchaseInterval = setInterval(createFakePurchase, 8000);
-  setTimeout(createFakePurchase, 3000);
-
-  // Pause fake purchases when tab hidden
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      clearInterval(fakePurchaseInterval);
-    } else {
-      fakePurchaseInterval = setInterval(createFakePurchase, 8000);
-    }
-  });
-
-  // ============================================
   // INITIALIZE CART & GAME
   // ============================================
   if (typeof CART !== 'undefined') CART.init();
   if (typeof BRICK_GAME !== 'undefined') BRICK_GAME.init();
-
-  // ============================================
-  // STOCK COUNTER
-  // ============================================
-  let stockCount = 7;
-  let stockInterval = setInterval(() => {
-    if (stockCount > 1 && Math.random() > 0.7) {
-      stockCount--;
-      document.getElementById('stockCount').textContent = stockCount;
-      document.querySelector('.stock-bar-fill').style.width = (93 - (7 - stockCount)) + '%';
-    }
-  }, 15000);
-
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) clearInterval(stockInterval);
-  });
 
   // ============================================
   // PAYMENT FORMATTING

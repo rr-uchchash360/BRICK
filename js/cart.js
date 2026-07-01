@@ -57,6 +57,9 @@ const CART = (() => {
 
     document.getElementById('addToCartBtn').addEventListener('click', addToCart);
 
+    document.getElementById('wishlistBtn').addEventListener('click', toggleWishlist);
+    loadWishlistState();
+
     document.getElementById('qtyIncrease').addEventListener('click', () => {
       quantity = Math.min(quantity + 1, 5);
       updateQuantityUI();
@@ -84,12 +87,16 @@ const CART = (() => {
       });
     });
 
-    document.getElementById('completePurchase').addEventListener('click', completePurchase);
     document.getElementById('downloadCert').addEventListener('click', downloadCertificate);
+
+    setupCheckoutSteps();
 
     window.addEventListener('gameComplete', (e) => {
       discount = e.detail.discount;
       updatePricing();
+      if (discount > 0) {
+        showNotification('Game reward applied!', discount + '% discount on your purchase');
+      }
     });
 
     document.querySelectorAll('.gallery-thumb').forEach(thumb => {
@@ -249,6 +256,7 @@ const CART = (() => {
   function openCheckout() {
     if (items.length === 0) return;
     toggleCart();
+    resetCheckoutSteps();
 
     const subtotal = items.reduce((sum, i) => sum + (i.price * i.qty), 0);
     const discountAmount = Math.round(subtotal * discount / 100);
@@ -311,86 +319,24 @@ const CART = (() => {
   function validateForm() {
     clearAllErrors();
 
-    var name = getVal('checkoutName');
-    var email = getVal('checkoutEmail');
-    var phone = getVal('checkoutPhone');
-    var country = getVal('checkoutCountry');
-    var city = getVal('checkoutCity');
-    var address = getVal('checkoutAddress');
     var card = getVal('checkoutCard');
     var expiry = getVal('checkoutExpiry');
     var cvc = getVal('checkoutCVC');
 
     var errors = [];
-
-    // Name
-    if (!name.val) {
-      showFieldError(name.el, 'Full name is required');
-      errors.push(name.el);
-    } else if (name.val.length < 2) {
-      showFieldError(name.el, 'Name must be at least 2 characters');
-      errors.push(name.el);
-    } else if (/[0-9]/.test(name.val)) {
-      showFieldError(name.el, 'Name should not contain numbers');
-      errors.push(name.el);
-    }
-
-    // Email
-    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email.val) {
-      showFieldError(email.el, 'Email address is required');
-      if (!errors.length) errors.push(email.el);
-    } else if (!emailRegex.test(email.val)) {
-      showFieldError(email.el, 'Enter a valid email address (e.g. name@domain.com)');
-      if (!errors.length) errors.push(email.el);
-    }
-
-    // Phone (optional — validate format if provided)
-    if (phone.val && !/^[\d\s\-\+\(\)]{7,20}$/.test(phone.val)) {
-      showFieldError(phone.el, 'Enter a valid phone number (e.g. +1 555 000 0000)');
-      if (!errors.length) errors.push(phone.el);
-    }
-
-    // Country
-    if (!country.val) {
-      showFieldError(country.el, 'Please select your country');
-      if (!errors.length) errors.push(country.el);
-    }
-
-    // City
-    if (!city.val) {
-      showFieldError(city.el, 'City is required');
-      if (!errors.length) errors.push(city.el);
-    } else if (city.val.length < 2) {
-      showFieldError(city.el, 'City must be at least 2 characters');
-      if (!errors.length) errors.push(city.el);
-    }
-
-    // Address
-    if (!address.val) {
-      showFieldError(address.el, 'Street address is required');
-      if (!errors.length) errors.push(address.el);
-    } else if (address.val.length < 5) {
-      showFieldError(address.el, 'Please enter a full street address');
-      if (!errors.length) errors.push(address.el);
-    }
-
-    // Payment method check
     var selectedPayment = document.querySelector('.payment-method.active input');
     var isCard = selectedPayment && selectedPayment.value === 'card';
 
     if (isCard) {
-      // Card number
       var cardDigits = card.val.replace(/\s/g, '');
       if (!cardDigits) {
         showFieldError(card.el, 'Card number is required');
-        if (!errors.length) errors.push(card.el);
+        errors.push(card.el);
       } else if (!/^\d{13,19}$/.test(cardDigits)) {
         showFieldError(card.el, 'Enter a valid card number (13-19 digits)');
         if (!errors.length) errors.push(card.el);
       }
 
-      // Expiry
       if (!expiry.val) {
         showFieldError(expiry.el, 'Expiry date is required');
         if (!errors.length) errors.push(expiry.el);
@@ -420,7 +366,6 @@ const CART = (() => {
         }
       }
 
-      // CVC
       if (!cvc.val) {
         showFieldError(cvc.el, 'CVC is required');
         if (!errors.length) errors.push(cvc.el);
@@ -432,11 +377,16 @@ const CART = (() => {
 
     if (errors.length > 0) {
       errors[0].focus();
-      if (errors[0].type === 'select-one') errors[0].focus();
       return false;
     }
 
-    // Also set focus to the first field on the page if none are errored but we need general validation
+    var name = getVal('checkoutName');
+    var email = getVal('checkoutEmail');
+    var phone = getVal('checkoutPhone');
+    var country = getVal('checkoutCountry');
+    var city = getVal('checkoutCity');
+    var address = getVal('checkoutAddress');
+
     return {
       name: name.val,
       email: email.val,
@@ -458,11 +408,21 @@ const CART = (() => {
     const today = new Date().toLocaleDateString('en-US', {
       year: 'numeric', month: 'long', day: 'numeric'
     });
+    const now = new Date();
+    const dateStr = now.getFullYear().toString() +
+      String(now.getMonth() + 1).padStart(2, '0') +
+      String(now.getDate()).padStart(2, '0');
+    const seq = String(Math.floor(Math.random() * 9000) + 1000);
+    const orderNumber = 'BRK-' + dateStr + '-' + seq;
 
     ownerNumber.textContent = ownerNum;
     certOwner.textContent = result.name;
     certNumber.textContent = '#' + ownerNum;
     certDate.textContent = today;
+
+    document.getElementById('confOrderNumber').textContent = orderNumber;
+    document.getElementById('confOrderTotal').textContent =
+      document.getElementById('checkoutTotal').textContent;
 
     setTimeout(() => {
       confirmationModal.classList.add('show');
@@ -477,6 +437,84 @@ const CART = (() => {
       if (el.tagName !== 'SELECT') el.value = '';
     });
     document.querySelectorAll('.field-error').forEach(function(e) { e.remove(); });
+  }
+
+  function setupCheckoutSteps() {
+    document.querySelectorAll('[data-step-next]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var step = parseInt(btn.dataset.stepNext, 10);
+        if (validateStep(step)) goToStep(step + 1);
+      });
+    });
+    document.querySelectorAll('[data-step-prev]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var step = parseInt(btn.dataset.stepPrev, 10);
+        goToStep(step - 1);
+      });
+    });
+    document.getElementById('completePurchaseStep').addEventListener('click', completePurchase);
+  }
+
+  function goToStep(step) {
+    document.querySelectorAll('[data-step-section]').forEach(function(s) { s.style.display = 'none'; });
+    var section = document.querySelector('[data-step-section="' + step + '"]');
+    if (section) section.style.display = '';
+
+    document.querySelectorAll('.checkout-step').forEach(function(s) { s.classList.remove('active'); });
+    var indicator = document.querySelector('.checkout-step[data-step="' + step + '"]');
+    if (indicator) indicator.classList.add('active');
+    clearAllErrors();
+  }
+
+  function resetCheckoutSteps() {
+    goToStep(1);
+    document.querySelectorAll('.checkout-form .form-input').forEach(function(el) {
+      if (el.tagName !== 'SELECT') el.value = '';
+      el.style.borderColor = '';
+    });
+  }
+
+  function validateStep(step) {
+    clearAllErrors();
+    var errors = [];
+    var stepSection = document.querySelector('[data-step-section="' + step + '"]');
+    if (!stepSection) return true;
+
+    if (step === 1) {
+      var name = getVal('checkoutName');
+      var email = getVal('checkoutEmail');
+      var phone = getVal('checkoutPhone');
+
+      if (!name.val) { showFieldError(name.el, 'Full name is required'); errors.push(name.el); }
+      else if (name.val.length < 2) { showFieldError(name.el, 'Name must be at least 2 characters'); errors.push(name.el); }
+      else if (/[0-9]/.test(name.val)) { showFieldError(name.el, 'Name should not contain numbers'); errors.push(name.el); }
+
+      var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email.val) { showFieldError(email.el, 'Email address is required'); if (!errors.length) errors.push(email.el); }
+      else if (!emailRegex.test(email.val)) { showFieldError(email.el, 'Enter a valid email address (e.g. name@domain.com)'); if (!errors.length) errors.push(email.el); }
+
+      if (phone.val && !/^[\d\s\-\+\(\)]{7,20}$/.test(phone.val)) {
+        showFieldError(phone.el, 'Enter a valid phone number'); if (!errors.length) errors.push(phone.el);
+      }
+    }
+
+    if (step === 2) {
+      var country = getVal('checkoutCountry');
+      var city = getVal('checkoutCity');
+      var address = getVal('checkoutAddress');
+
+      if (!country.val) { showFieldError(country.el, 'Please select your country'); errors.push(country.el); }
+      if (!city.val) { showFieldError(city.el, 'City is required'); if (!errors.length) errors.push(city.el); }
+      else if (city.val.length < 2) { showFieldError(city.el, 'City must be at least 2 characters'); if (!errors.length) errors.push(city.el); }
+      if (!address.val) { showFieldError(address.el, 'Street address is required'); if (!errors.length) errors.push(address.el); }
+      else if (address.val.length < 5) { showFieldError(address.el, 'Please enter a full street address'); if (!errors.length) errors.push(address.el); }
+    }
+
+    if (errors.length > 0) {
+      errors[0].focus();
+      return false;
+    }
+    return true;
   }
 
   function createConfetti() {
@@ -512,13 +550,14 @@ const CART = (() => {
     var name = certOwner.textContent;
     var number = certNumber.textContent;
     var date = certDate.textContent;
+    var orderNo = document.getElementById('confOrderNumber').textContent;
     if (!name || name === '—') { showNotification('No certificate data', 'Complete a purchase first'); return; }
 
     showNotification('Generating certificate…', 'Preparing your PDF');
 
     setTimeout(function() {
       try {
-        generateProfessionalPdf(name, number, date);
+        generateProfessionalPdf(name, number, date, orderNo);
         showNotification('Certificate ready', 'Your PDF has been downloaded');
       } catch(e) {
         showNotification('PDF generation failed', 'Please try again');
@@ -526,7 +565,7 @@ const CART = (() => {
     }, 200);
   }
 
-  function generateProfessionalPdf(name, number, date) {
+  function generateProfessionalPdf(name, number, date, orderNo) {
     var doc = new jspdf.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     var w = doc.internal.pageSize.getWidth();
     var h = doc.internal.pageSize.getHeight();
@@ -617,49 +656,58 @@ const CART = (() => {
     // Details table - centered layout
     var detailX = w / 2;
 
+    // Order Number row
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(120, 120, 120);
+    doc.text('Order No.', detailX - 55, 215);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(dark[0], dark[1], dark[2]);
+    doc.text(orderNo, detailX + 55, 215, { align: 'right' });
+
     // Certificate Number row
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.setTextColor(120, 120, 120);
-    doc.text('Certificate No.', detailX - 55, 215);
+    doc.text('Certificate No.', detailX - 55, 228);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(dark[0], dark[1], dark[2]);
-    doc.text(number, detailX + 55, 215, { align: 'right' });
+    doc.text(number, detailX + 55, 228, { align: 'right' });
 
     // Date row
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.setTextColor(120, 120, 120);
-    doc.text('Date Issued', detailX - 55, 228);
+    doc.text('Date Issued', detailX - 55, 241);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(dark[0], dark[1], dark[2]);
-    doc.text(date, detailX + 55, 228, { align: 'right' });
+    doc.text(date, detailX + 55, 241, { align: 'right' });
 
     // Edition row
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.setTextColor(120, 120, 120);
-    doc.text('Edition', detailX - 55, 241);
+    doc.text('Edition', detailX - 55, 254);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(dark[0], dark[1], dark[2]);
-    doc.text('Limited — 1 of 100', detailX + 55, 241, { align: 'right' });
+    doc.text('Limited — 1 of 100', detailX + 55, 254, { align: 'right' });
 
     // Bottom gold line
     doc.setDrawColor(gold[0], gold[1], gold[2]);
     doc.setLineWidth(0.7);
-    doc.line(60, 258, w - 60, 258);
+    doc.line(60, 271, w - 60, 271);
 
     // Footer motto
     doc.setFont('times', 'italic');
     doc.setFontSize(10);
     doc.setTextColor(150, 150, 150);
-    doc.text('"The world has enough ordinary things."', w / 2, 274, { align: 'center' });
+    doc.text('"The world has enough ordinary things."', w / 2, 287, { align: 'center' });
 
     // Bottom brand
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(7);
     doc.setTextColor(180, 180, 180);
-    doc.text('BRICK — Exclusive Limited Edition | Authenticated by BRICK', w / 2, 283, { align: 'center' });
+    doc.text('BRICK — Exclusive Limited Edition | Authenticated by BRICK', w / 2, 296, { align: 'center' });
 
     doc.save('BRICK-Certificate-' + number.replace('#', '') + '.pdf');
   }
@@ -695,6 +743,39 @@ const CART = (() => {
     }, 3000);
   }
 
+  var wishlist = [];
+
+  function toggleWishlist() {
+    var btn = document.getElementById('wishlistBtn');
+    var icon = btn.querySelector('i');
+    var text = btn.querySelector('span');
+    var idx = wishlist.indexOf('original-brick');
+    if (idx > -1) {
+      wishlist.splice(idx, 1);
+      icon.className = 'fa-regular fa-heart';
+      text.textContent = 'Wishlist';
+    } else {
+      wishlist.push('original-brick');
+      icon.className = 'fa-solid fa-heart';
+      icon.style.color = 'var(--accent-red-bright)';
+      text.textContent = 'Saved';
+      showNotification('Saved to Wishlist', 'The Original Brick');
+    }
+    try { localStorage.setItem('brickWishlist', JSON.stringify(wishlist)); } catch(e) {}
+  }
+
+  function loadWishlistState() {
+    try {
+      var saved = localStorage.getItem('brickWishlist');
+      if (saved) wishlist = JSON.parse(saved);
+      if (wishlist.indexOf('original-brick') > -1) {
+        document.getElementById('wishlistBtn').querySelector('i').className = 'fa-solid fa-heart';
+        document.getElementById('wishlistBtn').querySelector('i').style.color = 'var(--accent-red-bright)';
+        document.getElementById('wishlistBtn').querySelector('span').textContent = 'Saved';
+      }
+    } catch(e) {}
+  }
+
   function destroy() {
     items = [];
     discount = 0;
@@ -725,7 +806,7 @@ const CART = (() => {
     if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
   }
 
-  const api = { init, destroy, removeItem, updateItemQty };
+  const api = { init, destroy, removeItem, updateItemQty, toggleWishlist };
   window.CART = api;
   return api;
 })();
