@@ -873,6 +873,76 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================
   window.addEventListener('resize', () => lenis.resize());
 
+  // ============================================
+  // FOOTER MODAL
+  // ============================================
+  var footerModalOverlay = document.getElementById('footerModalOverlay');
+  var footerModal = document.getElementById('footerModal');
+  var footerModalTitle = document.getElementById('footerModalTitle');
+  var footerModalBody = document.getElementById('footerModalBody');
+  var footerModalClose = document.getElementById('footerModalClose');
+
+  var footerContent = {
+    contact: {
+      title: 'Contact BRICK',
+      body: '<h5>Get in Touch</h5><p>We\'d love to hear from you. Whether you have a question about the brick, your order, or just want to say hello.</p><ul><li>Email: <strong>hello@brick.com</strong></li><li>Phone: <strong>+1 (555) 000-BRICK</strong></li><li>Address: <strong>100 Brick Lane, New York, NY 10001</strong></li></ul><p>Our team typically responds within 24 hours.</p>'
+    },
+    faq: {
+      title: 'Frequently Asked Questions',
+      body: '<h5>What is The Original Brick?</h5><p>A limited edition luxury object. A brick. One hundred exist. Each one authenticated.</p><h5>How long does shipping take?</h5><p>All orders ship within 3 business days. Domestic delivery takes 5–7 business days. International orders arrive within 14 business days.</p><h5>Can I return my brick?</h5><p>Yes. If the brick does not speak to you within 30 days, return it for a full refund. No questions asked.</p><h5>Can I change my order?</h5><p>Contact us within 24 hours of placing your order and we\'ll adjust it. After that, it enters production.</p>'
+    },
+    shipping: {
+      title: 'Shipping Policy',
+      body: '<h5>Shipping & Handling</h5><p>Complimentary shipping on all orders worldwide. No hidden fees, no surcharges.</p><ul><li><strong>Domestic (US):</strong> 5–7 business days</li><li><strong>International:</strong> 10–14 business days</li><li><strong>Express:</strong> Available at checkout for an additional fee</li></ul><p>All shipments are insured and require a signature upon delivery. Tracking information is emailed once your order ships.</p>'
+    },
+    returns: {
+      title: 'Returns & Exchanges',
+      body: '<h5>30-Day Satisfaction Guarantee</h5><p>If The Original Brick does not meet your expectations, return it within 30 days of delivery for a full refund.</p><ul><li>Items must be unused and in original packaging</li><li>Refunds are processed within 5 business days of receipt</li><li>Shipping costs are non-refundable on returns</li></ul><p>To initiate a return, email <strong>returns@brick.com</strong> with your order number.</p>'
+    },
+    privacy: {
+      title: 'Privacy Policy',
+      body: '<h5>Your Privacy Matters</h5><p>BRICK collects only the information necessary to process your order and improve your experience.</p><ul><li>We do not sell your personal data</li><li>We do not share your information with third parties for marketing</li><li>Payment data is processed securely by our payment partners</li><li>You may request deletion of your data at any time</li></ul><p>Contact <strong>privacy@brick.com</strong> for any privacy-related inquiries.</p>'
+    },
+    terms: {
+      title: 'Terms of Service',
+      body: '<h5>Terms & Conditions</h5><p>By purchasing The Original Brick, you agree to the following terms:</p><ul><li>All sales are subject to availability</li><li>Ownership of the physical brick does not transfer intellectual property rights</li><li>BRICK reserves the right to cancel orders in case of technical errors</li><li>Prices are subject to change without notice</li></ul><p>These terms are governed by the laws of the State of New York.</p>'
+    },
+    cookies: {
+      title: 'Cookie Policy',
+      body: '<h5>How We Use Cookies</h5><p>BRICK uses essential cookies to ensure the site functions properly. These are necessary for the shopping cart and checkout experience.</p><ul><li><strong>Essential:</strong> Cart, session management, security</li><li><strong>Analytics:</strong> Anonymous usage data to improve the site (opt-out available)</li><li><strong>No tracking:</strong> We do not use advertising or cross-site tracking cookies</li></ul><p>By continuing to use this site, you accept our use of essential cookies.</p>'
+    }
+  };
+
+  function openFooterModal(key) {
+    var content = footerContent[key];
+    if (!content) return;
+    footerModalTitle.textContent = content.title;
+    footerModalBody.innerHTML = content.body;
+    footerModal.classList.add('show');
+    footerModalOverlay.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeFooterModal() {
+    footerModal.classList.remove('show');
+    footerModalOverlay.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('[data-footer]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      openFooterModal(link.dataset.footer);
+    });
+  });
+
+  footerModalClose.addEventListener('click', closeFooterModal);
+  footerModalOverlay.addEventListener('click', closeFooterModal);
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeFooterModal();
+  });
+
   console.log(
     '%c BRICK ',
     'background: #C62828; color: white; font-size: 20px; font-weight: bold; padding: 10px; border-radius: 4px;'

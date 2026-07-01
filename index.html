@@ -1272,16 +1272,16 @@
         </div>
         <div class="footer-col">
           <h4 class="footer-col-title">Support</h4>
-          <a href="#" class="footer-link">Contact</a>
-          <a href="#" class="footer-link">FAQ</a>
-          <a href="#" class="footer-link">Shipping</a>
-          <a href="#" class="footer-link">Returns</a>
+          <a href="#" class="footer-link" data-footer="contact">Contact</a>
+          <a href="#" class="footer-link" data-footer="faq">FAQ</a>
+          <a href="#" class="footer-link" data-footer="shipping">Shipping</a>
+          <a href="#" class="footer-link" data-footer="returns">Returns</a>
         </div>
         <div class="footer-col">
           <h4 class="footer-col-title">Legal</h4>
-          <a href="#" class="footer-link">Privacy</a>
-          <a href="#" class="footer-link">Terms</a>
-          <a href="#" class="footer-link">Cookies</a>
+          <a href="#" class="footer-link" data-footer="privacy">Privacy</a>
+          <a href="#" class="footer-link" data-footer="terms">Terms</a>
+          <a href="#" class="footer-link" data-footer="cookies">Cookies</a>
         </div>
       </div>
     </div>
@@ -1302,6 +1302,18 @@
   <button class="back-to-top" id="backToTop" aria-label="Back to top">
     <i class="fa-solid fa-arrow-up"></i>
   </button>
+
+  <!-- ============================================ -->
+  <!-- FOOTER MODAL -->
+  <!-- ============================================ -->
+  <div class="footer-modal-overlay" id="footerModalOverlay"></div>
+  <div class="footer-modal" id="footerModal" role="dialog" aria-label="Footer information">
+    <div class="footer-modal-header">
+      <h4 class="footer-modal-title" id="footerModalTitle">Title</h4>
+      <button class="footer-modal-close" id="footerModalClose" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="footer-modal-body" id="footerModalBody"></div>
+  </div>
 
   <!-- ============================================ -->
   <!-- AMBIENT AUDIO -->
