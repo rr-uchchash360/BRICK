@@ -245,17 +245,23 @@ const BRICK_GAME = (() => {
       tier = 'PLATINUM'; discount = 30;
       message = 'Extraordinary precision. The brick bows to you.';
     } else if (score >= 150) {
-      tier = 'GOLD'; discount = 20;
+      tier = 'DIAMOND'; discount = 25;
       message = 'Masterful control. You are worthy of greatness.';
-    } else if (score >= 80) {
-      tier = 'SILVER'; discount = 10;
+    } else if (score >= 100) {
+      tier = 'GOLD'; discount = 20;
       message = 'Impressive focus. The brick acknowledges your effort.';
+    } else if (score >= 60) {
+      tier = 'SILVER'; discount = 15;
+      message = 'Steady hands. The brick feels your determination.';
     } else if (score >= 30) {
-      tier = 'BRONZE'; discount = 5;
+      tier = 'BRONZE'; discount = 10;
       message = 'Not bad. The brick acknowledges your effort.';
+    } else if (score >= 10) {
+      tier = 'IRON'; discount = 5;
+      message = 'A solid start. Every stack begins with one brick.';
     } else {
       tier = 'PARTICIPANT'; discount = 0;
-      message = 'The brick respects your time. Try again for rewards.';
+      message = 'The brick respects your time. Play again for a discount.';
     }
 
     state.tier = tier;
@@ -273,18 +279,15 @@ const BRICK_GAME = (() => {
     document.getElementById('resultMessage').textContent = message;
 
     const tierColors = {
-      'PLATINUM': '#E5E4E2', 'GOLD': '#D4A843',
-      'SILVER': '#C0C0C0', 'BRONZE': '#CD7F32', 'PARTICIPANT': '#666666',
+      'PLATINUM': '#E5E4E2', 'DIAMOND': '#B9F2FF',
+      'GOLD': '#D4A843', 'SILVER': '#C0C0C0',
+      'BRONZE': '#CD7F32', 'IRON': '#8B8C7A', 'PARTICIPANT': '#666666',
     };
     document.querySelector('.tier-name').style.color = tierColors[tier] || '#fff';
 
     document.getElementById('gameResult').classList.add('show');
     document.body.style.overflow = 'hidden';
     document.getElementById('gameStartBtn').style.display = '';
-
-    localStorage.setItem('brickDiscount', discount);
-    localStorage.setItem('brickScore', score);
-    localStorage.setItem('brickTier', tier);
 
     window.dispatchEvent(new CustomEvent('gameComplete', {
       detail: { discount, tier, score }

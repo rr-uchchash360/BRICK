@@ -87,7 +87,7 @@
         </button>
         <button class="nav-icon-btn cart-toggle" id="cartToggle" aria-label="Open shopping cart">
           <i class="fa-solid fa-cart-shopping"></i>
-          <span class="cart-count" id="cartCount">0</span>
+          <span class="cart-count" id="cartCount" style="display:none"></span>
         </button>
         <button class="nav-icon-btn menu-toggle" id="menuToggle" aria-label="Toggle menu">
           <i class="fa-solid fa-bars"></i>
@@ -887,7 +887,16 @@
         <div class="product-pricing">
           <span class="product-price" id="productPrice">$1,999</span>
           <span class="product-original-price" id="productOriginalPrice">$2,499</span>
-          <span class="product-discount-badge" id="productDiscountBadge">-20%</span>
+          <span class="product-discount-badge" id="productDiscountBadge"></span>
+        </div>
+
+        <div class="game-promo" id="gamePromo">
+          <div class="game-promo-icon"><i class="fa-solid fa-gamepad"></i></div>
+          <div class="game-promo-text">
+            <span class="game-promo-title">Stack & Save</span>
+            <span class="game-promo-sub">Play the Brick Stacking game to earn up to <strong>30% off</strong></span>
+          </div>
+          <a href="#game" class="game-promo-btn" data-smooth>Play Now <i class="fa-solid fa-arrow-right"></i></a>
         </div>
 
         <div class="product-stock">
@@ -980,7 +989,7 @@
           <span>Subtotal</span>
           <span id="cartSubtotal">$0</span>
         </div>
-        <div class="summary-row discount-row" id="discountRow">
+        <div class="summary-row discount-row" id="discountRow" style="display:none">
           <span>Game Reward Discount</span>
           <span id="cartDiscount">-$0</span>
         </div>

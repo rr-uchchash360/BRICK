@@ -46,6 +46,7 @@ const CART = (() => {
     certDate = document.getElementById('certDate');
 
     loadDiscount();
+    updateCartUI();
 
     document.getElementById('cartToggle').addEventListener('click', toggleCart);
     document.getElementById('cartClose').addEventListener('click', toggleCart);
@@ -76,8 +77,6 @@ const CART = (() => {
         selectedColor = btn.dataset.color;
       });
     });
-
-    document.getElementById('wishlistBtn').addEventListener('click', toggleWishlist);
 
     document.querySelectorAll('.payment-method').forEach(m => {
       m.addEventListener('click', () => {
@@ -110,12 +109,8 @@ const CART = (() => {
   }
 
   function loadDiscount() {
-    const saved = localStorage.getItem('brickDiscount');
-    discount = saved ? parseInt(saved) : 0;
-    if (discount > 0) {
-      document.getElementById('productDiscountBadge').textContent = '-' + discount + '%';
-      document.getElementById('productDiscountBadge').style.display = '';
-    }
+    discount = 0;
+    updatePricing();
   }
 
   function updatePricing() {
@@ -125,6 +120,8 @@ const CART = (() => {
     document.getElementById('productOriginalPrice').style.display = discount > 0 ? '' : 'none';
     document.getElementById('productDiscountBadge').textContent = discount > 0 ? '-' + discount + '%' : '';
     document.getElementById('productDiscountBadge').style.display = discount > 0 ? '' : 'none';
+    var promo = document.getElementById('gamePromo');
+    if (promo) promo.style.display = discount > 0 ? 'none' : 'flex';
   }
 
   function updateQuantityUI() {
@@ -172,6 +169,7 @@ const CART = (() => {
   function updateCartUI() {
     const totalQty = items.reduce((sum, i) => sum + i.qty, 0);
     cartCount.textContent = totalQty;
+    cartCount.style.display = totalQty > 0 ? 'flex' : 'none';
 
     if (items.length === 0) {
       cartItems.innerHTML = `
