@@ -340,8 +340,8 @@ const CART = (() => {
       if (!tx.val) {
         showFieldError(tx.el, 'Transaction ID is required');
         errors.push(tx.el);
-      } else if (tx.val.length < 5) {
-        showFieldError(tx.el, 'Enter a valid transaction ID');
+      } else if (!/^[a-zA-Z0-9]{10}$/.test(tx.val)) {
+        showFieldError(tx.el, 'Transaction ID must be exactly 10 alphanumeric characters');
         if (!errors.length) errors.push(tx.el);
       }
     }
