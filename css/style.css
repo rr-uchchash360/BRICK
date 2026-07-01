@@ -2533,10 +2533,11 @@ input::placeholder {
   overflow: hidden;
 }
 
-/* Product Specs */
+/* Product Specs - Full Width */
 .product-specs {
-  margin-top: 32px;
-  padding-top: 24px;
+  max-width: 1400px;
+  margin: 48px auto 0;
+  padding: 32px 0 0;
   border-top: 1px solid var(--border-color);
 }
 
@@ -3880,6 +3881,10 @@ input::placeholder {
     top: auto;
   }
 
+  .specs-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
   .checkout-layout {
     grid-template-columns: 1fr;
   }
@@ -3957,6 +3962,10 @@ input::placeholder {
 
   .section-title {
     font-size: 28px;
+  }
+
+  .specs-grid {
+    grid-template-columns: 1fr;
   }
 
   .features-grid {

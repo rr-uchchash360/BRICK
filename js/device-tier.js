@@ -72,8 +72,7 @@
       '  opacity: 1 !important;' +
       '  transform: none !important;' +
       '}' +
-      '.device-low .ch1-brick-emerge, .device-low .ch2-brick-core,' +
-      '.device-low .ch2-brick-glow, .device-low .ch3-message,' +
+      '.device-low .ch3-message,' +
       '.device-low .ch5-reveal, .device-low .ch4-msg {' +
       '  opacity: 1 !important;' +
       '  transform: none !important;' +

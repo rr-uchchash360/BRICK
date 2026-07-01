@@ -318,7 +318,8 @@ const CART = (() => {
     var pm = selectedPayment ? selectedPayment.value : 'bkash';
 
     if (pm === 'bkash' || pm === 'nagad') {
-      var tx = getVal('checkoutTxID');
+      var txEl = document.querySelector('#paymentBkash:not([style*="display: none"]) .txid-input, #paymentNagad:not([style*="display: none"]) .txid-input');
+      var tx = { el: txEl, val: txEl ? txEl.value.trim() : '' };
       if (!tx.val) {
         showFieldError(tx.el, 'Transaction ID is required');
         errors.push(tx.el);
@@ -399,7 +400,7 @@ const CART = (() => {
       city: city.val,
       address: address.val,
       payment: pm,
-      txID: pm === 'bkash' || pm === 'nagad' ? getVal('checkoutTxID').val : '',
+      txID: pm === 'bkash' || pm === 'nagad' ? (document.querySelector('#paymentBkash:not([style*="display: none"]) .txid-input, #paymentNagad:not([style*="display: none"]) .txid-input') || {}).value || '' : '',
     };
   }
 

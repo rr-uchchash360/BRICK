@@ -213,10 +213,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const chapters = document.querySelectorAll('.story-chapter');
   const chapterParticles = document.getElementById('ch2Particles');
 
-  // Chapter 1: Before the Brick — text + particle + brick emergence
+  // Chapter 1: Before the Brick — text + particle
   const ch1Texts = document.querySelectorAll('.ch1-text');
   const ch1Particles = document.querySelectorAll('.ch1-particle-container');
-  const ch1Brick = document.querySelector('.ch1-brick-emerge');
 
   ScrollTrigger.create({
     trigger: '#chapter1',
@@ -225,19 +224,15 @@ document.addEventListener('DOMContentLoaded', () => {
     onEnter: () => {
       gsap.to(ch1Texts, { y: 0, opacity: 1, duration: 1.2, stagger: 0.4, ease: 'power3.out' });
       gsap.to(ch1Particles, { opacity: 1, duration: 1.5, delay: 1.5, ease: 'power2.out' });
-      gsap.to(ch1Brick, { scale: 1, opacity: 1, duration: 1.5, delay: 2.5, ease: 'back.out(1.7)' });
     },
     onLeaveBack: () => {
       gsap.set(ch1Texts, { y: 20, opacity: 0 });
       gsap.set(ch1Particles, { opacity: 0 });
-      gsap.set(ch1Brick, { scale: 0.3, opacity: 0 });
     },
   });
 
   // Chapter 2: Born from the Earth — particles + text reveal
   const ch2Lines = document.querySelectorAll('.ch2-line');
-  const ch2BrickCore = document.querySelector('.ch2-brick-core');
-  const ch2BrickGlow = document.querySelector('.ch2-brick-glow');
 
   if (chapterParticles) {
     var ch2Count = tier === 'mid' ? 15 : 40;
@@ -257,23 +252,18 @@ document.addEventListener('DOMContentLoaded', () => {
     end: 'bottom 70%',
     onEnter: () => {
       gsap.to(ch2Lines, { y: 0, opacity: 1, duration: 1.2, stagger: 0.5, ease: 'power3.out' });
-      gsap.to(ch2BrickCore, { scale: 1, opacity: 1, duration: 1.2, delay: 2, ease: 'back.out(2)' });
-      gsap.to(ch2BrickGlow, { opacity: 1, duration: 1.5, delay: 2.2, ease: 'power2.out' });
       gsap.to('.ch2-particle', {
         opacity: 0.6, duration: 1.5, stagger: 0.02, ease: 'power2.out', delay: 0.5,
       });
     },
     onLeaveBack: () => {
       gsap.set(ch2Lines, { y: 30, opacity: 0 });
-      gsap.set(ch2BrickCore, { scale: 0.5, opacity: 0 });
-      gsap.set(ch2BrickGlow, { opacity: 0 });
       gsap.set('.ch2-particle', { opacity: 0 });
     },
   });
 
-  // Chapter 3: Time — year timeline + brick constant
+  // Chapter 3: Time — year timeline
   const ch3Years = document.querySelectorAll('.ch3-year');
-  const ch3Brick = document.querySelector('.ch3-brick-constant');
   const ch3Message = document.querySelector('.ch3-message');
 
   ScrollTrigger.create({
@@ -283,12 +273,10 @@ document.addEventListener('DOMContentLoaded', () => {
     onEnter: () => {
       gsap.to(ch3Years, { y: 0, opacity: 1, duration: 0.8, stagger: 0.3, ease: 'power3.out' });
       gsap.to(ch3Years, { color: '#D4A843', duration: 0.3, stagger: 0.3, delay: 0.6, ease: 'power2.in' });
-      gsap.to(ch3Brick, { opacity: 1, duration: 1, delay: 1.8, ease: 'power2.out' });
       gsap.to(ch3Message, { opacity: 1, duration: 1.2, delay: 2.5, ease: 'power2.out' });
     },
     onLeaveBack: () => {
       gsap.set(ch3Years, { y: 20, opacity: 0, color: '#555' });
-      gsap.set(ch3Brick, { opacity: 0 });
       gsap.set(ch3Message, { opacity: 0 });
     },
   });
@@ -518,9 +506,51 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ============================================
-  // EXPLORE — 3D Brick Display (handled by three-brick.js module)
+  // EXPLORE — 3D Brick Display Controls
   // ============================================
-  // (interactive 3D brick auto-initialized in the module; hotspots removed)
+  var showcaseControls = window.brickControls && window.brickControls.showcase;
+
+  function getShowcaseControls() {
+    return window.brickControls && window.brickControls.showcase;
+  }
+
+  var zoomInBtn = document.getElementById('zoomIn');
+  var zoomOutBtn = document.getElementById('zoomOut');
+  var zoomLevelEl = document.getElementById('zoomLevel');
+  var rotateToggle = document.getElementById('rotateToggle');
+  var resetViewBtn = document.getElementById('resetView');
+
+  if (zoomInBtn) {
+    zoomInBtn.addEventListener('click', function() {
+      var c = getShowcaseControls();
+      if (c) { c.zoomIn(); if (zoomLevelEl) zoomLevelEl.textContent = c.getZoomLevel(); }
+    });
+  }
+
+  if (zoomOutBtn) {
+    zoomOutBtn.addEventListener('click', function() {
+      var c = getShowcaseControls();
+      if (c) { c.zoomOut(); if (zoomLevelEl) zoomLevelEl.textContent = c.getZoomLevel(); }
+    });
+  }
+
+  if (rotateToggle) {
+    rotateToggle.addEventListener('click', function() {
+      var c = getShowcaseControls();
+      if (c) {
+        var on = !c.autoRotate();
+        c.autoRotate(on);
+        rotateToggle.classList.toggle('active', on);
+      }
+    });
+  }
+
+  if (resetViewBtn) {
+    resetViewBtn.addEventListener('click', function() {
+      var c = getShowcaseControls();
+      if (c) { c.resetView(); if (zoomLevelEl) zoomLevelEl.textContent = c.getZoomLevel(); }
+    });
+  }
 
   // ============================================
   // EXPLORE — X-Ray Cutaway Toggle

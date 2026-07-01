@@ -1,6 +1,8 @@
 (function() {
 var envMap = null;
 var activeCount = 0;
+var brickControls = {};
+window.brickControls = brickControls;
 
 function RoundedBoxGeometry(w, h, d, seg, r) {
   seg = Math.max(2, seg || 2);
@@ -64,7 +66,7 @@ function buildEnvMap(width) {
   return tex;
 }
 
-function initBrick(selector, isGold) {
+function initBrick(selector, isGold, controlKey) {
   var el = document.querySelector(selector);
   if (!el) return;
 
@@ -136,6 +138,11 @@ function initBrick(selector, isGold) {
   var lastAngleX = 0;
   var animId = null;
   var isVisible = false;
+  var autoRotate = true;
+  var camDist = camera.position.length();
+  var initialPos = camera.position.clone();
+  var initialAngleY = 0;
+  var initialAngleX = 0;
 
   renderer.domElement.addEventListener('mousedown', function(e) {
     isDragging = true;
@@ -242,10 +249,13 @@ function initBrick(selector, isGold) {
         velX *= 0.94;
         angleX = Math.max(-Math.PI / 4, Math.min(Math.PI / 4, angleX));
         if (angleX <= -Math.PI / 4 || angleX >= Math.PI / 4) velX = 0;
-      } else {
+      } else if (autoRotate) {
         velY = 0;
         velX = 0;
         angleY += 0.003;
+      } else {
+        velY = 0;
+        velX = 0;
       }
     }
 
@@ -256,13 +266,44 @@ function initBrick(selector, isGold) {
   }
 
   renderLoop();
+
+  var controls = {
+    autoRotate: function(val) {
+      if (val !== undefined) { autoRotate = !!val; return; }
+      return autoRotate;
+    },
+    zoomIn: function() {
+      camDist = Math.max(camDist * 0.85, 3);
+      camera.position.setLength(camDist);
+    },
+    zoomOut: function() {
+      camDist = Math.min(camDist / 0.85, 20);
+      camera.position.setLength(camDist);
+    },
+    resetView: function() {
+      angleY = initialAngleY;
+      angleX = initialAngleX;
+      velY = 0;
+      velX = 0;
+      camDist = initialPos.length();
+      camera.position.copy(initialPos);
+      camera.lookAt(0, 0, 0);
+    },
+    getZoomLevel: function() {
+      var base = initialPos.length();
+      return Math.round((base / camDist) * 10) / 10;
+    }
+  };
+
+  if (controlKey) brickControls[controlKey] = controls;
+  return controls;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
   if (!envMap) envMap = buildEnvMap(512);
 
-  initBrick('#productBrickContainer');
-  initBrick('.hero-brick');
-  initBrick('.showcase-brick-3d');
+  initBrick('#productBrickContainer', false);
+  initBrick('.hero-brick', false);
+  initBrick('.showcase-brick-3d', false, 'showcase');
 });
 })();
