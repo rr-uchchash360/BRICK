@@ -43,24 +43,40 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================
   // INTERACTIVE CURSOR
   // ============================================
-  const cursor = document.getElementById('cursor');
+  const cursor = window.DEVICE_TIER === 'low' ? null : document.getElementById('cursor');
   if (cursor) {
     const cursorDot = cursor.querySelector('.cursor-dot');
     const cursorRing = cursor.querySelector('.cursor-ring');
     let cursorX = -100, cursorY = -100;
     let ringX = -100, ringY = -100;
+    let lastMoveX = -100, lastMoveY = -100;
+    let cursorRafId = null;
+    let cursorActive = false;
 
     document.addEventListener('mousemove', (e) => {
       cursorX = e.clientX;
       cursorY = e.clientY;
-    });
+      if (!cursorActive) {
+        cursorActive = true;
+        if (!cursorRafId) animateCursor();
+      }
+    }, { passive: true });
 
     function animateCursor() {
+      var dx = Math.abs(cursorX - lastMoveX);
+      var dy = Math.abs(cursorY - lastMoveY);
+      if (dx < 0.5 && dy < 0.5 && Math.abs(ringX - cursorX) < 1 && Math.abs(ringY - cursorY) < 1) {
+        cursorActive = false;
+        cursorRafId = null;
+        return;
+      }
       ringX += (cursorX - ringX) * 0.08;
       ringY += (cursorY - ringY) * 0.08;
       cursorDot.style.transform = `translate(${cursorX}px, ${cursorY}px)`;
       cursorRing.style.transform = `translate(${ringX}px, ${ringY}px)`;
-      requestAnimationFrame(animateCursor);
+      lastMoveX = cursorX;
+      lastMoveY = cursorY;
+      cursorRafId = requestAnimationFrame(animateCursor);
     }
     animateCursor();
 
@@ -191,8 +207,11 @@ document.addEventListener('DOMContentLoaded', () => {
   `;
   document.head.appendChild(styleSheet);
 
-  createParticles('heroParticles', 80);
-  createParticles('footerParticles', 40);
+  const particleTier = window.DEVICE_TIER || 'high';
+  const heroParticleCount = particleTier === 'low' ? 15 : particleTier === 'mid' ? 40 : 80;
+  const footerParticleCount = particleTier === 'low' ? 0 : particleTier === 'mid' ? 15 : 40;
+  createParticles('heroParticles', heroParticleCount);
+  if (footerParticleCount > 0) createParticles('footerParticles', footerParticleCount);
 
   // ============================================
   // THREE.JS BRICK
@@ -469,7 +488,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================
   // MOUSE-FOLLOW LIGHTING
   // ============================================
-  const heroLighting = document.getElementById('heroLighting');
+  const heroLighting = window.DEVICE_TIER !== 'low' ? document.getElementById('heroLighting') : null;
   if (heroLighting) {
     let lightRafId = null;
     document.addEventListener('mousemove', (e) => {

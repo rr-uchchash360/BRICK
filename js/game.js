@@ -14,6 +14,8 @@ const BRICK_GAME = (() => {
     isDragging: false,
     stackHeight: 0,
     timerInterval: null,
+    timerRafId: null,
+    timerLastTick: 0,
     discountMultiplier: 0,
     tier: null,
   };
@@ -79,12 +81,24 @@ const BRICK_GAME = (() => {
     document.getElementById('gameStartBtn').style.display = 'none';
 
     clearInterval(state.timerInterval);
-    state.timerInterval = setInterval(() => {
-      state.timeLeft--;
-      timerEl.textContent = state.timeLeft;
-      if (state.timeLeft <= 5) timerEl.style.color = '#C62828';
-      if (state.timeLeft <= 0) endGame();
-    }, 1000);
+    if (state.timerRafId) cancelAnimationFrame(state.timerRafId);
+
+    state.timerLastTick = Date.now();
+
+    function timerLoop() {
+      if (!state.isPlaying) return;
+      var now = Date.now();
+      var elapsed = now - state.timerLastTick;
+      if (elapsed >= 1000) {
+        state.timerLastTick = now - (elapsed - 1000);
+        state.timeLeft--;
+        timerEl.textContent = state.timeLeft;
+        if (state.timeLeft <= 5) timerEl.style.color = '#C62828';
+        if (state.timeLeft <= 0) { endGame(); return; }
+      }
+      state.timerRafId = requestAnimationFrame(timerLoop);
+    }
+    timerLoop();
 
     spawnBrick();
   }
@@ -218,6 +232,10 @@ const BRICK_GAME = (() => {
   function endGame() {
     state.isPlaying = false;
     clearInterval(state.timerInterval);
+    if (state.timerRafId) {
+      cancelAnimationFrame(state.timerRafId);
+      state.timerRafId = null;
+    }
     timerEl.style.color = '';
 
     const score = state.score;

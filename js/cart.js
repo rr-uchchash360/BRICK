@@ -341,6 +341,7 @@ const CART = (() => {
     const container = document.getElementById('confettiContainer');
     container.innerHTML = '';
     const colors = ['#C62828', '#D4A843', '#ffffff', '#E53935', '#F0D080'];
+    const fragment = document.createDocumentFragment();
     for (let i = 0; i < 100; i++) {
       const piece = document.createElement('div');
       piece.className = 'confetti-piece';
@@ -351,8 +352,9 @@ const CART = (() => {
       piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
       piece.style.setProperty('--duration', (Math.random() * 2 + 2) + 's');
       piece.style.setProperty('--delay', (Math.random() * 1.5) + 's');
-      container.appendChild(piece);
+      fragment.appendChild(piece);
     }
+    container.appendChild(fragment);
   }
 
   function toggleWishlist() {
@@ -406,46 +408,68 @@ const CART = (() => {
     }
   }
 
-  function showNotification(title, message) {
-    const existing = document.querySelector('.notification-toast');
-    if (existing) existing.remove();
+  var toastTimer = null;
 
-    const toast = document.createElement('div');
+  function showNotification(title, message) {
+    var existing = document.querySelector('.notification-toast');
+    if (existing) existing.remove();
+    if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
+
+    var toast = document.createElement('div');
     toast.className = 'notification-toast';
     toast.setAttribute('role', 'alert');
-    toast.innerHTML = `
-      <div class="toast-icon"><i class="fa-solid fa-check-circle" style="color:#4CAF50"></i></div>
-      <div class="toast-content">
-        <span class="toast-title" style="display:block;font-weight:500">${escapeHtml(title)}</span>
-        ${message ? `<span class="toast-message" style="display:block;font-size:12px;color:rgba(255,255,255,0.6)">${escapeHtml(message)}</span>` : ''}
-      </div>
-    `;
-    toast.style.cssText = `
-      position: fixed; bottom: 30px; left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: #1a1a1a; border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px; padding: 16px 24px;
-      display: flex; align-items: center; gap: 12px;
-      z-index: 10000; opacity: 0;
-      transition: all 0.4s ease;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-    `;
+    toast.innerHTML =
+      '<div class="toast-icon"><i class="fa-solid fa-check-circle" style="color:#4CAF50"></i></div>' +
+      '<div class="toast-content">' +
+        '<span class="toast-title">' + escapeHtml(title) + '</span>' +
+        (message ? '<span class="toast-message">' + escapeHtml(message) + '</span>' : '') +
+      '</div>';
     document.body.appendChild(toast);
 
-    requestAnimationFrame(() => {
+    requestAnimationFrame(function() {
       toast.style.opacity = '1';
       toast.style.transform = 'translateX(-50%) translateY(0)';
     });
 
-    setTimeout(() => {
+    toastTimer = setTimeout(function() {
       toast.style.opacity = '0';
       toast.style.transform = 'translateX(-50%) translateY(20px)';
-      setTimeout(() => toast.remove(), 400);
+      setTimeout(function() { if (toast.parentNode) toast.remove(); }, 400);
+      toastTimer = null;
     }, 3000);
   }
 
-  const api = { init, removeItem, updateItemQty };
+  function destroy() {
+    items = [];
+    discount = 0;
+    selectedColor = 'Classic Red';
+    quantity = 1;
+    cartPanel = null;
+    cartOverlay = null;
+    cartItems = null;
+    cartCount = null;
+    cartSubtotal = null;
+    cartDiscount = null;
+    cartTotal = null;
+    discountRow = null;
+    checkoutPanel = null;
+    checkoutOverlay = null;
+    checkoutQty = null;
+    checkoutPrice = null;
+    checkoutSubtotal = null;
+    checkoutDiscount = null;
+    checkoutTax = null;
+    checkoutTotal = null;
+    confirmationModal = null;
+    confirmationOverlay = null;
+    ownerNumber = null;
+    certOwner = null;
+    certNumber = null;
+    certDate = null;
+    if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
+  }
+
+  const api = { init, destroy, removeItem, updateItemQty };
   window.CART = api;
   return api;
 })();

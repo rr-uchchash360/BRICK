@@ -9,6 +9,8 @@ const THREE_BRICK = (() => {
   let isAutoRotate = true;
   let animationId = null;
   let isVisible = true;
+  let isTabVisible = true;
+  let isOnScreen = true;
   let resizeObserver = null;
 
   function init(containerId) {
@@ -23,6 +25,9 @@ const THREE_BRICK = (() => {
     const height = container.clientHeight;
     if (width === 0 || height === 0) return;
 
+    const tier = window.DEVICE_TIER || 'high';
+    const maxDpr = tier === 'low' ? 1 : tier === 'mid' ? 1.5 : 2;
+
     scene = new THREE.Scene();
 
     camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
@@ -30,21 +35,23 @@ const THREE_BRICK = (() => {
 
     renderer = new THREE.WebGLRenderer({
       alpha: true,
-      antialias: true,
+      antialias: tier !== 'low',
       powerPreference: "high-performance",
     });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxDpr));
+    renderer.shadowMap.enabled = tier !== 'low';
+    if (tier !== 'low') {
+      renderer.shadowMap.type = tier === 'mid' ? THREE.PCFShadowMap : THREE.PCFSoftShadowMap;
+    }
+    renderer.toneMapping = tier === 'low' ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.0;
     container.appendChild(renderer.domElement);
 
-    setupLights();
-    createBrick();
-    createFloor();
-    createParticles();
+    setupLights(tier);
+    createBrick(tier);
+    if (tier !== 'low') createFloor();
+    if (tier !== 'low') createParticles(tier);
 
     container.addEventListener('mousemove', onMouseMove);
     container.addEventListener('touchmove', onTouchMove, { passive: true });
@@ -54,70 +61,87 @@ const THREE_BRICK = (() => {
 
     document.addEventListener('visibilitychange', onVisibilityChange);
 
+    var scrollObserver = new IntersectionObserver(function(entries) {
+      isOnScreen = entries[0].isIntersecting;
+      updateVisibility();
+    }, { threshold: 0 });
+    scrollObserver.observe(container);
+
     animate();
   }
 
-  function setupLights() {
+  function setupLights(tier) {
     const ambient = new THREE.AmbientLight(0x404060, 0.3);
     scene.add(ambient);
 
     const keyLight = new THREE.DirectionalLight(0xffeedd, 2.5);
     keyLight.position.set(3, 4, 5);
-    keyLight.castShadow = true;
-    keyLight.shadow.mapSize.width = 1024;
-    keyLight.shadow.mapSize.height = 1024;
+    if (tier !== 'low') {
+      keyLight.castShadow = true;
+      keyLight.shadow.mapSize.width = tier === 'mid' ? 512 : 1024;
+      keyLight.shadow.mapSize.height = tier === 'mid' ? 512 : 1024;
+    }
     scene.add(keyLight);
 
-    const fillLight = new THREE.DirectionalLight(0x4466ff, 0.4);
+    const fillLight = new THREE.DirectionalLight(0x4466ff, tier === 'low' ? 0.6 : 0.4);
     fillLight.position.set(-3, 1, -4);
     scene.add(fillLight);
 
-    const rimLight = new THREE.DirectionalLight(0xff8866, 0.6);
-    rimLight.position.set(-2, 3, -3);
-    scene.add(rimLight);
+    const rimLight = tier !== 'low' ? new THREE.DirectionalLight(0xff8866, 0.6) : null;
+    if (rimLight) {
+      rimLight.position.set(-2, 3, -3);
+      scene.add(rimLight);
+    }
 
-    const accentLight = new THREE.PointLight(0xff4400, 0.4, 6);
-    accentLight.position.set(0, 1.5, 2);
-    scene.add(accentLight);
+    const accentLight = tier !== 'low' ? new THREE.PointLight(0xff4400, 0.4, 6) : null;
+    if (accentLight) {
+      accentLight.position.set(0, 1.5, 2);
+      scene.add(accentLight);
+    }
   }
 
-  function createBrick() {
+  function createBrick(tier) {
     brickGroup = new THREE.Group();
 
-    const geo = new THREE.BoxGeometry(1.6, 0.8, 0.8, 24, 24, 24);
-    const pos = geo.attributes.position;
-    for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
-      const noise = (Math.random() - 0.5) * 0.018;
-      pos.setXYZ(i, x + noise * 0.3, y + noise * 1.5, z + noise);
+    const segments = tier === 'low' ? 6 : tier === 'mid' ? 12 : 24;
+    const geo = new THREE.BoxGeometry(1.6, 0.8, 0.8, segments, segments, segments);
+    if (tier !== 'low') {
+      const pos = geo.attributes.position;
+      for (let i = 0; i < pos.count; i++) {
+        const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+        const noise = (Math.random() - 0.5) * 0.018;
+        pos.setXYZ(i, x + noise * 0.3, y + noise * 1.5, z + noise);
+      }
+      geo.computeVertexNormals();
     }
-    geo.computeVertexNormals();
 
     const mat = new THREE.MeshPhysicalMaterial({
       color: 0x8B4513,
       roughness: 0.82,
       metalness: 0.01,
-      clearcoat: 0.08,
+      clearcoat: tier === 'low' ? 0 : 0.08,
       clearcoatRoughness: 0.7,
-      reflectivity: 0.15,
-      envMapIntensity: 0.4,
+      reflectivity: tier === 'low' ? 0 : 0.15,
+      envMapIntensity: tier === 'low' ? 0 : 0.4,
     });
 
     const brick = new THREE.Mesh(geo, mat);
-    brick.castShadow = true;
-    brick.receiveShadow = true;
+    brick.castShadow = tier !== 'low';
+    brick.receiveShadow = tier !== 'low';
     brick.position.y = -0.2;
     brickGroup.add(brick);
 
-    const edgeGeo = new THREE.EdgesGeometry(
-      new THREE.BoxGeometry(1.6, 0.8, 0.8)
-    );
-    const edgeMat = new THREE.LineBasicMaterial({
-      color: 0x5D3A1A, transparent: true, opacity: 0.2,
-    });
-    const edges = new THREE.LineSegments(edgeGeo, edgeMat);
-    edges.position.y = -0.2;
-    brickGroup.add(edges);
+    if (tier !== 'low') {
+      const edgeGeo = new THREE.EdgesGeometry(
+        new THREE.BoxGeometry(1.6, 0.8, 0.8)
+      );
+      const edgeMat = new THREE.LineBasicMaterial({
+        color: 0x5D3A1A, transparent: true, opacity: 0.2,
+      });
+      const edges = new THREE.LineSegments(edgeGeo, edgeMat);
+      edges.position.y = -0.2;
+      brickGroup.add(edges);
+    }
 
     scene.add(brickGroup);
   }
@@ -132,8 +156,8 @@ const THREE_BRICK = (() => {
     scene.add(floor);
   }
 
-  function createParticles() {
-    const count = 150;
+  function createParticles(tier) {
+    const count = tier === 'mid' ? 60 : 150;
     const positions = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
       positions[i * 3] = (Math.random() - 0.5) * 12;
@@ -172,11 +196,21 @@ const THREE_BRICK = (() => {
   }
 
   function onVisibilityChange() {
-    isVisible = !document.hidden;
-    if (isVisible && animationId === null) animate();
-    if (!isVisible && animationId !== null) {
-      cancelAnimationFrame(animationId);
-      animationId = null;
+    isTabVisible = !document.hidden;
+    updateVisibility();
+  }
+
+  function updateVisibility() {
+    var shouldRender = isTabVisible && isOnScreen;
+    if (shouldRender && !isVisible) {
+      isVisible = true;
+      if (animationId === null) animate();
+    } else if (!shouldRender && isVisible) {
+      isVisible = false;
+      if (animationId !== null) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
     }
   }
 
