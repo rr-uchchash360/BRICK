@@ -8,9 +8,13 @@ const CART = (() => {
   let selectedColor = 'Classic Red';
   let quantity = 1;
 
-  const BASE_PRICE = 2499;
-  const FINAL_PRICE = 1999;
-  const TAX_RATE = 0.08;
+  const BASE_PRICE = 300000;
+  const FINAL_PRICE = 240000;
+  const TAX_RATE = 0.05;
+
+  function fmtBDT(n) {
+    return '৳' + Number(n).toLocaleString('en-IN');
+  }
 
   let cartPanel, cartOverlay, cartItems, cartCount;
   let cartSubtotal, cartDiscount, cartTotal, discountRow;
@@ -47,6 +51,7 @@ const CART = (() => {
 
     loadDiscount();
     updateCartUI();
+    switchPayment('bkash');
 
     document.getElementById('cartToggle').addEventListener('click', toggleCart);
     document.getElementById('cartClose').addEventListener('click', toggleCart);
@@ -78,11 +83,12 @@ const CART = (() => {
       });
     });
 
-    document.querySelectorAll('.payment-method').forEach(m => {
-      m.addEventListener('click', () => {
-        document.querySelectorAll('.payment-method').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.payment-method').forEach(function(m) {
+      m.addEventListener('click', function() {
+        document.querySelectorAll('.payment-method').forEach(function(p) { p.classList.remove('active'); });
         m.classList.add('active');
         m.querySelector('input').checked = true;
+        switchPayment(m.dataset.pm);
       });
     });
 
@@ -115,8 +121,8 @@ const CART = (() => {
 
   function updatePricing() {
     const discountedPrice = FINAL_PRICE - (FINAL_PRICE * discount / 100);
-    document.getElementById('productPrice').textContent = '$' + discountedPrice.toLocaleString();
-    document.getElementById('productOriginalPrice').textContent = discount > 0 ? '$' + FINAL_PRICE.toLocaleString() : '';
+    document.getElementById('productPrice').textContent = fmtBDT(discountedPrice);
+    document.getElementById('productOriginalPrice').textContent = discount > 0 ? fmtBDT(BASE_PRICE) : '';
     document.getElementById('productOriginalPrice').style.display = discount > 0 ? '' : 'none';
     document.getElementById('productDiscountBadge').textContent = discount > 0 ? '-' + discount + '%' : '';
     document.getElementById('productDiscountBadge').style.display = discount > 0 ? '' : 'none';
@@ -180,9 +186,9 @@ const CART = (() => {
           <a href="#product" class="btn btn-primary cart-empty-cta" data-smooth>Browse the Brick <i class="fa-solid fa-arrow-right"></i></a>
         </div>
       `;
-      cartSubtotal.textContent = '$0';
-      cartDiscount.textContent = '-$0';
-      cartTotal.textContent = '$0';
+      cartSubtotal.textContent = fmtBDT(0);
+      cartDiscount.textContent = '-' + fmtBDT(0);
+      cartTotal.textContent = fmtBDT(0);
       discountRow.style.display = 'none';
       return;
     }
@@ -208,7 +214,7 @@ const CART = (() => {
                 <span>${item.qty}</span>
                 <button data-cart-inc="${item.id}" aria-label="Increase quantity"><i class="fa-solid fa-plus"></i></button>
               </div>
-              <span class="cart-item-price">$${itemTotal.toLocaleString()}</span>
+              <span class="cart-item-price">${fmtBDT(itemTotal)}</span>
             </div>
             <button class="cart-item-remove" data-cart-remove="${item.id}">Remove</button>
           </div>
@@ -231,9 +237,9 @@ const CART = (() => {
     const discountAmount = Math.round(subtotal * discount / 100);
     const total = subtotal - discountAmount;
 
-    cartSubtotal.textContent = '$' + subtotal.toLocaleString();
-    cartDiscount.textContent = '-$' + discountAmount.toLocaleString();
-    cartTotal.textContent = '$' + total.toLocaleString();
+    cartSubtotal.textContent = fmtBDT(subtotal);
+    cartDiscount.textContent = '-' + fmtBDT(discountAmount);
+    cartTotal.textContent = fmtBDT(total);
   }
 
   function escapeHtml(str) {
@@ -264,11 +270,11 @@ const CART = (() => {
     const totalQty = items.reduce((sum, i) => sum + i.qty, 0);
 
     checkoutQty.textContent = totalQty;
-    checkoutPrice.textContent = '$' + subtotal.toLocaleString();
-    checkoutSubtotal.textContent = '$' + subtotal.toLocaleString();
-    checkoutDiscount.textContent = '-$' + discountAmount.toLocaleString();
-    checkoutTax.textContent = '$' + tax.toLocaleString();
-    checkoutTotal.textContent = '$' + total.toLocaleString();
+    checkoutPrice.textContent = fmtBDT(subtotal);
+    checkoutSubtotal.textContent = fmtBDT(subtotal);
+    checkoutDiscount.textContent = '-' + fmtBDT(discountAmount);
+    checkoutTax.textContent = fmtBDT(tax);
+    checkoutTotal.textContent = fmtBDT(total);
 
     checkoutPanel.classList.add('show');
     checkoutOverlay.classList.add('show');
@@ -315,18 +321,36 @@ const CART = (() => {
     return { el: el, val: el ? el.value.trim() : '' };
   }
 
+  function switchPayment(pm) {
+    document.getElementById('paymentBkash').style.display = pm === 'bkash' ? '' : 'none';
+    document.getElementById('paymentNagad').style.display = pm === 'nagad' ? '' : 'none';
+    document.getElementById('paymentCard').style.display = pm === 'card' ? '' : 'none';
+    clearAllErrors();
+  }
+
   function validateForm() {
     clearAllErrors();
 
-    var card = getVal('checkoutCard');
-    var expiry = getVal('checkoutExpiry');
-    var cvc = getVal('checkoutCVC');
-
     var errors = [];
     var selectedPayment = document.querySelector('.payment-method.active input');
-    var isCard = selectedPayment && selectedPayment.value === 'card';
+    var pm = selectedPayment ? selectedPayment.value : 'bkash';
 
-    if (isCard) {
+    if (pm === 'bkash' || pm === 'nagad') {
+      var tx = getVal('checkoutTxID');
+      if (!tx.val) {
+        showFieldError(tx.el, 'Transaction ID is required');
+        errors.push(tx.el);
+      } else if (tx.val.length < 5) {
+        showFieldError(tx.el, 'Enter a valid transaction ID');
+        if (!errors.length) errors.push(tx.el);
+      }
+    }
+
+    if (pm === 'card') {
+      var card = getVal('checkoutCard');
+      var expiry = getVal('checkoutExpiry');
+      var cvc = getVal('checkoutCVC');
+
       var cardDigits = card.val.replace(/\s/g, '');
       if (!cardDigits) {
         showFieldError(card.el, 'Card number is required');
@@ -382,7 +406,6 @@ const CART = (() => {
     var name = getVal('checkoutName');
     var email = getVal('checkoutEmail');
     var phone = getVal('checkoutPhone');
-    var country = getVal('checkoutCountry');
     var city = getVal('checkoutCity');
     var address = getVal('checkoutAddress');
 
@@ -390,10 +413,11 @@ const CART = (() => {
       name: name.val,
       email: email.val,
       phone: phone.val,
-      country: country.val,
+      country: 'BD',
       city: city.val,
       address: address.val,
-      payment: selectedPayment ? selectedPayment.value : 'card',
+      payment: pm,
+      txID: pm === 'bkash' || pm === 'nagad' ? getVal('checkoutTxID').val : '',
     };
   }
 
@@ -433,7 +457,7 @@ const CART = (() => {
     }, 600);
 
     document.querySelectorAll('.checkout-form .form-input').forEach(function(el) {
-      if (el.tagName !== 'SELECT') el.value = '';
+      if (el.tagName !== 'SELECT' && el.id !== 'checkoutCountry') el.value = '';
     });
     document.querySelectorAll('.field-error').forEach(function(e) { e.remove(); });
   }
@@ -468,7 +492,7 @@ const CART = (() => {
   function resetCheckoutSteps() {
     goToStep(1);
     document.querySelectorAll('.checkout-form .form-input').forEach(function(el) {
-      if (el.tagName !== 'SELECT') el.value = '';
+      if (el.tagName !== 'SELECT' && el.id !== 'checkoutCountry') el.value = '';
       el.style.borderColor = '';
     });
   }
@@ -492,18 +516,16 @@ const CART = (() => {
       if (!email.val) { showFieldError(email.el, 'Email address is required'); if (!errors.length) errors.push(email.el); }
       else if (!emailRegex.test(email.val)) { showFieldError(email.el, 'Enter a valid email address (e.g. name@domain.com)'); if (!errors.length) errors.push(email.el); }
 
-      if (phone.val && !/^[\d\s\-\+\(\)]{7,20}$/.test(phone.val)) {
-        showFieldError(phone.el, 'Enter a valid phone number'); if (!errors.length) errors.push(phone.el);
+      if (phone.val && !/^(?:\+8801[3-9]\d{8}|01[3-9]\d{8})$/.test(phone.val.replace(/[\s\-]/g, ''))) {
+        showFieldError(phone.el, 'Enter a valid Bangladeshi number (e.g. 01XXX-XXXXXX)'); if (!errors.length) errors.push(phone.el);
       }
     }
 
     if (step === 2) {
-      var country = getVal('checkoutCountry');
       var city = getVal('checkoutCity');
       var address = getVal('checkoutAddress');
 
-      if (!country.val) { showFieldError(country.el, 'Please select your country'); errors.push(country.el); }
-      if (!city.val) { showFieldError(city.el, 'City is required'); if (!errors.length) errors.push(city.el); }
+      if (!city.val) { showFieldError(city.el, 'City is required'); errors.push(city.el); }
       else if (city.val.length < 2) { showFieldError(city.el, 'City must be at least 2 characters'); if (!errors.length) errors.push(city.el); }
       if (!address.val) { showFieldError(address.el, 'Street address is required'); if (!errors.length) errors.push(address.el); }
       else if (address.val.length < 5) { showFieldError(address.el, 'Please enter a full street address'); if (!errors.length) errors.push(address.el); }

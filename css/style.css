@@ -3115,6 +3115,62 @@ input::placeholder {
   border-color: var(--border-hover);
 }
 
+.pm-logo {
+  width: 72px;
+  height: 20px;
+  display: block;
+}
+
+.pm-icon {
+  font-size: 18px;
+  color: var(--text-secondary);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.payment-detail {
+  animation: fadeIn 0.25s ease-out;
+}
+
+.merchant-info {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+
+.merchant-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 13px;
+}
+
+.merchant-label {
+  color: var(--text-muted);
+}
+
+.merchant-value {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.5px;
+}
+
+.form-static {
+  display: flex;
+  align-items: center;
+  color: var(--text-primary);
+  font-weight: 500;
+  cursor: default;
+  opacity: 0.8;
+}
+
 .checkout-summary {
   padding: 32px;
   background: var(--bg-primary);

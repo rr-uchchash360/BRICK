@@ -885,8 +885,8 @@
         <p class="product-tagline">One brick. Infinite meaning.</p>
 
         <div class="product-pricing">
-          <span class="product-price" id="productPrice">$1,999</span>
-          <span class="product-original-price" id="productOriginalPrice">$2,499</span>
+          <span class="product-price" id="productPrice">৳2,40,000</span>
+          <span class="product-original-price" id="productOriginalPrice">৳3,00,000</span>
           <span class="product-discount-badge" id="productDiscountBadge"></span>
         </div>
 
@@ -948,7 +948,7 @@
         <div class="product-meta">
           <div class="meta-item">
             <i class="fa-solid fa-truck"></i>
-            <span>Complimentary delivery</span>
+            <span>Free delivery</span>
           </div>
           <div class="meta-item">
             <i class="fa-solid fa-lock"></i>
@@ -988,20 +988,20 @@
       <div class="cart-summary">
         <div class="summary-row">
           <span>Subtotal</span>
-          <span id="cartSubtotal">$0</span>
+          <span id="cartSubtotal">৳0</span>
         </div>
         <div class="summary-row discount-row" id="discountRow" style="display:none">
           <span>Game Reward Discount</span>
-          <span id="cartDiscount">-$0</span>
+          <span id="cartDiscount">-৳0</span>
         </div>
         <div class="summary-row">
           <span>Shipping</span>
-          <span id="cartShipping">Complimentary</span>
+          <span id="cartShipping">Free</span>
         </div>
         <div class="summary-divider"></div>
         <div class="summary-row total">
           <span>Total</span>
-          <span id="cartTotal">$0</span>
+          <span id="cartTotal">৳0</span>
         </div>
       </div>
       <button class="btn btn-primary cart-checkout" id="checkoutBtn">
@@ -1055,7 +1055,7 @@
           </div>
           <div class="form-group">
             <label for="checkoutPhone">Phone <span class="text-muted">(optional)</span></label>
-            <input type="tel" id="checkoutPhone" class="form-input" placeholder="+1 (555) 000-0000" autocomplete="tel">
+            <input type="tel" id="checkoutPhone" class="form-input" placeholder="01XXX-XXXXXX" autocomplete="tel">
           </div>
           <button type="button" class="btn btn-primary step-btn" data-step-next="1">Continue <i class="fa-solid fa-arrow-right"></i></button>
         </div>
@@ -1064,25 +1064,18 @@
           <h4 class="form-section-title">Shipping Address</h4>
           <div class="form-row">
             <div class="form-group">
-              <label for="checkoutCountry">Country</label>
-              <select id="checkoutCountry" class="form-input">
-                <option value="">Select country</option>
-                <option value="US">United States</option>
-                <option value="UK">United Kingdom</option>
-                <option value="DE">Germany</option>
-                <option value="FR">France</option>
-                <option value="JP">Japan</option>
-                <option value="AE">UAE</option>
-              </select>
+              <label>Country</label>
+              <div class="form-input form-static">Bangladesh</div>
+              <input type="hidden" id="checkoutCountry" value="BD">
             </div>
             <div class="form-group">
               <label for="checkoutCity">City</label>
-              <input type="text" id="checkoutCity" class="form-input" placeholder="City">
+              <input type="text" id="checkoutCity" class="form-input" placeholder="e.g. Dhaka">
             </div>
           </div>
           <div class="form-group">
             <label for="checkoutAddress">Address</label>
-            <input type="text" id="checkoutAddress" class="form-input" placeholder="Street address">
+            <input type="text" id="checkoutAddress" class="form-input" placeholder="House, Road, Area">
           </div>
           <div class="step-nav">
             <button type="button" class="btn btn-outline step-btn" data-step-prev="2"><i class="fa-solid fa-arrow-left"></i> Back</button>
@@ -1093,34 +1086,69 @@
         <div class="form-section" data-step-section="3" style="display:none">
           <h4 class="form-section-title">Payment</h4>
           <div class="payment-methods">
-            <label class="payment-method active">
-              <input type="radio" name="payment" value="card" checked>
-              <i class="fa-regular fa-credit-card"></i>
+            <label class="payment-method active" data-pm="bkash">
+              <input type="radio" name="payment" value="bkash" checked>
+              <svg class="pm-logo" viewBox="0 0 100 28" fill="none"><rect width="100" height="28" rx="4" fill="#E2136E"/><text x="50" y="19" text-anchor="middle" fill="white" font-size="14" font-weight="700" font-family="Arial,sans-serif">bKash</text></svg>
+            </label>
+            <label class="payment-method" data-pm="nagad">
+              <input type="radio" name="payment" value="nagad">
+              <svg class="pm-logo" viewBox="0 0 100 28" fill="none"><rect width="100" height="28" rx="4" fill="#ED1C24"/><text x="50" y="19" text-anchor="middle" fill="white" font-size="14" font-weight="700" font-family="Arial,sans-serif">Nagad</text></svg>
+            </label>
+            <label class="payment-method" data-pm="card">
+              <input type="radio" name="payment" value="card">
+              <i class="fa-regular fa-credit-card pm-icon"></i>
               <span>Card</span>
             </label>
-            <label class="payment-method">
-              <input type="radio" name="payment" value="paypal">
-              <i class="fa-brands fa-paypal"></i>
-              <span>PayPal</span>
-            </label>
-            <label class="payment-method">
-              <input type="radio" name="payment" value="crypto">
-              <i class="fa-brands fa-bitcoin"></i>
-              <span>Crypto</span>
-            </label>
           </div>
-          <div class="form-group">
-            <label for="checkoutCard">Card Number</label>
-            <input type="text" id="checkoutCard" class="form-input" placeholder="0000 0000 0000 0000" inputmode="numeric">
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="checkoutExpiry">Expiry</label>
-              <input type="text" id="checkoutExpiry" class="form-input" placeholder="MM/YY">
+
+          <div id="paymentBkash" class="payment-detail">
+            <div class="merchant-info">
+              <div class="merchant-row">
+                <span class="merchant-label">Merchant</span>
+                <span class="merchant-value">BRICK</span>
+              </div>
+              <div class="merchant-row">
+                <span class="merchant-label">Send money to</span>
+                <span class="merchant-value">01700-000000</span>
+              </div>
             </div>
             <div class="form-group">
-              <label for="checkoutCVC">CVC</label>
-              <input type="text" id="checkoutCVC" class="form-input" placeholder="000" inputmode="numeric">
+              <label for="checkoutTxID">Transaction ID (TNX ID)</label>
+              <input type="text" id="checkoutTxID" class="form-input" placeholder="e.g. A7B8C9D0E1" inputmode="text">
+            </div>
+          </div>
+
+          <div id="paymentNagad" class="payment-detail" style="display:none">
+            <div class="merchant-info">
+              <div class="merchant-row">
+                <span class="merchant-label">Merchant</span>
+                <span class="merchant-value">BRICK</span>
+              </div>
+              <div class="merchant-row">
+                <span class="merchant-label">Send money to</span>
+                <span class="merchant-value">01700-000001</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="checkoutTxID">Transaction ID (TNX ID)</label>
+              <input type="text" id="checkoutTxID" class="form-input" placeholder="e.g. A7B8C9D0E1" inputmode="text">
+            </div>
+          </div>
+
+          <div id="paymentCard" class="payment-detail" style="display:none">
+            <div class="form-group">
+              <label for="checkoutCard">Card Number</label>
+              <input type="text" id="checkoutCard" class="form-input" placeholder="0000 0000 0000 0000" inputmode="numeric">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="checkoutExpiry">Expiry</label>
+                <input type="text" id="checkoutExpiry" class="form-input" placeholder="MM/YY">
+              </div>
+              <div class="form-group">
+                <label for="checkoutCVC">CVC</label>
+                <input type="text" id="checkoutCVC" class="form-input" placeholder="000" inputmode="numeric">
+              </div>
             </div>
           </div>
           <div class="step-nav">
@@ -1140,29 +1168,29 @@
             <span class="checkout-item-name">The Original Brick</span>
             <span class="checkout-item-qty">Qty: <span id="checkoutQty">1</span></span>
           </div>
-          <span class="checkout-item-price" id="checkoutPrice">$1,999</span>
+          <span class="checkout-item-price" id="checkoutPrice">৳2,40,000</span>
         </div>
         <div class="checkout-summary-details">
           <div class="summary-row">
             <span>Subtotal</span>
-            <span id="checkoutSubtotal">$0</span>
+            <span id="checkoutSubtotal">৳0</span>
           </div>
           <div class="summary-row">
             <span>Discount</span>
-            <span id="checkoutDiscount">-$0</span>
+            <span id="checkoutDiscount">-৳0</span>
           </div>
           <div class="summary-row">
-            <span>Shipping</span>
-            <span>Complimentary</span>
+            <span>Delivery</span>
+            <span>Free across Bangladesh</span>
           </div>
           <div class="summary-row">
-            <span>Tax</span>
-            <span id="checkoutTax">$0</span>
+            <span>VAT</span>
+            <span id="checkoutTax">৳0</span>
           </div>
         </div>
         <div class="checkout-total">
           <span>Total</span>
-          <span id="checkoutTotal">$0</span>
+          <span id="checkoutTotal">৳0</span>
         </div>
 
         <p class="checkout-secure">
@@ -1196,7 +1224,7 @@
         </div>
         <h3 class="confirmation-title">Welcome to the <span class="accent">100.</span></h3>
         <p class="confirmation-text">
-          You are now owner #<span id="ownerNumber">001</span> of 100. The brick will arrive within 14 business days. Some things are worth waiting for.
+          You are now owner #<span id="ownerNumber">001</span> of 100. Your brick will arrive within 3–7 business days across Bangladesh. Some things are worth waiting for.
         </p>
 
           <div class="confirmation-order-details">
@@ -1206,11 +1234,11 @@
             </div>
             <div class="confirmation-order-row">
               <span>Total</span>
-              <span id="confOrderTotal">$1,999</span>
+              <span id="confOrderTotal">৳2,40,000</span>
             </div>
             <div class="confirmation-order-row">
               <span>Delivery</span>
-              <span>14 business days</span>
+              <span>3–7 business days</span>
             </div>
           </div>
 

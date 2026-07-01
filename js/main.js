@@ -885,27 +885,27 @@ document.addEventListener('DOMContentLoaded', () => {
   var footerContent = {
     contact: {
       title: 'Contact BRICK',
-      body: '<h5>Get in Touch</h5><p>We\'d love to hear from you. Whether you have a question about the brick, your order, or just want to say hello.</p><ul><li>Email: <strong>hello@brick.com</strong></li><li>Phone: <strong>+1 (555) 000-BRICK</strong></li><li>Address: <strong>100 Brick Lane, New York, NY 10001</strong></li></ul><p>Our team typically responds within 24 hours.</p>'
+      body: '<h5>Get in Touch</h5><p>We\'d love to hear from you. Whether you have a question about the brick, your order, or just want to say hello.</p><ul><li>Email: <strong>hello@brick.com.bd</strong></li><li>Phone: <strong>+880 1700-000000</strong></li><li>Address: <strong>House 42, Road 11, Gulshan 2, Dhaka 1212, Bangladesh</strong></li></ul><p>Our team typically responds within 24 hours.</p>'
     },
     faq: {
       title: 'Frequently Asked Questions',
-      body: '<h5>What is The Original Brick?</h5><p>A limited edition luxury object. A brick. One hundred exist. Each one authenticated.</p><h5>How long does shipping take?</h5><p>All orders ship within 3 business days. Domestic delivery takes 5–7 business days. International orders arrive within 14 business days.</p><h5>Can I return my brick?</h5><p>Yes. If the brick does not speak to you within 30 days, return it for a full refund. No questions asked.</p><h5>Can I change my order?</h5><p>Contact us within 24 hours of placing your order and we\'ll adjust it. After that, it enters production.</p>'
+      body: '<h5>What is The Original Brick?</h5><p>A limited edition luxury object. A brick. One hundred exist. Each one authenticated.</p><h5>How long does shipping take?</h5><p>All orders ship within 2 business days. Delivery across Bangladesh takes 3–7 business days via Sundarban Courier or Pathao.</p><h5>Can I return my brick?</h5><p>Yes. If the brick does not speak to you within 30 days, return it for a full refund. No questions asked.</p><h5>Can I change my order?</h5><p>Contact us within 24 hours of placing your order and we\'ll adjust it. After that, it enters production.</p>'
     },
     shipping: {
       title: 'Shipping Policy',
-      body: '<h5>Shipping & Handling</h5><p>Complimentary shipping on all orders worldwide. No hidden fees, no surcharges.</p><ul><li><strong>Domestic (US):</strong> 5–7 business days</li><li><strong>International:</strong> 10–14 business days</li><li><strong>Express:</strong> Available at checkout for an additional fee</li></ul><p>All shipments are insured and require a signature upon delivery. Tracking information is emailed once your order ships.</p>'
+      body: '<h5>Shipping & Handling</h5><p>Complimentary shipping across Bangladesh. No hidden fees, no surcharges.</p><ul><li><strong>Dhaka City:</strong> 2–3 business days</li><li><strong>Divisional Cities:</strong> 3–5 business days</li><li><strong>Other Districts:</strong> 5–7 business days</li><li><strong>Express Delivery:</strong> Available via Pathao Express (additional fee)</li></ul><p>All shipments are insured and require a signature upon delivery. Tracking information is shared via SMS once your order ships.</p>'
     },
     returns: {
       title: 'Returns & Exchanges',
-      body: '<h5>30-Day Satisfaction Guarantee</h5><p>If The Original Brick does not meet your expectations, return it within 30 days of delivery for a full refund.</p><ul><li>Items must be unused and in original packaging</li><li>Refunds are processed within 5 business days of receipt</li><li>Shipping costs are non-refundable on returns</li></ul><p>To initiate a return, email <strong>returns@brick.com</strong> with your order number.</p>'
+      body: '<h5>30-Day Satisfaction Guarantee</h5><p>If The Original Brick does not meet your expectations, return it within 30 days of delivery for a full refund.</p><ul><li>Items must be unused and in original packaging</li><li>Refunds are processed within 5 business days of receipt</li><li>Shipping costs are non-refundable on returns</li></ul><p>To initiate a return, email <strong>returns@brick.com.bd</strong> with your order number.</p>'
     },
     privacy: {
       title: 'Privacy Policy',
-      body: '<h5>Your Privacy Matters</h5><p>BRICK collects only the information necessary to process your order and improve your experience.</p><ul><li>We do not sell your personal data</li><li>We do not share your information with third parties for marketing</li><li>Payment data is processed securely by our payment partners</li><li>You may request deletion of your data at any time</li></ul><p>Contact <strong>privacy@brick.com</strong> for any privacy-related inquiries.</p>'
+      body: '<h5>Your Privacy Matters</h5><p>BRICK collects only the information necessary to process your order and improve your experience.</p><ul><li>We do not sell your personal data</li><li>We do not share your information with third parties for marketing</li><li>Payment data is processed securely by our payment partners</li><li>You may request deletion of your data at any time</li></ul><p>Contact <strong>privacy@brick.com.bd</strong> for any privacy-related inquiries.</p>'
     },
     terms: {
       title: 'Terms of Service',
-      body: '<h5>Terms & Conditions</h5><p>By purchasing The Original Brick, you agree to the following terms:</p><ul><li>All sales are subject to availability</li><li>Ownership of the physical brick does not transfer intellectual property rights</li><li>BRICK reserves the right to cancel orders in case of technical errors</li><li>Prices are subject to change without notice</li></ul><p>These terms are governed by the laws of the State of New York.</p>'
+      body: '<h5>Terms & Conditions</h5><p>By purchasing The Original Brick, you agree to the following terms:</p><ul><li>All sales are subject to availability</li><li>Ownership of the physical brick does not transfer intellectual property rights</li><li>BRICK reserves the right to cancel orders in case of technical errors</li><li>Prices are in Bangladeshi Taka (BDT) and include applicable VAT</li></ul><p>These terms are governed by the laws of the People\'s Republic of Bangladesh.</p>'
     },
     cookies: {
       title: 'Cookie Policy',
