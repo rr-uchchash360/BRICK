@@ -20,12 +20,17 @@
   --accent-red: #B83A1A;
   --accent-red-light: #D44A2A;
   --accent-red-dark: #8B2A10;
+  --accent-red-bright: #E85A3A;
   --brick-ancient: #B83A1A;
   --brick-ancient-dark: #8B2A10;
   --brick-warm: #C84A2A;
   --accent-gold: #D4A843;
   --accent-gold-light: #E8C870;
   --accent-gold-dark: #A87820;
+
+  --accent-primary: var(--accent-red);
+
+  --blur-sm: 4px;
 
   --border-color: rgba(255, 255, 255, 0.06);
   --border-hover: rgba(255, 255, 255, 0.15);
@@ -81,6 +86,9 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
   overflow-x: hidden;
+}
+
+body:not(.device-low) {
   cursor: none;
 }
 
@@ -818,18 +826,6 @@ input::placeholder {
   50% { box-shadow: 0 0 40px var(--accent-gold), 0 0 100px rgba(212, 168, 67, 0.5); }
 }
 
-.ch1-brick-emerge {
-  opacity: 0;
-  transform: scale(0.3);
-}
-
-.emerge-brick {
-  width: 120px; height: 60px;
-  background: linear-gradient(135deg, var(--brick-ancient-dark), var(--brick-ancient));
-  border-radius: 6px;
-  box-shadow: 0 0 60px rgba(184, 58, 26, 0.3), 0 0 120px rgba(184, 58, 26, 0.1);
-}
-
 /* ---------- CHAPTER 2: Born from the Earth ---------- */
 .chapter-2-content {
   display: flex;
@@ -875,27 +871,6 @@ input::placeholder {
 .ch2-line:nth-child(3) { color: #CD853F; }
 .ch2-line:nth-child(4) { color: var(--accent-gold); }
 
-.ch2-brick-visual {
-  position: relative;
-  width: 100px; height: 50px;
-}
-
-.ch2-brick-core {
-  width: 100%; height: 100%;
-  background: linear-gradient(135deg, var(--brick-ancient-dark), var(--brick-ancient));
-  border-radius: 4px;
-  opacity: 0;
-  transform: scale(0.5);
-}
-
-.ch2-brick-glow {
-  position: absolute;
-  inset: -20px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(212, 168, 67, 0.2), transparent 70%);
-  opacity: 0;
-}
-
 /* ---------- CHAPTER 3: Time ---------- */
 .chapter-3-content {
   display: flex;
@@ -936,28 +911,6 @@ input::placeholder {
 
 .ch3-year.active-year {
   color: var(--accent-gold);
-}
-
-.ch3-brick-constant {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  opacity: 0;
-}
-
-.ch3-brick-icon {
-  width: 80px; height: 40px;
-  background: linear-gradient(135deg, var(--brick-ancient-dark), var(--brick-ancient));
-  border-radius: 4px;
-  box-shadow: 0 0 30px rgba(184, 58, 26, 0.2);
-}
-
-.ch3-brick-label {
-  font-size: 10px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--text-muted);
 }
 
 .ch3-backdrop {
@@ -1169,22 +1122,6 @@ input::placeholder {
   gap: 24px;
   opacity: 0;
   transform: scale(0.8);
-}
-
-.ch5-glowing-brick {
-  width: 120px; height: 60px;
-  background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
-  border-radius: 6px;
-  box-shadow: 0 0 60px rgba(212, 168, 67, 0.5), 0 0 120px rgba(212, 168, 67, 0.2);
-  position: relative;
-}
-
-.ch5-brick-glow-inner {
-  position: absolute;
-  inset: -30px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(212, 168, 67, 0.3), transparent 70%);
-  animation: glowPulse 2s ease-in-out infinite;
 }
 
 .ch5-reveal-text {
@@ -1762,84 +1699,6 @@ input::placeholder {
 .build-count span {
   color: var(--accent-gold);
   font-weight: 500;
-}
-
-/* ---------- Panel 4: Legacy ---------- */
-.legacy-layout {
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.legacy-header {
-  margin-bottom: 50px;
-}
-
-.legacy-title {
-  font-family: var(--font-display);
-  font-size: clamp(28px, 3vw, 42px);
-  font-weight: 300;
-  margin-bottom: 12px;
-}
-
-.legacy-desc {
-  color: var(--text-secondary);
-  font-size: 14px;
-}
-
-.legacy-counters {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 30px;
-}
-
-.legacy-counter-item {
-  padding: 32px 20px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  transition: var(--transition-medium);
-}
-
-.legacy-counter-item:hover {
-  background: var(--bg-glass);
-  border-color: var(--border-hover);
-  transform: translateY(-2px);
-}
-
-.legacy-number {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 4vw, 56px);
-  font-weight: 300;
-  color: var(--text-primary);
-  line-height: 1;
-  display: inline;
-}
-
-.legacy-suffix {
-  font-family: var(--font-display);
-  font-size: clamp(24px, 2.5vw, 36px);
-  font-weight: 300;
-  color: var(--accent-gold);
-  margin-left: 4px;
-}
-
-.legacy-label {
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  display: block;
-  margin-top: 10px;
-}
-
-.legacy-footer {
-  margin-top: 50px;
-  padding-top: 30px;
-  border-top: 1px solid var(--border-color);
-  font-size: 13px;
-  color: var(--text-muted);
-  font-style: italic;
 }
 
 /* ----------------------------------------------
@@ -3351,7 +3210,7 @@ input::placeholder {
   margin-bottom: 24px;
 }
 
-.checkout-complete-btn {
+.checkout-complete-step-btn {
   width: 100%;
   justify-content: center;
   padding: 18px 32px;
@@ -3851,10 +3710,6 @@ input::placeholder {
     grid-template-columns: 1fr;
   }
 
-  .legacy-counters {
-    grid-template-columns: 1fr 1fr;
-  }
-
   .footer-content {
     grid-template-columns: 1fr;
     gap: 40px;
@@ -3969,21 +3824,9 @@ input::placeholder {
   }
 
   .features-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .build-grid {
     grid-template-columns: repeat(4, 1fr);
     max-width: 320px;
     margin: 0 auto;
-  }
-
-  .legacy-counters {
-    grid-template-columns: 1fr;
   }
 
   .testimonial-card {
@@ -4109,16 +3952,12 @@ input::placeholder {
   backdrop-filter: none !important;
 }
 
-.device-low .glass,
-.device-low .glass-light,
-.device-low .glass-dark,
 .device-low .navbar.scrolled,
 .device-low .cart-overlay,
 .device-low .checkout-overlay,
 .device-low .confirmation-overlay,
 .device-low .mobile-menu,
 .device-low .testimonial-card:hover,
-.device-low .product-3d-badge,
 .device-low .notification-toast {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
@@ -4213,7 +4052,6 @@ input::placeholder {
   .hero-canvas,
   .hero-lighting,
   .hero-particles,
-  .hero-particles-container,
   .hero-scroll-indicator,
   .back-to-top {
     display: none !important;

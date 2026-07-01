@@ -57,7 +57,7 @@
       '.device-low .hero-canvas { display: none !important; }' +
       '.device-low .hero-lighting { display: none !important; }' +
       '.device-low .hero-particles { display: none !important; }' +
-      '.device-low .hero-particles-container { display: none !important; }' +
+      '.device-low .hero-particles { display: none !important; }' +
       '.device-low .particle { display: none !important; }' +
       '.device-low .hero-scroll-indicator { display: none !important; }' +
       '.device-low .back-to-top { display: none !important; }' +

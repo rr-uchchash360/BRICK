@@ -62,7 +62,7 @@ function buildEnvMap(width) {
   ctx.fillStyle = key;
   ctx.fillRect(0, 0, width, height);
   var tex = new THREE.CanvasTexture(canvas);
-  tex.mapping = THREE.EquirectangularReflectionMapping;
+  tex.mapping = THREE.UniformReflectionMapping;
   return tex;
 }
 

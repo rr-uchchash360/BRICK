@@ -49,9 +49,11 @@ const BRICK_GAME = (() => {
     board.addEventListener('mousemove', onBoardMove);
     board.addEventListener('touchmove', onBoardTouch, { passive: false });
 
-    document.getElementById('gameStartBtn').addEventListener('click', startGame);
+    var startBtn = document.getElementById('gameStartBtn');
+    if (startBtn) startBtn.addEventListener('click', startGame);
 
-    document.getElementById('gameRetryBtn').addEventListener('click', () => {
+    var retryBtn = document.getElementById('gameRetryBtn');
+    if (retryBtn) retryBtn.addEventListener('click', () => {
       document.getElementById('gameResult').classList.remove('show');
       document.body.style.overflow = '';
       startGame();

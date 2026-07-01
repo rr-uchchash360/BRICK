@@ -52,17 +52,21 @@ const CART = (() => {
     updateCartUI();
     switchPayment('bkash');
 
-    document.getElementById('cartToggle').addEventListener('click', toggleCart);
+    var toggle = document.getElementById('cartToggle');
+    if (toggle) toggle.addEventListener('click', toggleCart);
     document.getElementById('cartClose').addEventListener('click', toggleCart);
     cartOverlay.addEventListener('click', toggleCart);
 
-    document.getElementById('checkoutBtn').addEventListener('click', openCheckout);
+    var checkout = document.getElementById('checkoutBtn');
+    if (checkout) checkout.addEventListener('click', openCheckout);
     document.getElementById('checkoutClose').addEventListener('click', closeCheckout);
     checkoutOverlay.addEventListener('click', closeCheckout);
 
-    document.getElementById('addToCartBtn').addEventListener('click', addToCart);
+    var addBtn = document.getElementById('addToCartBtn');
+    if (addBtn) addBtn.addEventListener('click', addToCart);
 
-    document.getElementById('wishlistBtn').addEventListener('click', toggleWishlist);
+    var wishBtn = document.getElementById('wishlistBtn');
+    if (wishBtn) wishBtn.addEventListener('click', toggleWishlist);
     loadWishlistState();
 
     document.getElementById('qtyIncrease').addEventListener('click', () => {
@@ -83,7 +87,8 @@ const CART = (() => {
       });
     });
 
-    document.getElementById('downloadCert').addEventListener('click', downloadCertificate);
+    var cert = document.getElementById('downloadCert');
+    if (cert) cert.addEventListener('click', downloadCertificate);
 
     setupCheckoutSteps();
 

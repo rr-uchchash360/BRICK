@@ -118,49 +118,53 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobileMenu = document.getElementById('mobileMenu');
 
   window.addEventListener('scroll', () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 50);
+    if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 50);
   }, { passive: true });
 
-  menuToggle.addEventListener('click', () => {
-    mobileMenu.classList.toggle('show');
-    const icon = menuToggle.querySelector('i');
-    icon.className = mobileMenu.classList.contains('show') ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
-  });
+  if (menuToggle) {
+    menuToggle.addEventListener('click', () => {
+      mobileMenu.classList.toggle('show');
+      const icon = menuToggle.querySelector('i');
+      icon.className = mobileMenu.classList.contains('show') ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+    });
+  }
 
   document.querySelectorAll('[data-nav]').forEach(link => {
     link.addEventListener('click', () => {
-      mobileMenu.classList.remove('show');
-      menuToggle.querySelector('i').className = 'fa-solid fa-bars';
+      if (mobileMenu) mobileMenu.classList.remove('show');
+      if (menuToggle) menuToggle.querySelector('i').className = 'fa-solid fa-bars';
     });
   });
 
-  document.querySelectorAll('[data-smooth]').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      // Close any open modals
-      const gameResult = document.getElementById('gameResult');
-      if (gameResult?.classList.contains('show')) {
-        gameResult.classList.remove('show');
-        document.body.style.overflow = '';
-      }
-      const target = link.getAttribute('href');
-      if (target && target.startsWith('#')) {
-        const el = document.querySelector(target);
-        if (el) lenis.scrollTo(el, { duration: 1.5 });
-      }
-    });
+  document.addEventListener('click', function(e) {
+    var link = e.target.closest('[data-smooth]');
+    if (!link) return;
+    e.preventDefault();
+    // Close any open modals
+    var gameResult = document.getElementById('gameResult');
+    if (gameResult && gameResult.classList.contains('show')) {
+      gameResult.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    var target = link.getAttribute('href');
+    if (target && target.startsWith('#')) {
+      var el = document.querySelector(target);
+      if (el) lenis.scrollTo(el, { duration: 1.5 });
+    }
   });
 
   // ============================================
   // BACK TO TOP
   // ============================================
   const backToTop = document.getElementById('backToTop');
-  window.addEventListener('scroll', () => {
-    backToTop.classList.toggle('show', window.scrollY > 500);
-  }, { passive: true });
-  backToTop.addEventListener('click', () => {
-    lenis.scrollTo('#hero', { duration: 1.5 });
-  });
+  if (backToTop) {
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 500);
+    }, { passive: true });
+    backToTop.addEventListener('click', () => {
+      lenis.scrollTo('#hero', { duration: 1.5 });
+    });
+  }
 
   // ============================================
   // HERO PARTICLES
@@ -702,8 +706,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      mobileMenu.classList.remove('show');
-      menuToggle.querySelector('i').className = 'fa-solid fa-bars';
+      if (mobileMenu && menuToggle) {
+        mobileMenu.classList.remove('show');
+        menuToggle.querySelector('i').className = 'fa-solid fa-bars';
+      }
 
       const cartClose = document.getElementById('cartClose');
       if (cartClose && document.getElementById('cartPanel').classList.contains('show')) {
@@ -753,13 +759,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Apply focus trap to modals
-  const modals = [document.getElementById('cartPanel'), document.getElementById('checkoutPanel'), confirmModal];
-  const modalObservers = [];
-  modals.forEach(modal => {
+  var modals = [document.getElementById('cartPanel'), document.getElementById('checkoutPanel'), confirmModal];
+  var modalCleanups = [];
+  modals.forEach(function(modal) {
     if (!modal) return;
-    const observer = new MutationObserver(() => {
+    var observer = new MutationObserver(function() {
       if (modal.classList.contains('show')) {
-        modalObservers.push(trapFocus(modal));
+        modalCleanups.push(trapFocus(modal));
+      } else {
+        while (modalCleanups.length > 0) {
+          var cleanup = modalCleanups.pop();
+          if (cleanup) cleanup();
+        }
       }
     });
     observer.observe(modal, { attributes: true, attributeFilter: ['class'] });
@@ -778,22 +789,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target.matches('a, button, input, select, textarea, [tabindex]')) {
       e.target.style.outline = '';
     }
-  });
-
-  // ============================================
-  // LAZY LOAD IMAGES
-  // ============================================
-  document.querySelectorAll('img[data-src]').forEach(img => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          img.src = img.dataset.src;
-          img.classList.add('loaded');
-          observer.unobserve(img);
-        }
-      });
-    });
-    observer.observe(img);
   });
 
   // ============================================
@@ -843,7 +838,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openFooterModal(key) {
     var content = footerContent[key];
-    if (!content) return;
+    if (!content || !footerModal || !footerModalTitle || !footerModalBody || !footerModalOverlay) return;
     footerModalTitle.textContent = content.title;
     footerModalBody.innerHTML = content.body;
     footerModal.classList.add('show');
@@ -852,6 +847,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function closeFooterModal() {
+    if (!footerModal || !footerModalOverlay) return;
     footerModal.classList.remove('show');
     footerModalOverlay.classList.remove('show');
     document.body.style.overflow = '';
@@ -864,8 +860,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  footerModalClose.addEventListener('click', closeFooterModal);
-  footerModalOverlay.addEventListener('click', closeFooterModal);
+  if (footerModalClose) footerModalClose.addEventListener('click', closeFooterModal);
+  if (footerModalOverlay) footerModalOverlay.addEventListener('click', closeFooterModal);
 
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeFooterModal();
