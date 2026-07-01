@@ -174,9 +174,10 @@ const CART = (() => {
     if (items.length === 0) {
       cartItems.innerHTML = `
         <div class="cart-empty">
-          <i class="fa-regular fa-box-open"></i>
-          <p>Your cart is empty</p>
-          <span>The brick is waiting for you.</span>
+          <div class="cart-empty-icon"><i class="fa-solid fa-box-open"></i></div>
+          <h4 class="cart-empty-title">Your cart is empty</h4>
+          <p class="cart-empty-text">The brick is waiting for someone who dares to own the extraordinary.</p>
+          <a href="#product" class="btn btn-primary cart-empty-cta" data-smooth>Browse the Brick <i class="fa-solid fa-arrow-right"></i></a>
         </div>
       `;
       cartSubtotal.textContent = '$0';
