@@ -203,7 +203,7 @@ const CART = (() => {
       html += `
         <div class="cart-item">
           <div class="cart-item-image">
-            <div class="thumb-brick" style="width:36px;height:20px;background:var(--accent-red-dark);border-radius:3px;"></div>
+            <div class="thumb-brick" style="width:36px;height:20px;background:var(--brick-ancient-dark);border-radius:2px;"></div>
           </div>
           <div class="cart-item-details">
             <span class="cart-item-name">${escapeHtml(item.name)}</span>

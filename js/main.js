@@ -695,37 +695,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================
-  // EXPLORE — Legacy Counter Animation
-  // ============================================
-  function animateLegacyCounter(el, target, duration = 2500) {
-    const start = 0;
-    const startTime = performance.now();
-
-    function update(now) {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      const current = Math.floor(start + (target - start) * eased);
-      el.textContent = current.toLocaleString();
-      if (progress < 1) requestAnimationFrame(update);
-    }
-    requestAnimationFrame(update);
-  }
-
-  const legacyObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const el = entry.target;
-        const target = parseInt(el.dataset.target);
-        if (!isNaN(target)) animateLegacyCounter(el, target);
-        legacyObserver.unobserve(el);
-      }
-    });
-  }, { threshold: 0.3 });
-
-  document.querySelectorAll('.legacy-number[data-target]').forEach(el => legacyObserver.observe(el));
-
-  // ============================================
   // INITIALIZE CART & GAME
   // ============================================
   if (typeof CART !== 'undefined') CART.init();
