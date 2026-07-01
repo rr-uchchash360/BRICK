@@ -93,7 +93,7 @@ const BRICK_GAME = (() => {
         state.timerLastTick = now - (elapsed - 1000);
         state.timeLeft--;
         timerEl.textContent = state.timeLeft;
-        if (state.timeLeft <= 5) timerEl.style.color = '#C62828';
+        if (state.timeLeft <= 5) timerEl.style.color = '#B83A1A';
         if (state.timeLeft <= 0) { endGame(); return; }
       }
       state.timerRafId = requestAnimationFrame(timerLoop);

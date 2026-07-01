@@ -5,7 +5,6 @@
 const CART = (() => {
   let items = [];
   let discount = 0;
-  let selectedColor = 'Classic Red';
   let quantity = 1;
 
   const BASE_PRICE = 300000;
@@ -75,14 +74,6 @@ const CART = (() => {
       updateQuantityUI();
     });
 
-    document.querySelectorAll('.color-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        selectedColor = btn.dataset.color;
-      });
-    });
-
     document.querySelectorAll('.payment-method').forEach(function(m) {
       m.addEventListener('click', function() {
         document.querySelectorAll('.payment-method').forEach(function(p) { p.classList.remove('active'); });
@@ -98,17 +89,10 @@ const CART = (() => {
 
     window.addEventListener('gameComplete', (e) => {
       discount = e.detail.discount;
-      updatePricing();
+    updatePricing();
       if (discount > 0) {
         showNotification('Game reward applied!', discount + '% discount on your purchase');
       }
-    });
-
-    document.querySelectorAll('.gallery-thumb').forEach(thumb => {
-      thumb.addEventListener('click', () => {
-        document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
-        thumb.classList.add('active');
-      });
     });
 
     updatePricing();
@@ -135,20 +119,19 @@ const CART = (() => {
   }
 
   function addToCart() {
-    const existing = items.find(i => i.color === selectedColor);
+    const existing = items.find(i => i.name === 'The Original Brick');
     if (existing) {
       existing.qty += quantity;
     } else {
       items.push({
         id: Date.now() + Math.random(),
         name: 'The Original Brick',
-        color: selectedColor,
         qty: quantity,
         price: FINAL_PRICE,
       });
     }
     updateCartUI();
-    showNotification('Added to cart', 'The Original Brick - ' + selectedColor);
+    showNotification('Added to cart', 'The Original Brick');
     if (!cartPanel.classList.contains('show')) {
       toggleCart();
     }
@@ -207,7 +190,6 @@ const CART = (() => {
           </div>
           <div class="cart-item-details">
             <span class="cart-item-name">${escapeHtml(item.name)}</span>
-            <span class="cart-item-variant">${escapeHtml(item.color)}</span>
             <div class="cart-item-bottom">
               <div class="cart-item-qty">
                 <button data-cart-dec="${item.id}" aria-label="Decrease quantity"><i class="fa-solid fa-minus"></i></button>
@@ -299,7 +281,7 @@ const CART = (() => {
   }
 
   function showFieldError(input, message) {
-    input.style.borderColor = '#C62828';
+    input.style.borderColor = '#B83A1A';
     input.setAttribute('aria-invalid', 'true');
 
     var existing = input.parentNode.querySelector('.field-error');
@@ -425,6 +407,33 @@ const CART = (() => {
     var result = validateForm();
     if (!result) return;
 
+    var formSection = document.querySelector('[data-step-section="3"]');
+    var stepButtons = formSection.querySelectorAll('.step-nav');
+    var processingEl = document.getElementById('paymentProcessing');
+
+    if (formSection) formSection.style.display = 'none';
+    if (processingEl) processingEl.style.display = 'flex';
+
+    var steps = document.querySelectorAll('.proc-step');
+    var stepIdx = 0;
+
+    function advanceProcStep() {
+      if (stepIdx < steps.length) {
+        steps[stepIdx].classList.add('active');
+        stepIdx++;
+        setTimeout(advanceProcStep, stepIdx === 1 ? 600 : stepIdx === 2 ? 800 : 500);
+      } else {
+        finishPurchase();
+      }
+    }
+
+    setTimeout(advanceProcStep, 400);
+  }
+
+  function finishPurchase() {
+    var result = validateForm();
+    var processingEl = document.getElementById('paymentProcessing');
+
     closeCheckout();
 
     const ownerNum = String(Math.floor(Math.random() * 100) + 1).padStart(3, '0');
@@ -443,6 +452,8 @@ const CART = (() => {
     certNumber.textContent = '#' + ownerNum;
     certDate.textContent = today;
 
+    document.getElementById('tlConfirmed').textContent = 'Today at ' +
+      now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
     document.getElementById('confOrderNumber').textContent = orderNumber;
     document.getElementById('confOrderTotal').textContent =
       document.getElementById('checkoutTotal').textContent;
@@ -454,12 +465,16 @@ const CART = (() => {
       createConfetti();
       items = [];
       updateCartUI();
-    }, 600);
+    }, 200);
 
     document.querySelectorAll('.checkout-form .form-input').forEach(function(el) {
       if (el.tagName !== 'SELECT' && el.id !== 'checkoutCountry') el.value = '';
     });
     document.querySelectorAll('.field-error').forEach(function(e) { e.remove(); });
+
+    if (processingEl) processingEl.style.display = 'none';
+    var formSection = document.querySelector('[data-step-section="3"]');
+    if (formSection) formSection.style.display = '';
   }
 
   function setupCheckoutSteps() {
@@ -539,32 +554,26 @@ const CART = (() => {
   }
 
   function createConfetti() {
+    var ct = window.DEVICE_TIER || 'high';
+    if (ct === 'low') return;
+    var count = ct === 'mid' ? 40 : 100;
     const container = document.getElementById('confettiContainer');
     container.innerHTML = '';
-    const colors = ['#C62828', '#D4A843', '#ffffff', '#E53935', '#F0D080'];
+    const colors = ['#B83A1A', '#D4A843', '#ffffff', '#D44A2A', '#E8C870'];
     const fragment = document.createDocumentFragment();
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < count; i++) {
       const piece = document.createElement('div');
       piece.className = 'confetti-piece';
       piece.style.left = Math.random() * 100 + '%';
       piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-      piece.style.width = (Math.random() * 6 + 4) + 'px';
-      piece.style.height = (Math.random() * 6 + 4) + 'px';
+      piece.style.width = (Math.random() * 5 + 3) + 'px';
+      piece.style.height = (Math.random() * 5 + 3) + 'px';
       piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
       piece.style.setProperty('--duration', (Math.random() * 2 + 2) + 's');
       piece.style.setProperty('--delay', (Math.random() * 1.5) + 's');
       fragment.appendChild(piece);
     }
     container.appendChild(fragment);
-  }
-
-  function toggleWishlist() {
-    const btn = document.getElementById('wishlistBtn');
-    const icon = btn.querySelector('i');
-    const isFilled = icon.classList.contains('fa-solid');
-    icon.className = isFilled ? 'fa-regular fa-heart' : 'fa-solid fa-heart';
-    btn.style.color = isFilled ? '' : '#C62828';
-    showNotification(isFilled ? 'Removed from wishlist' : 'Added to wishlist', '');
   }
 
   function downloadCertificate() {
@@ -800,7 +809,6 @@ const CART = (() => {
   function destroy() {
     items = [];
     discount = 0;
-    selectedColor = 'Classic Red';
     quantity = 1;
     cartPanel = null;
     cartOverlay = null;

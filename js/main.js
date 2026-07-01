@@ -7,21 +7,26 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================
   // LENIS — Smooth Scrolling
   // ============================================
+  const tier = window.DEVICE_TIER || 'high';
+  const isLowTier = tier === 'low';
+  const shouldAnimate = tier !== 'low';
+
   const lenis = new Lenis({
-    duration: 1.2,
+    duration: isLowTier ? 0.5 : 1.2,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     orientation: 'vertical',
-    smoothWheel: true,
+    smoothWheel: !isLowTier,
     wheelMultiplier: 0.8,
     touchMultiplier: 1.5,
   });
 
-  lenis.on('scroll', ScrollTrigger.update);
-
-  gsap.ticker.add((time) => {
-    lenis.raf(time * 1000);
-  });
-  gsap.ticker.lagSmoothing(0);
+  if (!isLowTier) {
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+    gsap.ticker.lagSmoothing(0);
+  }
 
   // ============================================
   // LOADING SCREEN
@@ -80,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     animateCursor();
 
-    document.querySelectorAll('a, button, .hotspot-dot, .color-btn, .gallery-thumb, .gallery-thumb, .qty-btn').forEach(el => {
+    document.querySelectorAll('a, button, .hotspot-dot, .qty-btn').forEach(el => {
       el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
       el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
     });
@@ -214,15 +219,16 @@ document.addEventListener('DOMContentLoaded', () => {
   if (footerParticleCount > 0) createParticles('footerParticles', footerParticleCount);
 
   // ============================================
-  // THREE.JS BRICK
+  // THREE.JS BRICK — now handled by three-brick.js module
   // ============================================
-  if (typeof THREE !== 'undefined' && typeof THREE_BRICK !== 'undefined') {
-    THREE_BRICK.init('heroCanvas');
-  }
+  // (bricks auto-initialize on DOMContentLoaded)
 
   // ============================================
   // STORY — Cinematic Scroll Chapters (GSAP)
   // ============================================
+
+  if (shouldAnimate) {
+
   const chapters = document.querySelectorAll('.story-chapter');
   const chapterParticles = document.getElementById('ch2Particles');
 
@@ -252,10 +258,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const ch2BrickCore = document.querySelector('.ch2-brick-core');
   const ch2BrickGlow = document.querySelector('.ch2-brick-glow');
 
-  // Create floating particles for ch2
   if (chapterParticles) {
-    for (let i = 0; i < 40; i++) {
-      const p = document.createElement('div');
+    var ch2Count = tier === 'mid' ? 15 : 40;
+    for (var i = 0; i < ch2Count; i++) {
+      var p = document.createElement('div');
       p.className = 'ch2-particle';
       p.style.left = Math.random() * 100 + '%';
       p.style.top = Math.random() * 100 + '%';
@@ -272,7 +278,6 @@ document.addEventListener('DOMContentLoaded', () => {
       gsap.to(ch2Lines, { y: 0, opacity: 1, duration: 1.2, stagger: 0.5, ease: 'power3.out' });
       gsap.to(ch2BrickCore, { scale: 1, opacity: 1, duration: 1.2, delay: 2, ease: 'back.out(2)' });
       gsap.to(ch2BrickGlow, { opacity: 1, duration: 1.5, delay: 2.2, ease: 'power2.out' });
-      // Animate particles
       gsap.to('.ch2-particle', {
         opacity: 0.6, duration: 1.5, stagger: 0.02, ease: 'power2.out', delay: 0.5,
       });
@@ -334,11 +339,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Chapter 5: The Legacy — wall of bricks + reveal
   const ch5Wall = document.getElementById('ch5BrickWall');
-  let ch5WallBricks = [];
+  var ch5WallBricks = [];
 
   if (ch5Wall) {
-    for (let i = 0; i < 60; i++) {
-      const brick = document.createElement('div');
+    var ch5Count = tier === 'mid' ? 30 : 60;
+    for (var i = 0; i < ch5Count; i++) {
+      var brick = document.createElement('div');
       brick.className = 'ch5-wall-brick';
       ch5Wall.appendChild(brick);
       ch5WallBricks.push(brick);
@@ -391,18 +397,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  }
+
   // ============================================
   // GSAP + SCROLLTRIGGER — Cinematic Animations
   // ============================================
 
+  if (shouldAnimate) {
+
   // Hero entrance
   const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
   heroTl
-    .from('.hero-badge', { y: 30, opacity: 0, duration: 1.2, delay: 0.5 })
-    .from('.title-line', { y: 100, opacity: 0, duration: 1, stagger: 0.2 }, '-=0.6')
+    .from('.hero-badge', { y: 30, opacity: 0, duration: 1, delay: 0.3 })
+    .from('.title-line', { y: 120, opacity: 0, duration: 1.2, stagger: 0.15 }, '-=0.5')
     .from('.hero-subtitle', { y: 40, opacity: 0, duration: 1 }, '-=0.4')
-    .from('.hero-actions .btn', { y: 30, opacity: 0, stagger: 0.2, duration: 0.8 }, '-=0.4')
-    .from('.hero-scroll-indicator', { opacity: 0, duration: 1 }, '-=0.2');
+    .from('.hero-actions .btn', { y: 30, opacity: 0, scale: 0.95, stagger: 0.15, duration: 0.8 }, '-=0.4')
+    .from('.hero-scroll-indicator', { opacity: 0, y: 10, duration: 1 }, '-=0.2');
 
   // Features — staggered reveal (one-time)
   gsap.utils.toArray('.feature-card').forEach((card) => {
@@ -485,6 +495,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  }
+
   // ============================================
   // MOUSE-FOLLOW LIGHTING
   // ============================================
@@ -497,7 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const x = (e.clientX / window.innerWidth) * 100;
         const y = (e.clientY / window.innerHeight) * 100;
         heroLighting.style.background =
-          `radial-gradient(600px circle at ${x}% ${y}%, rgba(198, 40, 40, 0.08), transparent 60%)`;
+          `radial-gradient(600px circle at ${x}% ${y}%, rgba(184, 58, 26, 0.08), transparent 60%)`;
         lightRafId = null;
       });
     });
@@ -525,90 +537,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ============================================
-  // EXPLORE — 360° Brick Display (CSS 3D)
+  // EXPLORE — 3D Brick Display (handled by three-brick.js module)
   // ============================================
-  const sbdBrick = document.getElementById('sbdBrick');
-  const rotateToggle = document.getElementById('rotateToggle');
-  const resetViewBtn = document.getElementById('resetView');
-  const zoomInBtn = document.getElementById('zoomIn');
-  const zoomOutBtn = document.getElementById('zoomOut');
-  const zoomLevelSpan = document.getElementById('zoomLevel');
-
-  if (sbdBrick) {
-    let isRotating = true;
-    let rotX = -15, rotY = 25;
-    let zoom = 1;
-    let autoRotateInterval;
-
-    function applyBrickTransform() {
-      sbdBrick.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) scale(${zoom})`;
-    }
-
-    function startAutoRotate() {
-      stopAutoRotate();
-      autoRotateInterval = setInterval(() => {
-        rotY += 0.3;
-        applyBrickTransform();
-      }, 16);
-    }
-
-    function stopAutoRotate() {
-      if (autoRotateInterval) {
-        clearInterval(autoRotateInterval);
-        autoRotateInterval = null;
-      }
-    }
-
-    startAutoRotate();
-
-    if (rotateToggle) {
-      rotateToggle.addEventListener('click', function () {
-        isRotating = !isRotating;
-        this.classList.toggle('active');
-        if (isRotating) {
-          startAutoRotate();
-        } else {
-          stopAutoRotate();
-        }
-      });
-    }
-
-    if (resetViewBtn) {
-      resetViewBtn.addEventListener('click', () => {
-        rotX = -15;
-        rotY = 25;
-        zoom = 1;
-        isRotating = true;
-        if (rotateToggle) rotateToggle.classList.remove('active');
-        if (zoomLevelSpan) zoomLevelSpan.textContent = '1.0';
-        applyBrickTransform();
-        startAutoRotate();
-      });
-    }
-
-    if (zoomInBtn && zoomOutBtn && zoomLevelSpan) {
-      zoomInBtn.addEventListener('click', () => {
-        zoom = Math.min(2, +(zoom + 0.1).toFixed(1));
-        zoomLevelSpan.textContent = zoom.toFixed(1);
-        applyBrickTransform();
-      });
-      zoomOutBtn.addEventListener('click', () => {
-        zoom = Math.max(0.5, +(zoom - 0.1).toFixed(1));
-        zoomLevelSpan.textContent = zoom.toFixed(1);
-        applyBrickTransform();
-      });
-    }
-
-    // Hotspot hover effect
-    document.querySelectorAll('.hotspot').forEach(hs => {
-      hs.addEventListener('mouseenter', () => {
-        stopAutoRotate();
-      });
-      hs.addEventListener('mouseleave', () => {
-        if (isRotating) startAutoRotate();
-      });
-    });
-  }
+  // (interactive 3D brick auto-initialized in the module; hotspots removed)
 
   // ============================================
   // EXPLORE — X-Ray Cutaway Toggle
@@ -706,10 +637,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const cardInput = document.getElementById('checkoutCard');
   const expiryInput = document.getElementById('checkoutExpiry');
   const cvcInput = document.getElementById('checkoutCVC');
+  const cardBrandIcon = document.getElementById('cardBrandIcon');
 
-  if (cardInput) {
+  function detectCardBrand(num) {
+    var clean = num.replace(/\s/g, '');
+    if (/^4[0-9]/.test(clean)) return { brand: 'Visa', icon: 'fa-brands fa-cc-visa', color: '#1A1F71' };
+    if (/^5[1-5]/.test(clean)) return { brand: 'Mastercard', icon: 'fa-brands fa-cc-mastercard', color: '#EB001B' };
+    if (/^3[47]/.test(clean)) return { brand: 'Amex', icon: 'fa-brands fa-cc-amex', color: '#2E77BC' };
+    return null;
+  }
+
+  if (cardInput && cardBrandIcon) {
     cardInput.addEventListener('input', function () {
       this.value = this.value.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 ').substring(0, 19);
+      var detected = detectCardBrand(this.value);
+      if (detected) {
+        cardBrandIcon.innerHTML = '<i class="' + detected.icon + '" style="color:' + detected.color + ';font-size:22px"></i>';
+        cardBrandIcon.title = detected.brand;
+      } else {
+        cardBrandIcon.innerHTML = '<i class="fa-regular fa-credit-card"></i>';
+        cardBrandIcon.title = '';
+      }
     });
   }
   if (expiryInput) {
@@ -914,7 +862,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   console.log(
     '%c BRICK ',
-    'background: #C62828; color: white; font-size: 20px; font-weight: bold; padding: 10px; border-radius: 4px;'
+    'background: #B83A1A; color: white; font-size: 20px; font-weight: bold; padding: 10px; border-radius: 4px;'
   );
   console.log('%c The brick that chooses you. ', 'color: #D4A843; font-size: 14px;');
 

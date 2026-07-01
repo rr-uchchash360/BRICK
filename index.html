@@ -15,7 +15,7 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- Three.js -->
+  <!-- Three.js r128 (CDN) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <!-- GSAP -->
@@ -117,7 +117,7 @@
   <!-- SECTION 1: HERO -->
   <!-- ============================================ -->
   <section id="hero" class="section hero" data-section>
-    <div class="hero-canvas" id="heroCanvas" aria-hidden="true"></div>
+    <div class="hero-canvas hero-brick" id="heroCanvas" aria-hidden="true"></div>
 
     <div class="hero-overlay"></div>
 
@@ -324,16 +324,7 @@
       <div class="showcase-layout">
         <div class="showcase-viewer" id="showcaseViewer">
           <div class="showcase-canvas" id="showcaseCanvas">
-            <div class="showcase-brick-display">
-              <div class="sbd-brick" id="sbdBrick">
-                <div class="sbd-face sbd-front"></div>
-                <div class="sbd-face sbd-back"></div>
-                <div class="sbd-face sbd-top"></div>
-                <div class="sbd-face sbd-bottom"></div>
-                <div class="sbd-face sbd-left"></div>
-                <div class="sbd-face sbd-right"></div>
-              </div>
-            </div>
+            <div class="showcase-brick-3d" id="showcaseBrick3d"></div>
           </div>
 
           <div class="showcase-controls">
@@ -589,6 +580,7 @@
         <p class="feature-desc">Covered for life. Not yours—the brick's. Terms apply. (No terms apply.)</p>
       </div>
     </div>
+
   </section>
 
   <!-- ============================================ -->
@@ -823,23 +815,7 @@
     <div class="product-layout">
       <div class="product-gallery">
         <div class="product-main-image" id="productMainImage">
-          <div class="product-3d-badge">
-            <i class="fa-solid fa-cube"></i> 360°
-          </div>
-          <div class="product-gallery-thumbs">
-            <button class="gallery-thumb active" data-view="front" aria-label="Front view">
-              <div class="thumb-brick thumb-front"></div>
-            </button>
-            <button class="gallery-thumb" data-view="side" aria-label="Side view">
-              <div class="thumb-brick thumb-side"></div>
-            </button>
-            <button class="gallery-thumb" data-view="top" aria-label="Top view">
-              <div class="thumb-brick thumb-top"></div>
-            </button>
-            <button class="gallery-thumb" data-view="angle" aria-label="Angle view">
-              <div class="thumb-brick thumb-angle"></div>
-            </button>
-          </div>
+          <div class="brick-3d-container" id="productBrickContainer"></div>
         </div>
       </div>
 
@@ -867,21 +843,9 @@
           <div class="stock-bar">
             <div class="stock-bar-fill" style="width: 93%;"></div>
           </div>
-          <span class="stock-text">Only <strong id="stockCount">7</strong> remaining</span>
-        </div>
-
-        <div class="product-colors">
-          <span class="color-label">Color</span>
-          <div class="color-options">
-            <button class="color-btn active" data-color="Classic Red" style="background: #8B2500;" aria-label="Classic Red">
-              <span class="color-check"><i class="fa-solid fa-check"></i></span>
-            </button>
-            <button class="color-btn" data-color="Obsidian Black" style="background: #1a1a1a;" aria-label="Obsidian Black">
-              <span class="color-check"><i class="fa-solid fa-check"></i></span>
-            </button>
-            <button class="color-btn" data-color="Heritage Gold" style="background: #B8860B;" aria-label="Heritage Gold">
-              <span class="color-check"><i class="fa-solid fa-check"></i></span>
-            </button>
+          <div class="stock-status">
+            <span class="stock-badge">Authentic</span>
+            <span class="stock-text">Only <strong id="stockCount">7</strong> remaining</span>
           </div>
         </div>
 
@@ -912,7 +876,7 @@
         <div class="product-meta">
           <div class="meta-item">
             <i class="fa-solid fa-truck"></i>
-            <span>Free delivery</span>
+            <span>Free delivery across Bangladesh</span>
           </div>
           <div class="meta-item">
             <i class="fa-solid fa-lock"></i>
@@ -920,7 +884,37 @@
           </div>
           <div class="meta-item">
             <i class="fa-solid fa-rotate"></i>
-            <span>Lifetime satisfaction</span>
+            <span>30-day satisfaction guarantee</span>
+          </div>
+        </div>
+
+        <div class="product-specs">
+          <h4 class="specs-title">Specifications</h4>
+          <div class="specs-grid">
+            <div class="spec-item">
+              <span class="spec-label">Material</span>
+              <span class="spec-value">Fired clay, hand-finished</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Dimensions</span>
+              <span class="spec-value">240 × 115 × 71 mm</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Weight</span>
+              <span class="spec-value">3.2 kg</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Origin</span>
+              <span class="spec-value">Bangladesh</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Edition</span>
+              <span class="spec-value">Limited — 100 pieces</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Certification</span>
+              <span class="spec-value">Certificate of Authenticity</span>
+            </div>
           </div>
         </div>
       </div>
@@ -1100,18 +1094,23 @@
           </div>
 
           <div id="paymentCard" class="payment-detail" style="display:none">
-            <div class="form-group">
+            <div class="form-group card-input-wrapper">
               <label for="checkoutCard">Card Number</label>
-              <input type="text" id="checkoutCard" class="form-input" placeholder="0000 0000 0000 0000" inputmode="numeric">
+              <div class="card-input-group">
+                <input type="text" id="checkoutCard" class="form-input" placeholder="0000 0000 0000 0000" inputmode="numeric">
+                <span class="card-brand-icon" id="cardBrandIcon">
+                  <i class="fa-regular fa-credit-card"></i>
+                </span>
+              </div>
             </div>
             <div class="form-row">
               <div class="form-group">
                 <label for="checkoutExpiry">Expiry</label>
-                <input type="text" id="checkoutExpiry" class="form-input" placeholder="MM/YY">
+                <input type="text" id="checkoutExpiry" class="form-input" placeholder="MM/YY" autocomplete="cc-exp">
               </div>
               <div class="form-group">
                 <label for="checkoutCVC">CVC</label>
-                <input type="text" id="checkoutCVC" class="form-input" placeholder="000" inputmode="numeric">
+                <input type="text" id="checkoutCVC" class="form-input" placeholder="000" inputmode="numeric" autocomplete="cc-csc">
               </div>
             </div>
           </div>
@@ -1121,6 +1120,19 @@
               <span>Complete Purchase</span>
               <i class="fa-solid fa-lock"></i>
             </button>
+          </div>
+
+          <div class="payment-processing" id="paymentProcessing" style="display:none">
+            <div class="processing-spinner"></div>
+            <div class="processing-text">
+              <span class="processing-title">Processing Payment</span>
+              <span class="processing-sub">Please wait while we verify your payment…</span>
+            </div>
+            <div class="processing-steps">
+              <div class="proc-step" data-step="1"><span class="proc-dot"></span> Verifying details</div>
+              <div class="proc-step" data-step="2"><span class="proc-dot"></span> Connecting to gateway</div>
+              <div class="proc-step" data-step="3"><span class="proc-dot"></span> Confirming payment</div>
+            </div>
           </div>
         </div>
       </div>
@@ -1203,6 +1215,37 @@
             <div class="confirmation-order-row">
               <span>Delivery</span>
               <span>3–7 business days</span>
+            </div>
+          </div>
+
+          <div class="order-timeline">
+            <div class="timeline-step active">
+              <span class="tl-dot"></span>
+              <div class="tl-content">
+                <span class="tl-title">Order Confirmed</span>
+                <span class="tl-sub" id="tlConfirmed">Just now</span>
+              </div>
+            </div>
+            <div class="timeline-step">
+              <span class="tl-dot"></span>
+              <div class="tl-content">
+                <span class="tl-title">Processing</span>
+                <span class="tl-sub">Preparing your brick</span>
+              </div>
+            </div>
+            <div class="timeline-step">
+              <span class="tl-dot"></span>
+              <div class="tl-content">
+                <span class="tl-title">Shipped</span>
+                <span class="tl-sub">via Sundarban Courier</span>
+              </div>
+            </div>
+            <div class="timeline-step">
+              <span class="tl-dot"></span>
+              <div class="tl-content">
+                <span class="tl-title">Delivered</span>
+                <span class="tl-sub">Expected 3–7 business days</span>
+              </div>
             </div>
           </div>
 
