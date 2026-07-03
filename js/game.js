@@ -1,18 +1,16 @@
 /* =============================================
-   BRICK — Brick Stacking Mini Game
+   BRICK — Brick Balance Mini Game
    ============================================= */
 
 const BRICK_GAME = (() => {
   const state = {
     isPlaying: false,
-    score: 0,
-    highScore: parseInt(localStorage.getItem('brickHighScore') || '0'),
-    combo: 1,
+    bestAngle: 90,
     timeLeft: 30,
-    bricks: [],
-    currentBrick: null,
-    isDragging: false,
-    stackHeight: 0,
+    totalPlaced: 0,
+    perfectCount: 0,
+    leftWeight: 0,
+    rightWeight: 0,
     timerInterval: null,
     timerRafId: null,
     timerLastTick: 0,
@@ -20,67 +18,78 @@ const BRICK_GAME = (() => {
     tier: null,
   };
 
-  const BRICK_HEIGHT = 30;
-  let boardWidth = 400;
-  let boardHeight = 400;
-  let brickWidth = 80;
-
-  let board, ghost, timerEl, scoreEl, comboEl, highEl;
-
-  function getBoardMetrics() {
-    if (!board) return;
-    const rect = board.getBoundingClientRect();
-    boardWidth = board.clientWidth;
-    boardHeight = board.clientHeight;
-    brickWidth = Math.min(80, Math.floor(boardWidth * 0.2));
-  }
+  let timerEl, bestAngleEl, angleHudEl;
+  let plankEl, angleEl, arrowFill, arrowIndicator, boardEl;
+  let stackLeft, stackRight, offerBrick, offerWeight;
+  let placeLeftBtn, placeRightBtn, startBtn;
+  let currentWeight = 0;
+  const MAX_ANGLE = 90;
 
   function init() {
-    board = document.getElementById('gameBoard');
-    ghost = document.getElementById('gameGhost');
     timerEl = document.getElementById('gameTimer');
-    scoreEl = document.getElementById('gameScore');
-    comboEl = document.getElementById('gameCombo');
-    highEl = document.getElementById('gameHigh');
+    bestAngleEl = document.getElementById('gameBestAngle');
+    angleHudEl = document.getElementById('gameAngle');
+    plankEl = document.getElementById('balancePlank');
+    angleEl = document.getElementById('balanceAngle');
+    arrowFill = document.getElementById('arrowFill');
+    arrowIndicator = document.getElementById('arrowIndicator');
+    boardEl = document.getElementById('balanceBoard');
+    stackLeft = document.getElementById('stackLeft');
+    stackRight = document.getElementById('stackRight');
+    offerBrick = document.getElementById('offerBrick');
+    offerWeight = document.getElementById('offerWeight');
+    placeLeftBtn = document.getElementById('placeLeft');
+    placeRightBtn = document.getElementById('placeRight');
+    startBtn = document.getElementById('gameStartBtn');
 
-    highEl.textContent = state.highScore;
+    bestAngleEl.textContent = '0\u00B0';
 
-    board.addEventListener('click', onBoardClick);
-    board.addEventListener('mousemove', onBoardMove);
-    board.addEventListener('touchmove', onBoardTouch, { passive: false });
-
-    var startBtn = document.getElementById('gameStartBtn');
+    if (placeLeftBtn) placeLeftBtn.addEventListener('click', function() { placeBrick('left'); });
+    if (placeRightBtn) placeRightBtn.addEventListener('click', function() { placeBrick('right'); });
     if (startBtn) startBtn.addEventListener('click', startGame);
 
     var retryBtn = document.getElementById('gameRetryBtn');
-    if (retryBtn) retryBtn.addEventListener('click', () => {
+    if (retryBtn) retryBtn.addEventListener('click', function() {
       document.getElementById('gameResult').classList.remove('show');
       document.body.style.overflow = '';
+      resetVisuals();
       startGame();
-    });
-
-    window.addEventListener('resize', () => {
-      getBoardMetrics();
-      if (ghost) ghost.style.width = brickWidth + 'px';
     });
   }
 
+  function resetVisuals() {
+    plankEl.style.transform = 'rotate(0deg)';
+    angleEl.innerHTML = '0&deg; <span class="balance-pct">30%</span>';
+    angleHudEl.textContent = '0\u00B0';
+    angleEl.className = 'balance-angle';
+    arrowFill.className = 'arrow-fill';
+    arrowFill.style.width = '50%';
+    arrowIndicator.className = 'arrow-indicator';
+    arrowIndicator.style.left = '50%';
+    stackLeft.innerHTML = '';
+    stackRight.innerHTML = '';
+    boardEl.classList.remove('tip');
+    boardEl.querySelectorAll('.game-floating-text').forEach(function(el) { el.remove(); });
+    boardEl.querySelectorAll('.game-particle').forEach(function(el) { el.remove(); });
+  }
+
   function startGame() {
-    getBoardMetrics();
     state.isPlaying = true;
-    state.score = 0;
-    state.combo = 1;
+    state.bestAngle = 90;
     state.timeLeft = 30;
-    state.bricks = [];
-    state.stackHeight = 0;
+    state.totalPlaced = 0;
+    state.perfectCount = 0;
+    state.leftWeight = 0;
+    state.rightWeight = 0;
+
+    resetVisuals();
 
     timerEl.textContent = state.timeLeft;
+    timerEl.classList.remove('warning');
     timerEl.style.color = '';
-    scoreEl.textContent = '0';
-    comboEl.textContent = 'x1';
+    bestAngleEl.textContent = '0\u00B0';
 
-    board.querySelectorAll('.game-brick').forEach(el => el.remove());
-    document.getElementById('gameStartBtn').style.display = 'none';
+    startBtn.style.display = 'none';
 
     clearInterval(state.timerInterval);
     if (state.timerRafId) cancelAnimationFrame(state.timerRafId);
@@ -95,204 +104,230 @@ const BRICK_GAME = (() => {
         state.timerLastTick = now - (elapsed - 1000);
         state.timeLeft--;
         timerEl.textContent = state.timeLeft;
-        if (state.timeLeft <= 5) timerEl.style.color = '#B83A1A';
+        if (state.timeLeft <= 5) timerEl.classList.add('warning');
         if (state.timeLeft <= 0) { endGame(); return; }
       }
       state.timerRafId = requestAnimationFrame(timerLoop);
     }
     timerLoop();
 
-    spawnBrick();
+    generateBrick();
   }
 
-  function spawnBrick() {
-    getBoardMetrics();
-    const brick = document.createElement('div');
-    brick.className = 'game-brick';
-    brick.style.width = brickWidth + 'px';
-    brick.style.height = BRICK_HEIGHT + 'px';
-    brick.style.bottom = Math.max(0, boardHeight - 30 - state.stackHeight * BRICK_HEIGHT) + 'px';
-
-    const maxLeft = Math.max(0, boardWidth - brickWidth);
-    const startLeft = Math.random() * maxLeft;
-    brick.style.left = startLeft + 'px';
-    brick.dataset.placed = 'false';
-    board.appendChild(brick);
-
-    state.currentBrick = brick;
-    state.isDragging = true;
-
-    ghost.style.width = brickWidth + 'px';
-    ghost.style.opacity = '1';
-    ghost.style.bottom = brick.style.bottom;
-    updateGhostPosition(startLeft);
+  function generateBrick() {
+    currentWeight = Math.floor(Math.random() * 7) + 2; // 2–8 kg
+    offerWeight.textContent = currentWeight;
+    offerBrick.className = 'offer-brick';
+    offerBrick.style.animation = 'none';
+    void offerBrick.offsetWidth;
+    offerBrick.style.animation = 'brickLand 0.35s cubic-bezier(0.22, 1, 0.36, 1)';
   }
 
-  function updateGhostPosition(left) {
-    if (ghost) ghost.style.left = left + 'px';
-  }
+  function placeBrick(side) {
+    if (!state.isPlaying) return;
+    if (currentWeight === 0) return;
 
-  function getBoardX(clientX) {
-    const rect = board.getBoundingClientRect();
-    let x = clientX - rect.left;
-    return Math.max(0, Math.min(boardWidth - brickWidth, x));
-  }
+    var leftEl = document.createElement('div');
+    leftEl.className = 'stack-brick';
+    if (currentWeight >= 8) leftEl.classList.add('heavy');
+    else if (currentWeight <= 3) leftEl.classList.add('light');
 
-  function onBoardMove(e) {
-    if (!state.isPlaying || !state.isDragging || !state.currentBrick) return;
-    const x = getBoardX(e.clientX);
-    state.currentBrick.style.left = x + 'px';
-    updateGhostPosition(x);
-  }
+    if (side === 'left') {
+      state.leftWeight += currentWeight;
+      stackLeft.appendChild(leftEl);
+    } else {
+      state.rightWeight += currentWeight;
+      stackRight.appendChild(leftEl);
+    }
 
-  function onBoardTouch(e) {
-    if (!state.isPlaying || !state.isDragging || !state.currentBrick) return;
-    e.preventDefault();
-    const touch = e.touches[0];
-    const x = getBoardX(touch.clientX);
-    state.currentBrick.style.left = x + 'px';
-    updateGhostPosition(x);
-  }
+    state.totalPlaced++;
 
-  function onBoardClick() {
-    if (!state.isPlaying || !state.isDragging || !state.currentBrick) return;
-    dropBrick();
-  }
+    updateBalance();
 
-  function dropBrick() {
-    const brick = state.currentBrick;
-    if (!brick) return;
+    var tier = getBalanceTier(getAngle());
 
-    state.isDragging = false;
-    ghost.style.opacity = '0';
-    brick.dataset.placed = 'true';
-    brick.classList.add('placed');
-
-    const brickLeft = parseFloat(brick.style.left) || 0;
-    const brickBottom = parseFloat(brick.style.bottom) || 0;
-    const prevBrick = state.bricks[state.bricks.length - 1];
-    let precision = 1;
-
-    if (prevBrick) {
-      const diff = Math.abs(brickLeft - prevBrick.left);
-      if (diff < 5) {
-        precision = 1.5;
-        brick.classList.add('perfect');
-        showFloatingText('PERFECT!', brickLeft + brickWidth / 2, brickBottom);
-      } else if (diff < 15) {
-        precision = 1.2;
-      } else if (diff > brickWidth * 0.6) {
-        precision = 0.5;
-        if (diff > brickWidth * 0.7) {
-          animateBrickFall(brick);
-          state.combo = 1;
-          comboEl.textContent = 'x1';
-          showFloatingText('MISS!', brickLeft + brickWidth / 2, brickBottom);
-          spawnBrick();
-          return;
-        }
+    if (state.totalPlaced > 1) {
+      showFloatingText(tier.msg, side === 'left' ? 35 : 65, 50, tier.cls);
+      if (tier.cls === 'perfect') {
+        state.perfectCount++;
+        spawnParticles(side === 'left' ? 25 : 75, 50, 'gold', 10);
       }
     }
 
-    const points = Math.round(10 * state.combo * precision);
-    state.score += points;
-    state.combo += 1;
-    state.stackHeight += 1;
+    generateBrick();
 
-    scoreEl.textContent = state.score;
-    comboEl.textContent = 'x' + state.combo;
-
-    state.bricks.push({ left: brickLeft, bottom: brickBottom, el: brick });
-    showFloatingText('+' + points, brickLeft + brickWidth / 2, brickBottom + 30);
-    spawnBrick();
+    if (Math.abs(getAngle()) >= MAX_ANGLE) {
+      boardEl.classList.add('tip');
+      showFloatingText('Tipped!', 50, 55, 'tip');
+      setTimeout(function() { endGame(); }, 600);
+    }
   }
 
-  function animateBrickFall(brick) {
-    brick.style.transition = 'transform 0.3s ease-in, opacity 0.3s ease-in';
-    brick.style.transform = 'translateY(80px) rotate(45deg)';
-    brick.style.opacity = '0';
-    setTimeout(() => { if (brick.parentNode) brick.remove(); }, 300);
+  function getAngle() {
+    var LEVER_ARM = 38;
+    var netTorque = (state.rightWeight - state.leftWeight) * LEVER_ARM;
+    var TORSIONAL_SPRING = (48 * LEVER_ARM) / MAX_ANGLE;
+    var angle = netTorque / TORSIONAL_SPRING;
+    return Math.max(-MAX_ANGLE, Math.min(MAX_ANGLE, angle));
   }
 
-  function showFloatingText(text, x, y) {
-    const el = document.createElement('div');
+  function getBalanceTier(angle) {
+    var absAngle = Math.abs(angle);
+    if (absAngle <= 5) return { pct: 30, msg: 'Perfect Balance!', cls: 'perfect' };
+    if (absAngle <= 10) return { pct: 25, msg: 'Steady...', cls: 'good' };
+    if (absAngle <= 15) return { pct: 20, msg: 'Careful...', cls: 'fair' };
+    if (absAngle <= 20) return { pct: 15, msg: 'Unstable!', cls: 'unstable' };
+    if (absAngle <= 25) return { pct: 10, msg: 'Critical!', cls: 'critical' };
+    if (absAngle <= 30) return { pct: 5, msg: 'About to tip!', cls: 'critical' };
+    return { pct: 0, msg: 'Tipped!', cls: 'critical' };
+  }
+
+  function updateBalance() {
+    var angle = getAngle();
+    var tier = getBalanceTier(angle);
+    var remaining = 100 - Math.round(Math.abs(angle) / MAX_ANGLE * 100);
+
+    plankEl.style.transform = 'rotate(' + angle + 'deg)';
+    angleEl.innerHTML = Math.round(angle) + '&deg; <span class="balance-pct">' + tier.pct + '%</span>';
+    angleHudEl.textContent = Math.round(angle) + '\u00B0';
+
+    var absAngle = Math.abs(angle);
+    if (absAngle < state.bestAngle) {
+      state.bestAngle = absAngle;
+      bestAngleEl.textContent = Math.round(absAngle) + '\u00B0';
+    }
+
+    angleEl.className = 'balance-angle';
+    if (tier.cls === 'critical') angleEl.classList.add('warning');
+    else if (tier.cls === 'perfect') angleEl.classList.add('perfect');
+
+    arrowFill.className = 'arrow-fill';
+    var fillW = Math.min(50, 50 * (remaining / 100));
+    if (angle >= 0) {
+      arrowFill.classList.add('tilt-right');
+      arrowFill.style.width = (50 + fillW) + '%';
+    } else {
+      arrowFill.style.width = (50 + fillW) + '%';
+    }
+
+    var indicatorPct = 50 - (angle / MAX_ANGLE) * 50;
+    arrowIndicator.style.left = indicatorPct + '%';
+    arrowIndicator.className = 'arrow-indicator';
+    if (tier.cls === 'critical') arrowIndicator.classList.add('warning');
+  }
+
+  function showFloatingText(text, x, y, type) {
+    var el = document.createElement('div');
+    el.className = 'game-floating-text ft-' + (type || 'score');
     el.textContent = text;
-    el.style.cssText = `
-      position: absolute; left: ${x}px; bottom: ${y}px;
-      transform: translateX(-50%); color: #D4A843;
-      font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 600;
-      pointer-events: none; z-index: 10;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.5); white-space: nowrap;
-    `;
-    board.appendChild(el);
+    el.style.left = x + '%';
+    el.style.top = y + '%';
+    boardEl.appendChild(el);
+    var dur = type === 'perfect' ? 1000 : 700;
+    var dist = type === 'perfect' ? 50 : 40;
     el.animate([
       { transform: 'translateX(-50%) translateY(0)', opacity: 1 },
-      { transform: 'translateX(-50%) translateY(-40px)', opacity: 0 },
-    ], { duration: 800, easing: 'ease-out' }).onfinish = () => el.remove();
+      { transform: 'translateX(-50%) translateY(-' + dist + 'px)', opacity: 0 },
+    ], { duration: dur, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }).onfinish = function() { el.remove(); };
+  }
+
+  function spawnParticles(cx, cy, type, count) {
+    var cls = type === 'gold' ? 'pt-gold' : 'pt-red';
+    for (var i = 0; i < count; i++) {
+      var p = document.createElement('div');
+      p.className = 'game-particle ' + cls;
+      var w = 3 + Math.random() * 3;
+      p.style.width = w + 'px';
+      p.style.height = w + 'px';
+      p.style.left = (cx + (Math.random() - 0.5) * 8) + '%';
+      p.style.top = (cy + (Math.random() - 0.5) * 8) + '%';
+      boardEl.appendChild(p);
+      var angle2 = Math.random() * Math.PI * 2;
+      var dist = 40 + Math.random() * 50;
+      var dx = Math.cos(angle2) * dist;
+      var dy = Math.sin(angle2) * dist;
+      p.animate([
+        { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+        { transform: 'translate(' + dx + 'px, ' + dy + 'px) scale(0.3)', opacity: 0 },
+      ], { duration: 500 + Math.random() * 300, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }).onfinish = function() { p.remove(); };
+    }
   }
 
   function endGame() {
     state.isPlaying = false;
+    currentWeight = 0;
     clearInterval(state.timerInterval);
     if (state.timerRafId) {
       cancelAnimationFrame(state.timerRafId);
       state.timerRafId = null;
     }
+    timerEl.classList.remove('warning');
     timerEl.style.color = '';
 
-    const score = state.score;
-    let tier, discount, message;
+    var finalAngle = Math.abs(getAngle());
+    var bestAngle = state.bestAngle;
+    var finalTier = getBalanceTier(finalAngle);
+    var discount = finalTier.pct;
+    var tier, tierSub, message;
 
-    if (score >= 200) {
-      tier = 'PLATINUM'; discount = 30;
-      message = 'Extraordinary precision. The brick bows to you.';
-    } else if (score >= 150) {
-      tier = 'DIAMOND'; discount = 25;
-      message = 'Masterful control. You are worthy of greatness.';
-    } else if (score >= 100) {
-      tier = 'GOLD'; discount = 20;
-      message = 'Impressive focus. The brick acknowledges your effort.';
-    } else if (score >= 60) {
-      tier = 'SILVER'; discount = 15;
-      message = 'Steady hands. The brick feels your determination.';
-    } else if (score >= 30) {
-      tier = 'BRONZE'; discount = 10;
-      message = 'Not bad. The brick acknowledges your effort.';
-    } else if (score >= 10) {
-      tier = 'IRON'; discount = 5;
-      message = 'A solid start. Every stack begins with one brick.';
+    if (discount >= 30) {
+      tier = 'PLATINUM'; tierSub = 'Grand Master';
+      message = 'Perfect equilibrium. Your instincts are unmatched.';
+    } else if (discount >= 25) {
+      tier = 'DIAMOND'; tierSub = 'Master Balancer';
+      message = 'Exceptional poise under pressure. Truly impressive.';
+    } else if (discount >= 20) {
+      tier = 'GOLD'; tierSub = 'Artisan';
+      message = 'Steady hands and a sharp mind. The brick approves.';
+    } else if (discount >= 15) {
+      tier = 'SILVER'; tierSub = 'Apprentice';
+      message = 'You\'re learning the art of equilibrium. Keep going.';
+    } else if (discount >= 10) {
+      tier = 'BRONZE'; tierSub = 'Novice Balancer';
+      message = 'A solid start. Every brick teaches something.';
+    } else if (discount >= 5) {
+      tier = 'IRON'; tierSub = 'Beginner';
+      message = 'The scales are unforgiving. Try again with patience.';
     } else {
-      tier = 'PARTICIPANT'; discount = 0;
-      message = 'The brick respects your time. Play again for a discount.';
+      tier = 'PARTICIPANT'; tierSub = 'Observer'; discount = 0;
+      message = 'The brick tipped, but you showed up. That counts.';
     }
 
     state.tier = tier;
     state.discountMultiplier = discount;
 
-    if (score > state.highScore) {
-      state.highScore = score;
-      localStorage.setItem('brickHighScore', score.toString());
-      highEl.textContent = score;
-    }
+    var tierNameEl = document.getElementById('tierName');
+    var tierSubEl = document.getElementById('tierSub');
+    var rewardValueEl = document.getElementById('rewardValue');
+    var messageEl = document.getElementById('resultMessage');
+    var resultBestEl = document.getElementById('resultBest');
+    var resultFinalEl = document.getElementById('resultFinal');
 
-    document.getElementById('tierName').textContent = tier;
-    document.getElementById('resultScore').textContent = score;
-    document.getElementById('rewardValue').textContent = discount + '% Discount';
-    document.getElementById('resultMessage').textContent = message;
+    tierNameEl.textContent = tier;
+    if (tierSubEl) tierSubEl.textContent = tierSub;
+    if (rewardValueEl) rewardValueEl.innerHTML = '<span class="reward-pct">' + discount + '</span>% Discount';
+    messageEl.textContent = message;
+    if (resultBestEl) resultBestEl.textContent = Math.round(bestAngle) + '\u00B0';
+    if (resultFinalEl) resultFinalEl.textContent = Math.round(finalAngle) + '\u00B0';
 
-    const tierColors = {
+    var tierColors = {
       'PLATINUM': '#E5E4E2', 'DIAMOND': '#B9F2FF',
       'GOLD': '#D4A843', 'SILVER': '#C0C0C0',
       'BRONZE': '#CD7F32', 'IRON': '#8B8C7A', 'PARTICIPANT': '#666666',
     };
-    document.querySelector('.tier-name').style.color = tierColors[tier] || '#fff';
+    var tColor = tierColors[tier] || '#fff';
+    tierNameEl.style.color = tColor;
+    var tierIconEl = document.querySelector('.tier-icon');
+    if (tierIconEl) tierIconEl.style.color = tColor;
 
-    document.getElementById('gameResult').classList.add('show');
+    var modal = document.getElementById('gameResult');
+    modal.classList.add('show');
     document.body.style.overflow = 'hidden';
-    document.getElementById('gameStartBtn').style.display = '';
+
+    startBtn.style.display = '';
 
     window.dispatchEvent(new CustomEvent('gameComplete', {
-      detail: { discount, tier, score }
+      detail: { discount: discount, tier: tier, bestAngle: bestAngle }
     }));
   }
 
@@ -300,7 +335,7 @@ const BRICK_GAME = (() => {
     return state.discountMultiplier;
   }
 
-  const api = { init, getDiscount };
+  var api = { init: init, getDiscount: getDiscount };
   window.BRICK_GAME = api;
   return api;
 })();

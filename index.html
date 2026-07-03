@@ -74,11 +74,11 @@
       </a>
 
       <div class="navbar-links" id="navLinks">
-        <a href="#story" class="nav-link">Story</a>
+        <a href="#story" class="nav-link">Journey</a>
         <a href="#explore" class="nav-link">Explore</a>
-        <a href="#features" class="nav-link">Features</a>
-        <a href="#game" class="nav-link">Prove</a>
-        <a href="#product" class="nav-link">Purchase</a>
+        <a href="#features" class="nav-link">Why</a>
+        <a href="#game" class="nav-link">Stack</a>
+        <a href="#product" class="nav-link">Own</a>
       </div>
 
       <div class="navbar-actions">
@@ -98,11 +98,11 @@
   <!-- ============================================ -->
   <div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Mobile navigation">
     <div class="mobile-menu-inner">
-      <a href="#story" class="mobile-link" data-nav>Story</a>
+      <a href="#story" class="mobile-link" data-nav>Journey</a>
       <a href="#explore" class="mobile-link" data-nav>Explore</a>
-      <a href="#features" class="mobile-link" data-nav>Features</a>
-      <a href="#game" class="mobile-link" data-nav>Prove</a>
-      <a href="#product" class="mobile-link" data-nav>Purchase</a>
+      <a href="#features" class="mobile-link" data-nav>Why</a>
+      <a href="#game" class="mobile-link" data-nav>Stack</a>
+      <a href="#product" class="mobile-link" data-nav>Own</a>
     </div>
   </div>
 
@@ -110,170 +110,116 @@
   <!-- SECTION 1: HERO -->
   <!-- ============================================ -->
   <section id="hero" class="section hero" data-section>
-    <div class="hero-canvas hero-brick" id="heroCanvas" aria-hidden="true"></div>
-
-    <div class="hero-overlay"></div>
-
-    <div class="hero-particles" id="heroParticles" aria-hidden="true"></div>
+    <div class="hero-canvas" id="heroCanvas" aria-hidden="true"></div>
 
     <div class="hero-content">
-      <div class="hero-badge">
-        <span class="badge-dot"></span>
-        Limited Edition
-        <span class="badge-count">100</span>
-      </div>
-
       <h1 class="hero-title">
-        <span class="title-line">The Brick That</span>
-        <span class="title-line accent">Chooses You.</span>
+        <span class="title-line">A Story</span>
+        <span class="title-line accent">4.5 Billion Years</span>
+        <span class="title-line">In the Making.</span>
       </h1>
 
       <p class="hero-subtitle">
-        Crafted by time. Forged by fire. Reserved for visionaries.
+        Before it built civilizations, it was just earth, water, and fire.
       </p>
 
       <div class="hero-actions">
-        <a href="#explore" class="btn btn-primary" data-smooth>
-          <span class="btn-text">Explore</span>
+        <a href="#story" class="btn btn-primary" data-smooth>
+          <span>Witness the Journey</span>
           <i class="fa-solid fa-arrow-right"></i>
-          <span class="btn-ripple"></span>
         </a>
-        <a href="#product" class="btn btn-outline" data-smooth>
-          <span class="btn-text">Apply for Ownership</span>
-          <i class="fa-solid fa-gem"></i>
-          <span class="btn-ripple"></span>
-        </a>
-      </div>
-
-      <div class="hero-scroll-indicator" aria-hidden="true">
-        <span class="scroll-text">Scroll to discover</span>
-        <div class="scroll-line">
-          <div class="scroll-line-mover"></div>
-        </div>
       </div>
     </div>
-
-    <div class="hero-lighting" id="heroLighting"></div>
   </section>
 
   <!-- ============================================ -->
-  <!-- SECTION 2: STORYTELLING — CINEMATIC SCROLL -->
+  <!-- SECTION 2: THE STORY OF THE BRICK -->
   <!-- ============================================ -->
   <section id="story" class="section story" data-section>
 
-    <!-- CHAPTER 1: Before the Brick -->
+    <!-- CHAPTER 0: PROLOGUE -->
+    <div class="story-chapter" id="prologue">
+      <div class="chapter-bg chapter-bg-prologue"></div>
+      <div class="chapter-visual" id="visual0">
+        <div class="cv-earth"></div>
+      </div>
+      <div class="chapter-content">
+        <span class="ch-label">Prologue</span>
+        <p class="ch-line" data-idx="0">Before the brick,</p>
+        <p class="ch-line accent" data-idx="1">there was the Earth.</p>
+      </div>
+    </div>
+
+    <!-- CHAPTER 1: BIRTH -->
     <div class="story-chapter" id="chapter1">
-      <div class="chapter-bg chapter-bg-dark"></div>
-      <div class="chapter-content chapter-1-content">
-        <p class="ch1-text" id="ch1Text">The world is full of ordinary objects.</p>
-        <div class="ch1-particle-container" id="ch1Particles">
-          <div class="ch1-glowing-particle" id="ch1GlowParticle"></div>
-        </div>
+      <div class="chapter-bg chapter-bg-birth"></div>
+      <div class="chapter-content">
+        <span class="ch-label">Chapter I — Birth</span>
+        <p class="ch-line" data-idx="0">Deep within the Earth,</p>
+        <p class="ch-line" data-idx="1">over millions of years,</p>
+        <p class="ch-line accent" data-idx="2">clay was born.</p>
       </div>
     </div>
 
-    <!-- CHAPTER 2: Born from the Earth -->
+    <!-- CHAPTER 2: TRANSFORMATION -->
     <div class="story-chapter" id="chapter2">
-      <div class="chapter-bg chapter-bg-earth"></div>
-      <div class="chapter-particles-2" id="ch2Particles"></div>
-      <div class="chapter-content chapter-2-content">
-        <div class="ch2-captions" id="ch2Captions">
-          <span class="ch2-line" data-line="0">Ancient clay.</span>
-          <span class="ch2-line" data-line="1">Relentless pressure.</span>
-          <span class="ch2-line" data-line="2">Unforgiving fire.</span>
-          <span class="ch2-line" data-line="3">A timeless form.</span>
-        </div>
+      <div class="chapter-bg chapter-bg-fire"></div>
+      <div class="chapter-content">
+        <span class="ch-label">Chapter II — Transformation</span>
+        <p class="ch-line" data-idx="0">Mesopotamia, 3500 BCE.</p>
+        <p class="ch-line" data-idx="1">Mud met fire.</p>
+        <p class="ch-line accent" data-idx="2">The first man-made stone.</p>
       </div>
     </div>
 
-    <!-- CHAPTER 3: Time -->
+    <!-- CHAPTER 3: JOURNEY -->
     <div class="story-chapter" id="chapter3">
-      <div class="chapter-bg chapter-bg-time"></div>
-      <div class="chapter-content chapter-3-content">
-        <div class="ch3-timeline" id="ch3Timeline">
-          <div class="ch3-year" data-year="100">100</div>
-          <div class="ch3-year" data-year="1000">1,000</div>
-          <div class="ch3-year" data-year="10000">10,000</div>
-          <div class="ch3-year" data-year="100000">100,000</div>
-        </div>
-        <div class="ch3-backdrop" id="ch3Backdrop">
-          <div class="ch3-skyline" id="ch3Skyline"></div>
-          <div class="ch3-city" id="ch3City"></div>
-        </div>
-        <p class="ch3-message" id="ch3Message">It does not change. The world does.</p>
+      <div class="chapter-bg chapter-bg-journey"></div>
+      <div class="chapter-content">
+        <span class="ch-label">Chapter III — Journey</span>
+        <p class="ch-line" data-idx="0">Ziggurats. Aqueducts.</p>
+        <p class="ch-line" data-idx="1">Cathedrals. Skyscrapers.</p>
+        <p class="ch-line accent" data-idx="2">Every age. Every civilization.</p>
       </div>
     </div>
 
-    <!-- CHAPTER 4: The Test -->
+    <!-- CHAPTER 4: FOR EVERYONE -->
     <div class="story-chapter" id="chapter4">
-      <div class="chapter-bg chapter-bg-test"></div>
-      <div class="chapter-content chapter-4-content">
-        <h3 class="ch4-headline">The Test of Time</h3>
-        <div class="ch4-items" id="ch4Items">
-          <div class="ch4-item" data-product="smartphone">
-            <div class="ch4-item-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
-            <span class="ch4-item-name">Smartphone</span>
-            <div class="ch4-item-lifespan">
-              <div class="lifespan-bar"><div class="lifespan-fill" style="width:5%"></div></div>
-              <span class="lifespan-text">3-5 years</span>
-            </div>
-          </div>
-          <div class="ch4-item" data-product="laptop">
-            <div class="ch4-item-icon"><i class="fa-solid fa-laptop"></i></div>
-            <span class="ch4-item-name">Laptop</span>
-            <div class="ch4-item-lifespan">
-              <div class="lifespan-bar"><div class="lifespan-fill" style="width:10%"></div></div>
-              <span class="lifespan-text">5-8 years</span>
-            </div>
-          </div>
-          <div class="ch4-item" data-product="watch">
-            <div class="ch4-item-icon"><i class="fa-regular fa-clock"></i></div>
-            <span class="ch4-item-name">Luxury Watch</span>
-            <div class="ch4-item-lifespan">
-              <div class="lifespan-bar"><div class="lifespan-fill" style="width:20%"></div></div>
-              <span class="lifespan-text">20-30 years</span>
-            </div>
-          </div>
-          <div class="ch4-item" data-product="car">
-            <div class="ch4-item-icon"><i class="fa-solid fa-car"></i></div>
-            <span class="ch4-item-name">Sports Car</span>
-            <div class="ch4-item-lifespan">
-              <div class="lifespan-bar"><div class="lifespan-fill" style="width:15%"></div></div>
-              <span class="lifespan-text">10-20 years</span>
-            </div>
-          </div>
-          <div class="ch4-item ch4-item-brick" data-product="brick">
-            <div class="ch4-item-icon"><i class="fa-solid fa-cube"></i></div>
-            <span class="ch4-item-name">The Brick</span>
-            <div class="ch4-item-lifespan">
-              <div class="lifespan-bar"><div class="lifespan-fill gold-fill" style="width:100%"></div></div>
-              <span class="lifespan-text">10,000+ years</span>
-            </div>
-          </div>
-        </div>
-        <div class="ch4-messages" id="ch4Messages">
-          <p class="ch4-msg" data-msg="0">Some things become obsolete.</p>
-          <p class="ch4-msg" data-msg="1">Some become history.</p>
-          <p class="ch4-msg accent" data-msg="2">One becomes eternal.</p>
-        </div>
+      <div class="chapter-bg chapter-bg-equal"></div>
+      <div class="chapter-content">
+        <span class="ch-label">Chapter IV — For Everyone</span>
+        <p class="ch-line" data-idx="0">Rich or poor.</p>
+        <p class="ch-line" data-idx="1">East or West.</p>
+        <p class="ch-line accent" data-idx="2">The brick never discriminated.</p>
       </div>
     </div>
 
-    <!-- CHAPTER 5: The Legacy -->
+    <!-- CHAPTER 5: ENDURANCE -->
     <div class="story-chapter" id="chapter5">
-      <div class="chapter-bg chapter-bg-legacy"></div>
-      <div class="chapter-content chapter-5-content">
-        <div class="ch5-brick-wall" id="ch5BrickWall"></div>
-        <div class="ch5-reveal" id="ch5Reveal">
-          <div class="ch5-reveal-text">
-            <span class="ch5-line-1">This one</span>
-            <span class="ch5-line-2">could be yours.</span>
-          </div>
-          <a href="#product" class="btn btn-primary" data-smooth>
-            <span>Claim Your Legacy</span>
-            <i class="fa-solid fa-arrow-right"></i>
-          </a>
-        </div>
+      <div class="chapter-bg chapter-bg-test"></div>
+      <div class="chapter-content">
+        <span class="ch-label">Chapter V — Endurance</span>
+        <p class="ch-line" data-idx="0">Everything fades.</p>
+        <p class="ch-line" data-idx="1">The smartphone. The watch. The car.</p>
+        <p class="ch-line accent" data-idx="2">The brick outlasts civilizations.</p>
+      </div>
+    </div>
+
+    <!-- CHAPTER 6: INVITATION -->
+    <div class="story-chapter" id="chapter6">
+      <div class="chapter-bg chapter-bg-invitation"></div>
+      <div class="chapter-visual" id="visual6">
+        <div class="cv-brick-glow"></div>
+        <div class="cv-brick"></div>
+      </div>
+      <div class="chapter-content">
+        <span class="ch-label">Epilogue</span>
+        <p class="ch-line" data-idx="0">5,000 years of building the world.</p>
+        <p class="ch-line accent" data-idx="1">One brick set aside for you.</p>
+        <a href="#explore" class="btn btn-primary" data-smooth>
+          <span>Explore the Brick</span>
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </a>
       </div>
     </div>
 
@@ -297,7 +243,6 @@
     <div class="explore-tabs" role="tablist">
       <button class="explore-tab active" role="tab" data-panel="360" aria-selected="true">360° View</button>
       <button class="explore-tab" role="tab" data-panel="xray" aria-selected="false">X-Ray</button>
-      <button class="explore-tab" role="tab" data-panel="build" aria-selected="false">Build</button>
     </div>
 
     <!-- Panel 1: 360° Interactive Viewer -->
@@ -315,9 +260,7 @@
             <button class="showcase-btn" id="resetView" aria-label="Reset view">
               <i class="fa-solid fa-expand"></i>
             </button>
-          </div>
-
-          <div class="showcase-zoom">
+            <div class="showcase-spacer"></div>
             <button class="zoom-btn" id="zoomIn" aria-label="Zoom in"><i class="fa-solid fa-plus"></i></button>
             <div class="zoom-level"><span id="zoomLevel">1.0</span>x</div>
             <button class="zoom-btn" id="zoomOut" aria-label="Zoom out"><i class="fa-solid fa-minus"></i></button>
@@ -362,31 +305,47 @@
           </div>
         </div>
 
-        <div class="showcase-info">
-          <div class="showcase-specs">
-            <div class="spec-item">
-              <span class="spec-label">Dimensions</span>
-              <span class="spec-value">215 × 102.5 × 65 mm</span>
+        <div class="showcase-info" id="showcaseInfo">
+          <div class="showcase-detail" id="showcaseDetail">
+            <span class="detail-icon"><i class="fa-solid fa-ruler"></i></span>
+            <div class="detail-text">
+              <span class="detail-label">Dimensions</span>
+              <span class="detail-value">215 × 102.5 × 65 mm</span>
             </div>
-            <div class="spec-divider"></div>
-            <div class="spec-item">
-              <span class="spec-label">Weight</span>
-              <span class="spec-value">2.3 kg</span>
+          </div>
+          <div class="showcase-detail">
+            <span class="detail-icon"><i class="fa-solid fa-weight-scale"></i></span>
+            <div class="detail-text">
+              <span class="detail-label">Weight</span>
+              <span class="detail-value">2.3 kg</span>
             </div>
-            <div class="spec-divider"></div>
-            <div class="spec-item">
-              <span class="spec-label">Material</span>
-              <span class="spec-value">Fired Clay</span>
+          </div>
+          <div class="showcase-detail">
+            <span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span>
+            <div class="detail-text">
+              <span class="detail-label">Material</span>
+              <span class="detail-value">Fired Clay</span>
             </div>
-            <div class="spec-divider"></div>
-            <div class="spec-item">
-              <span class="spec-label">Finish</span>
-              <span class="spec-value">Matte Textured</span>
+          </div>
+          <div class="showcase-detail">
+            <span class="detail-icon"><i class="fa-solid fa-paint-roller"></i></span>
+            <div class="detail-text">
+              <span class="detail-label">Finish</span>
+              <span class="detail-value">Matte Textured</span>
             </div>
-            <div class="spec-divider"></div>
-            <div class="spec-item">
-              <span class="spec-label">Origin</span>
-              <span class="spec-value">Earth</span>
+          </div>
+          <div class="showcase-detail">
+            <span class="detail-icon"><i class="fa-solid fa-globe"></i></span>
+            <div class="detail-text">
+              <span class="detail-label">Origin</span>
+              <span class="detail-value">Earth</span>
+            </div>
+          </div>
+          <div class="showcase-detail-fill" id="showcaseDetailFill">
+            <span class="detail-icon" id="fillIcon"><i class="fa-solid fa-info"></i></span>
+            <div class="detail-text">
+              <span class="detail-label" id="fillLabel">Hover a hotspot</span>
+              <span class="detail-value" id="fillValue">Explore the brick's details</span>
             </div>
           </div>
         </div>
@@ -395,8 +354,9 @@
 
     <!-- Panel 2: X-Ray View -->
     <div class="explore-panel" id="panel-xray" role="tabpanel">
-      <div class="xray-layout">
-        <div class="xray-viewer">
+      <div class="showcase-layout">
+        <div class="showcase-viewer xray-viewer">
+          <div class="xray-scanline" id="xrayScanline"></div>
           <div class="xray-brick-container" id="xrayBrick">
             <div class="xray-brick-outer"></div>
             <div class="xray-brick-cutaway" id="xrayCutaway">
@@ -405,69 +365,58 @@
               <div class="xray-layer xray-layer-3"></div>
               <div class="xray-layer xray-layer-4"></div>
             </div>
-            <div class="xray-labels">
-              <div class="xray-label" style="top:20%;left:30%;">
+            <div class="xray-labels" id="xrayLabels">
+              <div class="xray-label" style="top:20%;left:30%;" data-idx="0">
                 <span class="xray-dot"></span>
                 <span class="xray-text">Compressed Earth Core</span>
               </div>
-              <div class="xray-label" style="top:50%;left:60%;">
+              <div class="xray-label" style="top:50%;left:60%;" data-idx="1">
                 <span class="xray-dot"></span>
                 <span class="xray-text">Mineral Reinforcement</span>
               </div>
-              <div class="xray-label" style="top:75%;left:40%;">
+              <div class="xray-label" style="top:75%;left:40%;" data-idx="2">
                 <span class="xray-dot"></span>
                 <span class="xray-text">Fired Shell</span>
               </div>
             </div>
           </div>
-          <p class="xray-caption">Legendary engineering. Visible only to those who look closer.</p>
         </div>
-        <div class="xray-controls">
-          <button class="btn btn-outline" id="xrayToggle">
-            <i class="fa-solid fa-eye"></i>
-            <span id="xrayToggleText">Toggle Cutaway</span>
-          </button>
-        </div>
-      </div>
-    </div>
 
-    <!-- Panel 3: Build Mode -->
-    <div class="explore-panel" id="panel-build" role="tabpanel">
-      <div class="build-layout">
-        <div class="build-header">
-          <h3 class="build-title">Build with Purpose</h3>
-          <p class="build-desc">Place bricks. Create structures. Watch your vision take shape.</p>
-        </div>
-        <div class="build-platform" id="buildPlatform">
-          <div class="build-grid" id="buildGrid"></div>
-          <div class="build-brick-preview" id="buildPreview">
-            <div class="build-preview-brick"></div>
+        <div class="showcase-info">
+          <div class="xray-controls" style="grid-column:1/-1;">
+            <button class="btn btn-outline" id="xrayToggle">
+              <i class="fa-solid fa-grip-lines-vertical"></i>
+              <span id="xrayToggleText">Reveal Layers</span>
+            </button>
           </div>
-          <div class="build-placed-bricks" id="buildPlaced"></div>
-          <div class="build-progress" id="buildProgress">
-            <div class="build-stage-info">
-              <span class="build-stage-icon"><i class="fa-solid fa-cube"></i></span>
-              <span class="build-stage-text" id="buildStageText">Place your first brick</span>
-            </div>
-            <div class="build-stage-bar">
-              <div class="build-stage-fill" id="buildStageFill"></div>
-            </div>
-            <div class="build-stage-labels">
-              <span class="stage-label" data-stage="0">Wall</span>
-              <span class="stage-label" data-stage="1">House</span>
-              <span class="stage-label" data-stage="2">Castle</span>
-              <span class="stage-label" data-stage="3">Skyline</span>
+          <div class="showcase-detail-fill">
+            <span class="detail-icon"><i class="fa-solid fa-circle-info"></i></span>
+            <div class="detail-text">
+              <span class="detail-label">Caption</span>
+              <span class="detail-value">Legendary engineering. Visible only to those who look closer.</span>
             </div>
           </div>
-        </div>
-        <div class="build-controls">
-          <button class="btn btn-primary" id="buildAddBtn">
-            <i class="fa-solid fa-plus"></i> Add Brick
-          </button>
-          <button class="btn btn-outline" id="buildClearBtn">
-            <i class="fa-solid fa-rotate"></i> Clear
-          </button>
-          <span class="build-count"><span id="buildCount">0</span> bricks placed</span>
+          <div class="showcase-detail">
+            <span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span>
+            <div class="detail-text">
+              <span class="detail-label">Compressed Earth Core</span>
+              <span class="detail-value">Dense clay compacted over millennia</span>
+            </div>
+          </div>
+          <div class="showcase-detail">
+            <span class="detail-icon"><i class="fa-solid fa-gem"></i></span>
+            <div class="detail-text">
+              <span class="detail-label">Mineral Reinforcement</span>
+              <span class="detail-value">Natural aggregates for structural integrity</span>
+            </div>
+          </div>
+          <div class="showcase-detail">
+            <span class="detail-icon"><i class="fa-solid fa-fire"></i></span>
+            <div class="detail-text">
+              <span class="detail-label">Fired Shell</span>
+              <span class="detail-value">Vitrified surface hardened by extreme heat</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -475,90 +424,90 @@
   </section>
 
   <!-- ============================================ -->
-  <!-- SECTION 4: LUXURY FEATURES -->
+  <!-- SECTION 4: WHY — Relatable Truths -->
   <!-- ============================================ -->
   <section id="features" class="section features" data-section>
     <div class="section-label">
       <span class="label-line"></span>
-      <span class="label-text">Uncompromising</span>
+      <span class="label-text">Why a Brick?</span>
     </div>
 
     <h2 class="section-title">
-      <span class="title-reveal">Designed to</span>
-      <span class="title-reveal accent">Outlast Everything.</span>
+      <span class="title-reveal">Honest Answers to</span>
+      <span class="title-reveal accent">an Honest Question.</span>
     </h2>
 
     <div class="features-grid">
       <div class="feature-card" data-delay="0">
         <div class="feature-icon">
-          <i class="fa-solid fa-bolt"></i>
+          <i class="fa-solid fa-bell-slash"></i>
         </div>
-        <h3 class="feature-name">Battery Life</h3>
-        <p class="feature-tagline">Infinite</p>
-        <p class="feature-desc">No charging. No wires. No batteries. It simply exists. Powered by time itself.</p>
+        <h3 class="feature-name">No Distractions</h3>
+        <p class="feature-tagline">Silent.</p>
+        <p class="feature-desc">Never pings, buzzes, or demands attention. It just sits there. Quiet. Present.</p>
       </div>
 
       <div class="feature-card" data-delay="0.1">
         <div class="feature-icon">
-          <i class="fa-solid fa-droplet"></i>
+          <i class="fa-regular fa-clock"></i>
         </div>
-        <h3 class="feature-name">Water Resistance</h3>
-        <p class="feature-tagline">Mostly</p>
-        <p class="feature-desc">Survives rain, rivers, and centuries of humidity. Not recommended for oceans.</p>
+        <h3 class="feature-name">Outlasts Everything</h3>
+        <p class="feature-tagline">Permanent.</p>
+        <p class="feature-desc">Your phone, laptop, car — all temporary. This brick was here before you and will be here after.</p>
       </div>
 
       <div class="feature-card" data-delay="0.2">
         <div class="feature-icon">
-          <i class="fa-solid fa-shield-halved"></i>
+          <i class="fa-solid fa-circle"></i>
         </div>
-        <h3 class="feature-name">Durability</h3>
-        <p class="feature-tagline">100+ Years</p>
-        <p class="feature-desc">Engineered to outlast you, your children, and their children's children.</p>
+        <h3 class="feature-name">One Purpose</h3>
+        <p class="feature-tagline">Simple.</p>
+        <p class="feature-desc">No camera, apps, or bloatware. It holds things up. In a world of do-everything, it does one thing perfectly.</p>
       </div>
 
       <div class="feature-card" data-delay="0.3">
         <div class="feature-icon">
-          <i class="fa-solid fa-globe"></i>
+          <i class="fa-solid fa-credit-card"></i>
         </div>
-        <h3 class="feature-name">Compatibility</h3>
-        <p class="feature-tagline">Earth</p>
-        <p class="feature-desc">Works perfectly on every continent. No setup required. Just placement.</p>
+        <h3 class="feature-name">You Own It</h3>
+        <p class="feature-tagline">Forever.</p>
+        <p class="feature-desc">No subscription, premium tier, or fine print. Buy it once and it's yours for life. No catch.</p>
       </div>
 
       <div class="feature-card" data-delay="0.4">
         <div class="feature-icon">
-          <i class="fa-solid fa-plug"></i>
+          <i class="fa-solid fa-signal"></i>
         </div>
-        <h3 class="feature-name">Charging</h3>
-        <p class="feature-tagline">Never Required</p>
-        <p class="feature-desc">Zero power consumption. No energy bills. No cables. Pure autonomy.</p>
+        <h3 class="feature-name">No Signal Required</h3>
+        <p class="feature-tagline">Free.</p>
+        <p class="feature-desc">Works in basements, mountains, and the middle of nowhere. No Wi-Fi, no data plan. No bars? Good.</p>
       </div>
 
       <div class="feature-card" data-delay="0.5">
         <div class="feature-icon">
-          <i class="fa-solid fa-temperature-high"></i>
+          <i class="fa-solid fa-hand"></i>
         </div>
-        <h3 class="feature-name">Heat Resistance</h3>
-        <p class="feature-tagline">1,000°C</p>
-        <p class="feature-desc">Forged in kilns hot enough to melt steel. Your fireplace is nothing.</p>
+        <h3 class="feature-name">Realer Than Real</h3>
+        <p class="feature-tagline">Honest.</p>
+        <p class="feature-desc">Pixels and screens aren't real. This is dirt that was shaped, burned, and hardened. You can feel it.</p>
       </div>
 
       <div class="feature-card" data-delay="0.6">
         <div class="feature-icon">
-          <i class="fa-solid fa-weight-scale"></i>
+          <i class="fa-solid fa-box-open"></i>
         </div>
-        <h3 class="feature-name">Portability</h3>
-        <p class="feature-tagline">Manageable</p>
-        <p class="feature-desc">Heavy enough to feel substantial. Light enough to carry—once.</p>
+        <h3 class="feature-name">Zero Setup</h3>
+        <p class="feature-tagline">Instant.</p>
+        <p class="feature-desc">No assembly, account, or EULA. Place it down and it works — immediately, for the next thousand years.</p>
       </div>
 
       <div class="feature-card" data-delay="0.7">
         <div class="feature-icon">
-          <i class="fa-solid fa-shield"></i>
+          <i class="fa-solid fa-spa"></i>
         </div>
-        <h3 class="feature-name">Warranty</h3>
-        <p class="feature-tagline">Lifetime+</p>
-        <p class="feature-desc">Covered for life. Not yours—the brick's. Terms apply. (No terms apply.)</p>
+        <h3 class="feature-name">Ages With Grace</h3>
+        <p class="feature-tagline">Beautiful.</p>
+        <p class="feature-desc">Scratches tell stories. Weather adds character. It doesn't degrade — it collects meaning over time.</p>
       </div>
     </div>
 
@@ -570,51 +519,77 @@
   <section id="game" class="section game" data-section>
     <div class="section-label">
       <span class="label-line"></span>
-      <span class="label-text">Prove Your Worth</span>
+      <span class="label-text">Test Your Skill</span>
     </div>
 
     <h2 class="section-title">
-      <span class="title-reveal">Stack. Build.</span>
-      <span class="title-reveal accent">Prevail.</span>
+      <span class="title-reveal">Brick Balance</span>
+      <span class="title-reveal accent">Challenge.</span>
     </h2>
 
     <p class="game-intro">
-      The brick is patient. Are you? Stack as many bricks as you can in 30 seconds. Precision matters.
+      Every brick has weight — and every decision has consequences. Place each brick on the left or right to keep the plank balanced. Let it tip past 45° and it's over.
     </p>
 
     <div class="game-container">
       <div class="game-hud">
         <div class="hud-item">
+          <span class="hud-label">Angle</span>
+          <span class="hud-value" id="gameAngle">0°</span>
+        </div>
+        <div class="hud-item">
           <span class="hud-label">Time</span>
           <span class="hud-value" id="gameTimer">30</span>
         </div>
         <div class="hud-item">
-          <span class="hud-label">Score</span>
-          <span class="hud-value" id="gameScore">0</span>
-        </div>
-        <div class="hud-item">
-          <span class="hud-label">Combo</span>
-          <span class="hud-value" id="gameCombo">x1</span>
-        </div>
-        <div class="hud-item">
-          <span class="hud-label">High</span>
-          <span class="hud-value" id="gameHigh">0</span>
+          <span class="hud-label">Best</span>
+          <span class="hud-value" id="gameBestAngle">0°</span>
         </div>
       </div>
 
-      <div class="game-board" id="gameBoard">
-        <div class="game-cursor-ghost" id="gameGhost"></div>
+      <div class="balance-board" id="balanceBoard">
+        <div class="balance-stage" id="balanceStage">
+          <div class="balance-plank" id="balancePlank">
+            <div class="plank-surface"></div>
+            <div class="stack-area stack-left" id="stackLeft"></div>
+            <div class="stack-area stack-right" id="stackRight"></div>
+          </div>
+          <div class="balance-fulcrum"></div>
+          <div class="balance-pivot"></div>
+        </div>
+        <div class="balance-angle" id="balanceAngle">0° <span class="balance-pct">30%</span></div>
+        <div class="balance-limits">
+          <span class="limit-label left">-90°</span>
+          <span class="limit-label right">+90°</span>
+        </div>
+        <div class="balance-arrow" id="balanceArrow">
+          <div class="arrow-fill" id="arrowFill"></div>
+          <div class="arrow-indicator" id="arrowIndicator"></div>
+        </div>
+      </div>
+
+      <div class="brick-offer" id="brickOffer">
+        <div class="offer-brick" id="offerBrick">
+          <span class="offer-weight" id="offerWeight">5</span>
+          <span class="offer-unit">kg</span>
+        </div>
+        <span class="offer-hint">Place this brick</span>
+      </div>
+
+      <div class="balance-controls">
+        <button class="btn btn-outline balance-btn" id="placeLeft">
+          <i class="fa-solid fa-arrow-left"></i> Left Side
+        </button>
+        <button class="btn btn-outline balance-btn" id="placeRight">
+          Right Side <i class="fa-solid fa-arrow-right"></i>
+        </button>
       </div>
 
       <div class="game-controls">
         <button class="btn btn-primary" id="gameStartBtn">
           <i class="fa-solid fa-play"></i>
-          <span>Start Stacking</span>
+          <span>Start Challenge</span>
         </button>
-        <div class="game-controls-hint">
-          <span><i class="fa-regular fa-hand-pointer"></i> Drag to position</span>
-          <span><i class="fa-regular fa-clock"></i> Click to drop</span>
-        </div>
       </div>
     </div>
 
@@ -623,18 +598,27 @@
       <div class="result-backdrop"></div>
       <div class="result-modal">
         <div class="result-tier" id="resultTier">
-          <div class="tier-icon">
-            <i class="fa-solid fa-award"></i>
+          <div class="tier-icon" id="tierIcon">
+            <i class="fa-solid fa-scale-balanced"></i>
           </div>
           <span class="tier-name" id="tierName">Bronze</span>
+          <span class="tier-sub" id="tierSub">Novice Balancer</span>
         </div>
-        <div class="result-score">
-          <span class="result-score-value" id="resultScore">0</span>
-          <span class="result-score-label">Bricks Stacked</span>
+        <div class="result-angles">
+          <div class="result-angle-item">
+            <span class="result-angle-value" id="resultBest">0°</span>
+            <span class="result-angle-label">Best</span>
+          </div>
+          <div class="result-angle-item">
+            <span class="result-angle-value" id="resultFinal">0°</span>
+            <span class="result-angle-label">Final</span>
+          </div>
         </div>
         <div class="result-reward">
           <span class="reward-label">Your Reward</span>
-          <span class="reward-value" id="rewardValue">5% Discount</span>
+          <span class="reward-value" id="rewardValue">
+            <span class="reward-pct">5</span>% Discount
+          </span>
         </div>
         <div class="result-divider"></div>
         <p class="result-message" id="resultMessage">Not bad. The brick acknowledges your effort.</p>
@@ -1281,7 +1265,7 @@
       <div class="footer-links">
         <div class="footer-col">
           <h4 class="footer-col-title">Navigation</h4>
-          <a href="#story" class="footer-link" data-smooth>Story</a>
+          <a href="#story" class="footer-link" data-smooth>The Journey</a>
           <a href="#explore" class="footer-link" data-smooth>Showcase</a>
           <a href="#features" class="footer-link" data-smooth>Features</a>
           <a href="#product" class="footer-link" data-smooth>Purchase</a>

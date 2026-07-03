@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     animateCursor();
 
-    document.querySelectorAll('a, button, .hotspot-dot, .qty-btn').forEach(el => {
+    document.querySelectorAll('a, button, .hotspot-dot, .qty-btn, .xray-dot').forEach(el => {
       el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
       el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
     });
@@ -167,193 +167,48 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================
-  // HERO PARTICLES
+  // THREE.JS BRICK — handled by three-brick.js module
   // ============================================
-  function createParticles(containerId, count = 60) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    for (let i = 0; i < count; i++) {
-      const particle = document.createElement('div');
-      particle.className = 'particle';
-      particle.style.left = Math.random() * 100 + '%';
-      particle.style.top = Math.random() * 100 + '%';
-      particle.style.width = (Math.random() * 3 + 2) + 'px';
-      particle.style.height = particle.style.width;
-      particle.style.animation = `floatParticle ${Math.random() * 6 + 4}s ease-in-out infinite`;
-      particle.style.animationDelay = (Math.random() * 4) + 's';
-      particle.style.opacity = Math.random() * 0.5 + 0.1;
-      container.appendChild(particle);
-    }
-  }
-
-  const styleSheet = document.createElement('style');
-  styleSheet.textContent = `
-    @keyframes floatParticle {
-      0%, 100% { transform: translateY(0) translateX(0); opacity: 0.2; }
-      25% { transform: translateY(-20px) translateX(10px); }
-      50% { transform: translateY(-10px) translateX(-10px); opacity: 0.6; }
-      75% { transform: translateY(-30px) translateX(5px); }
-    }
-  `;
-  document.head.appendChild(styleSheet);
-
-  const particleTier = window.DEVICE_TIER || 'high';
-  const heroParticleCount = particleTier === 'low' ? 15 : particleTier === 'mid' ? 40 : 80;
-  const footerParticleCount = particleTier === 'low' ? 0 : particleTier === 'mid' ? 15 : 40;
-  createParticles('heroParticles', heroParticleCount);
-  if (footerParticleCount > 0) createParticles('footerParticles', footerParticleCount);
 
   // ============================================
-  // THREE.JS BRICK — now handled by three-brick.js module
-  // ============================================
-  // (bricks auto-initialize on DOMContentLoaded)
-
-  // ============================================
-  // STORY — Cinematic Scroll Chapters (GSAP)
+  // STORY — Minimal Chapter Animations
   // ============================================
 
   if (shouldAnimate) {
 
   const chapters = document.querySelectorAll('.story-chapter');
-  const chapterParticles = document.getElementById('ch2Particles');
 
-  // Chapter 1: Before the Brick — text + particle
-  const ch1Texts = document.querySelectorAll('.ch1-text');
-  const ch1Particles = document.querySelectorAll('.ch1-particle-container');
+  function animateChapter(triggerId) {
+    const chapter = document.getElementById(triggerId);
+    if (!chapter) return;
+    const label = chapter.querySelector('.ch-label');
+    const lines = chapter.querySelectorAll('.ch-line');
+    const btn = chapter.querySelector('.btn');
 
-  ScrollTrigger.create({
-    trigger: '#chapter1',
-    start: 'top 30%',
-    end: 'bottom 70%',
-    onEnter: () => {
-      gsap.to(ch1Texts, { y: 0, opacity: 1, duration: 1.2, stagger: 0.4, ease: 'power3.out' });
-      gsap.to(ch1Particles, { opacity: 1, duration: 1.5, delay: 1.5, ease: 'power2.out' });
-    },
-    onLeaveBack: () => {
-      gsap.set(ch1Texts, { y: 20, opacity: 0 });
-      gsap.set(ch1Particles, { opacity: 0 });
-    },
-  });
-
-  // Chapter 2: Born from the Earth — particles + text reveal
-  const ch2Lines = document.querySelectorAll('.ch2-line');
-
-  if (chapterParticles) {
-    var ch2Count = tier === 'mid' ? 15 : 40;
-    for (var i = 0; i < ch2Count; i++) {
-      var p = document.createElement('div');
-      p.className = 'ch2-particle';
-      p.style.left = Math.random() * 100 + '%';
-      p.style.top = Math.random() * 100 + '%';
-      p.style.animationDelay = (Math.random() * 4) + 's';
-      chapterParticles.appendChild(p);
-    }
-  }
-
-  ScrollTrigger.create({
-    trigger: '#chapter2',
-    start: 'top 30%',
-    end: 'bottom 70%',
-    onEnter: () => {
-      gsap.to(ch2Lines, { y: 0, opacity: 1, duration: 1.2, stagger: 0.5, ease: 'power3.out' });
-      gsap.to('.ch2-particle', {
-        opacity: 0.6, duration: 1.5, stagger: 0.02, ease: 'power2.out', delay: 0.5,
-      });
-    },
-    onLeaveBack: () => {
-      gsap.set(ch2Lines, { y: 30, opacity: 0 });
-      gsap.set('.ch2-particle', { opacity: 0 });
-    },
-  });
-
-  // Chapter 3: Time — year timeline
-  const ch3Years = document.querySelectorAll('.ch3-year');
-  const ch3Message = document.querySelector('.ch3-message');
-
-  ScrollTrigger.create({
-    trigger: '#chapter3',
-    start: 'top 30%',
-    end: 'bottom 70%',
-    onEnter: () => {
-      gsap.to(ch3Years, { y: 0, opacity: 1, duration: 0.8, stagger: 0.3, ease: 'power3.out' });
-      gsap.to(ch3Years, { color: '#D4A843', duration: 0.3, stagger: 0.3, delay: 0.6, ease: 'power2.in' });
-      gsap.to(ch3Message, { opacity: 1, duration: 1.2, delay: 2.5, ease: 'power2.out' });
-    },
-    onLeaveBack: () => {
-      gsap.set(ch3Years, { y: 20, opacity: 0, color: '#555' });
-      gsap.set(ch3Message, { opacity: 0 });
-    },
-  });
-
-  // Chapter 4: The Test — items reveal then drop off
-  const ch4Headline = document.querySelector('.ch4-headline');
-  const ch4Items = document.querySelectorAll('.ch4-item');
-  const ch4Msgs = document.querySelectorAll('.ch4-msg');
-
-  ScrollTrigger.create({
-    trigger: '#chapter4',
-    start: 'top 20%',
-    end: 'bottom 50%',
-    onEnter: () => {
-      const nonBrickItems = gsap.utils.toArray('.ch4-item:not(.ch4-item-brick)');
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-      tl
-        .to(ch4Headline, { opacity: 1, duration: 1 })
-        .to(ch4Items, { y: 0, opacity: 1, duration: 0.6, stagger: 0.15, ease: 'power3.out' }, '-=0.5')
-        .to(nonBrickItems, { opacity: 0, y: 20, scale: 0.9, duration: 0.6, stagger: 0.15, ease: 'power2.in' }, '+=2.5')
-        .to(ch4Msgs, { opacity: 1, y: 0, duration: 0.8, stagger: 0.3, ease: 'power3.out' }, '-=0.4');
-    },
-    onLeaveBack: () => {
-      gsap.set(ch4Headline, { opacity: 0 });
-      gsap.set(ch4Items, { y: 20, opacity: 0, scale: 1 });
-      gsap.set(ch4Msgs, { y: 10, opacity: 0 });
-    },
-  });
-
-  // Chapter 5: The Legacy — wall of bricks + reveal
-  const ch5Wall = document.getElementById('ch5BrickWall');
-  var ch5WallBricks = [];
-
-  if (ch5Wall) {
-    var ch5Count = tier === 'mid' ? 30 : 60;
-    for (var i = 0; i < ch5Count; i++) {
-      var brick = document.createElement('div');
-      brick.className = 'ch5-wall-brick';
-      ch5Wall.appendChild(brick);
-      ch5WallBricks.push(brick);
-    }
-  }
-
-  const ch5Reveal = document.querySelector('.ch5-reveal');
-
-  ScrollTrigger.create({
-    trigger: '#chapter5',
-    start: 'top 30%',
-    end: 'bottom 70%',
-    onEnter: () => {
-      gsap.to(ch5WallBricks, { opacity: 1, duration: 0.3, stagger: 0.005, ease: 'power2.out' });
-      gsap.to(ch5Reveal, { scale: 1, opacity: 1, duration: 1.5, delay: 1.5, ease: 'elastic.out(1, 0.5)' });
-    },
-    onLeaveBack: () => {
-      gsap.set(ch5WallBricks, { opacity: 0 });
-      gsap.set(ch5Reveal, { scale: 0.8, opacity: 0 });
-    },
-  });
-
-  // Chapter 3: Skyline buildings
-  const ch3Skyline = document.getElementById('ch3Skyline');
-  if (ch3Skyline) {
-    const buildingHeights = [100, 140, 80, 180, 120, 90, 160, 110, 70, 200, 130, 95, 150, 85, 170, 100, 140, 120, 90, 160];
-    const buildingWidths = [30, 25, 35, 20, 28, 32, 22, 26, 38, 18, 30, 24, 28, 34, 20, 30, 25, 22, 35, 28];
-    buildingHeights.forEach((h, i) => {
-      const b = document.createElement('div');
-      b.className = 'ch3-building';
-      b.style.height = h + 'px';
-      b.style.width = (buildingWidths[i] || 26) + 'px';
-      b.style.left = (i * 5) + '%';
-      ch3Skyline.appendChild(b);
+    ScrollTrigger.create({
+      trigger: '#' + triggerId,
+      start: 'top 35%',
+      end: 'bottom 65%',
+      onEnter: () => {
+        gsap.to(label, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' });
+        gsap.to(lines, { y: 0, opacity: 1, duration: 1, stagger: 0.3, ease: 'power3.out', delay: 0.15 });
+        if (btn) gsap.to(btn, { y: 0, opacity: 1, duration: 0.6, delay: 0.6, ease: 'power3.out' });
+      },
+      onLeaveBack: () => {
+        gsap.set(label, { y: 8, opacity: 0 });
+        gsap.set(lines, { y: 20, opacity: 0 });
+        if (btn) gsap.set(btn, { y: 10, opacity: 0 });
+      }
     });
   }
+
+  animateChapter('prologue');
+  animateChapter('chapter1');
+  animateChapter('chapter2');
+  animateChapter('chapter3');
+  animateChapter('chapter4');
+  animateChapter('chapter5');
+  animateChapter('chapter6');
 
   // Chapter parallax background shifts
   chapters.forEach((chapter) => {
@@ -364,9 +219,8 @@ document.addEventListener('DOMContentLoaded', () => {
       start: 'top bottom',
       end: 'bottom top',
       onUpdate: (self) => {
-        const progress = self.progress;
-        gsap.set(bg, { scale: 1 + progress * 0.02 });
-      },
+        gsap.set(bg, { scale: 1 + self.progress * 0.015 });
+      }
     });
   });
 
@@ -381,11 +235,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Hero entrance
   const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
   heroTl
-    .from('.hero-badge', { y: 30, opacity: 0, duration: 1, delay: 0.3 })
-    .from('.title-line', { y: 120, opacity: 0, duration: 1.2, stagger: 0.15 }, '-=0.5')
+    .from('.title-line', { y: 120, opacity: 0, duration: 1.2, stagger: 0.2 })
     .from('.hero-subtitle', { y: 40, opacity: 0, duration: 1 }, '-=0.4')
-    .from('.hero-actions .btn', { y: 30, opacity: 0, scale: 0.95, stagger: 0.15, duration: 0.8 }, '-=0.4')
-    .from('.hero-scroll-indicator', { opacity: 0, y: 10, duration: 1 }, '-=0.2');
+    .from('.hero-actions .btn', { y: 30, opacity: 0, scale: 0.95, duration: 0.8 }, '-=0.4');
 
   // Features — staggered reveal (one-time)
   gsap.utils.toArray('.feature-card').forEach((card) => {
@@ -471,24 +323,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================
-  // MOUSE-FOLLOW LIGHTING
-  // ============================================
-  const heroLighting = window.DEVICE_TIER !== 'low' ? document.getElementById('heroLighting') : null;
-  if (heroLighting) {
-    let lightRafId = null;
-    document.addEventListener('mousemove', (e) => {
-      if (lightRafId) cancelAnimationFrame(lightRafId);
-      lightRafId = requestAnimationFrame(() => {
-        const x = (e.clientX / window.innerWidth) * 100;
-        const y = (e.clientY / window.innerHeight) * 100;
-        heroLighting.style.background =
-          `radial-gradient(600px circle at ${x}% ${y}%, rgba(184, 58, 26, 0.08), transparent 60%)`;
-        lightRafId = null;
-      });
-    });
-  }
-
-  // ============================================
   // EXPLORE — Tab Panels
   // ============================================
   const exploreTabs = document.querySelectorAll('.explore-tab');
@@ -506,6 +340,40 @@ document.addEventListener('DOMContentLoaded', () => {
       tab.setAttribute('aria-selected', 'true');
       const panel = document.getElementById(`panel-${target}`);
       if (panel) panel.classList.add('active');
+    });
+  });
+
+  // ============================================
+  // EXPLORE — Hotspot Detail Panel
+  // ============================================
+  const hotspotDots = document.querySelectorAll('.hotspot-dot');
+  const detailFill = document.getElementById('showcaseDetailFill');
+  const fillIcon = document.getElementById('fillIcon');
+  const fillLabel = document.getElementById('fillLabel');
+  const fillValue = document.getElementById('fillValue');
+
+  const hotspotData = {
+    material: { icon: '<i class="fa-solid fa-layer-group"></i>', label: 'Material', value: 'Premium fired clay, aged to perfection' },
+    craftsmanship: { icon: '<i class="fa-solid fa-hand"></i>', label: 'Craftsmanship', value: 'Hand-finished by master artisans' },
+    texture: { icon: '<i class="fa-solid fa-border-all"></i>', label: 'Texture', value: 'Matte surface with natural variations' },
+    weight: { icon: '<i class="fa-solid fa-weight-scale"></i>', label: 'Weight', value: '2.3 kg — substantial yet portable' },
+    durability: { icon: '<i class="fa-solid fa-shield-halved"></i>', label: 'Durability', value: 'Engineered to outlast civilizations' },
+  };
+
+  hotspotDots.forEach(dot => {
+    const hotspot = dot.closest('.hotspot');
+    const detail = hotspot ? hotspot.dataset.detail : null;
+    dot.addEventListener('mouseenter', () => {
+      if (detail && hotspotData[detail] && detailFill && fillIcon && fillLabel && fillValue) {
+        const data = hotspotData[detail];
+        fillIcon.innerHTML = data.icon;
+        fillLabel.textContent = data.label;
+        fillValue.textContent = data.value;
+        detailFill.classList.add('highlight');
+      }
+    });
+    dot.addEventListener('mouseleave', () => {
+      if (detailFill) detailFill.classList.remove('highlight');
     });
   });
 
@@ -564,79 +432,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const xrayToggleText = document.getElementById('xrayToggleText');
 
   if (xrayToggle && xrayCutaway) {
+    const xrayLabels = document.querySelectorAll('.xray-label');
     xrayToggle.addEventListener('click', () => {
       const isOpen = xrayCutaway.classList.toggle('open');
-      xrayToggleText.textContent = isOpen ? 'Hide Cutaway' : 'Show Cutaway';
+      xrayToggleText.textContent = isOpen ? 'Hide Layers' : 'Reveal Layers';
       xrayToggle.classList.toggle('active');
-    });
-  }
 
-  // ============================================
-  // EXPLORE — Build Mode
-  // ============================================
-  const buildGrid = document.getElementById('buildGrid');
-  const buildCount = document.getElementById('buildCount');
-  const buildAddBtn = document.getElementById('buildAddBtn');
-  const buildClearBtn = document.getElementById('buildClearBtn');
-  const buildStageFill = document.getElementById('buildStageFill');
-  const buildStageText = document.getElementById('buildStageText');
-  let bricksPlaced = 0;
-
-  function updateBuildUI() {
-    if (buildCount) buildCount.textContent = bricksPlaced;
-    if (buildStageFill) {
-      const pct = Math.min((bricksPlaced / 24) * 100, 100);
-      buildStageFill.style.width = pct + '%';
-    }
-    if (buildStageText) {
-      const stages = ['Place your first brick', 'Building a wall', 'Raising a house', 'Constructing a castle', 'Creating a skyline'];
-      const idx = Math.min(Math.floor(bricksPlaced / 6), 4);
-      buildStageText.textContent = stages[idx];
-    }
-  }
-
-  if (buildGrid) {
-    for (let i = 0; i < 24; i++) {
-      const cell = document.createElement('div');
-      cell.className = 'build-cell';
-      cell.addEventListener('click', () => {
-        if (cell.classList.contains('placed')) {
-          cell.classList.add('removing');
-          setTimeout(() => {
-            cell.classList.remove('placed', 'removing');
-            bricksPlaced = Math.max(0, bricksPlaced - 1);
-            updateBuildUI();
-          }, 300);
-        } else {
-          cell.classList.add('placed');
-          bricksPlaced++;
-          updateBuildUI();
-        }
-      });
-      buildGrid.appendChild(cell);
-    }
-  }
-
-  if (buildAddBtn) {
-    buildAddBtn.addEventListener('click', () => {
-      const emptyCells = document.querySelectorAll('.build-cell:not(.placed)');
-      if (emptyCells.length > 0) {
-        const cell = emptyCells[0];
-        cell.classList.add('placed');
-        bricksPlaced++;
-        updateBuildUI();
+      if (isOpen) {
+        xrayLabels.forEach((label, idx) => {
+          const text = label.querySelector('.xray-text');
+          if (text) {
+            gsap.set(text, { opacity: 0 });
+            gsap.to(text, { opacity: 1, duration: 0.4, delay: 0.8 + idx * 0.25, ease: 'power2.out' });
+          }
+        });
+      } else {
+        xrayLabels.forEach((label) => {
+          const text = label.querySelector('.xray-text');
+          if (text) gsap.set(text, { opacity: 0 });
+        });
       }
-    });
-  }
-
-  if (buildClearBtn) {
-    buildClearBtn.addEventListener('click', () => {
-      document.querySelectorAll('.build-cell.placed').forEach(cell => {
-        cell.classList.add('removing');
-        setTimeout(() => cell.classList.remove('placed', 'removing'), 300);
-      });
-      bricksPlaced = 0;
-      setTimeout(updateBuildUI, 350);
     });
   }
 

@@ -55,38 +55,23 @@
       '  -webkit-backdrop-filter: none !important;' +
       '}' +
       '.device-low .hero-canvas { display: none !important; }' +
-      '.device-low .hero-lighting { display: none !important; }' +
-      '.device-low .hero-particles { display: none !important; }' +
-      '.device-low .hero-particles { display: none !important; }' +
-      '.device-low .particle { display: none !important; }' +
-      '.device-low .hero-scroll-indicator { display: none !important; }' +
-      '.device-low .back-to-top { display: none !important; }' +
-      '.device-low .ch5-brick-wall { display: none !important; }' +
-      '.device-low .showcase-hotspots { display: none !important; }' +
-      '.device-low .testimonials-track { animation: none !important; }' +
-      '.device-low .story-chapter .ch1-text,' +
-      '.device-low .story-chapter .ch2-line,' +
-      '.device-low .story-chapter .ch3-year,' +
-      '.device-low .story-chapter .ch4-item,' +
-      '.device-low .story-chapter .ch5-wall-brick {' +
-      '  opacity: 1 !important;' +
-      '  transform: none !important;' +
-      '}' +
-      '.device-low .ch3-message,' +
-      '.device-low .ch5-reveal, .device-low .ch4-msg {' +
-      '  opacity: 1 !important;' +
-      '  transform: none !important;' +
-      '}' +
-      '.device-low .ch5-wall-brick { opacity: 1 !important; }';
+'.device-low .back-to-top { display: none !important; }' +
+'.device-low .showcase-hotspots { display: none !important; }' +
+'.device-low .testimonials-track { animation: none !important; }' +
+'.device-low .story-chapter .ch-line,' +
+'.device-low .story-chapter .ch-label {' +
+'  opacity: 1 !important;' +
+'  transform: none !important;' +
+'}' +
+'.device-low .cv-brick { opacity: 0.5 !important; }' +
+'.device-low .cv-earth { opacity: 0.2 !important; }';
     document.head.appendChild(s);
   }
 
   if (tier === 'mid') {
     var s = document.createElement('style');
     s.textContent =
-      '.device-mid .hero-particles { opacity: 0.35 !important; }' +
-      '.device-mid .ch5-brick-wall { opacity: 0.06 !important; }' +
-      '.device-mid .hero-lighting::before { opacity: 0.15 !important; }';
+      '.device-mid .hero-canvas { opacity: 0.6 !important; }';
     document.head.appendChild(s);
   }
 })();
