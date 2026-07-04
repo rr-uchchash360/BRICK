@@ -2052,27 +2052,6 @@ input::placeholder {
   transform: translateY(0);
 }
 
-.result-stats {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-bottom: 24px;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.7s;
-}
-
-.game-result.show .result-stats {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.result-stats strong {
-  color: var(--text-primary);
-}
-
 .result-actions {
   display: flex;
   gap: 12px;
@@ -3860,6 +3839,47 @@ input::placeholder {
     background: var(--border-color);
     margin: 16px 0;
   }
+
+  /* Tablet game */
+  .balance-board {
+    height: 280px;
+  }
+
+  .balance-btn {
+    max-width: 160px;
+  }
+
+  /* Tablet features */
+  .feature-tagline {
+    font-size: 24px;
+  }
+
+  .feature-card {
+    padding: 24px 20px;
+  }
+
+  /* Tablet story */
+  .chapter-content {
+    padding: 30px 24px;
+  }
+
+  /* Tablet explore */
+  .explore-content {
+    padding: 0 20px;
+  }
+
+  .hotspot-info {
+    padding: 14px 16px;
+  }
+
+  .showcase-viewer {
+    min-height: 320px;
+  }
+
+  /* Tablet testimonials */
+  .testimonials-inner {
+    padding: 0 20px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -3873,6 +3893,11 @@ input::placeholder {
 
   .hero-title {
     font-size: clamp(36px, 10vw, 56px);
+  }
+
+  .hero-subtitle {
+    font-size: 14px;
+    margin-bottom: 32px;
   }
 
   .section {
@@ -3958,6 +3983,156 @@ input::placeholder {
   .result-actions {
     flex-direction: column;
   }
+
+  /* Game responsive */
+  .game-intro {
+    font-size: 14px;
+    max-width: 400px;
+  }
+
+  .hud-value {
+    font-size: 22px;
+  }
+
+  .balance-board {
+    height: 260px;
+  }
+
+  .balance-plank {
+    height: 10px;
+    bottom: calc(28% + 22px - 5px);
+    transform-origin: center 5px;
+  }
+
+  .plank-surface::after {
+    width: 3px;
+    height: 3px;
+  }
+
+  .balance-btn {
+    padding: 10px 12px;
+    font-size: 11px;
+    max-width: 150px;
+  }
+
+  .balance-fulcrum {
+    border-left-width: 14px;
+    border-right-width: 14px;
+    border-bottom-width: 22px;
+  }
+
+  .balance-pivot {
+    bottom: calc(28% + 22px);
+    width: 5px;
+    height: 5px;
+  }
+
+  .stack-brick {
+    width: 32px;
+    height: 9px;
+  }
+
+  .stack-brick.heavy {
+    width: 36px;
+    height: 11px;
+  }
+
+  .stack-brick.light {
+    width: 26px;
+    height: 7px;
+  }
+
+  .balance-angle {
+    font-size: 12px;
+  }
+
+  .offer-weight {
+    font-size: 18px;
+  }
+
+  .balance-arrow {
+    bottom: 30px;
+  }
+
+  .result-angle-value {
+    font-size: 26px;
+  }
+
+  /* Mobile product */
+  .product-name {
+    font-size: 28px;
+  }
+
+  .product-price {
+    font-size: 32px;
+  }
+
+  .product-original-price {
+    font-size: 17px;
+  }
+
+  .product-tagline {
+    font-size: 14px;
+  }
+
+  .brick-3d-container {
+    width: 100%;
+    height: 400px;
+  }
+
+  .product-main-image {
+    aspect-ratio: 1/1;
+  }
+
+  .product-specs {
+    padding: 28px 0 0;
+    margin-top: 36px;
+  }
+
+  /* Mobile features */
+  .feature-tagline {
+    font-size: 22px;
+  }
+
+  .feature-card {
+    padding: 20px 18px;
+  }
+
+  /* Mobile story */
+  .chapter-content {
+    padding: 24px 20px;
+  }
+
+  .story-chapter {
+    min-height: 80vh;
+  }
+
+  .ch-label {
+    font-size: 9px;
+    letter-spacing: 4px;
+  }
+
+  /* Mobile explore */
+  .explore-panel {
+    padding: 24px 0;
+  }
+
+  .hotspot-info {
+    padding: 12px 14px;
+    font-size: 12px;
+  }
+
+  .showcase-viewer {
+    min-height: 280px;
+  }
+
+  .info-label {
+    font-size: 9px;
+  }
+
+  .info-value {
+    font-size: 13px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -3971,6 +4146,276 @@ input::placeholder {
 
   .product-pricing {
     flex-wrap: wrap;
+  }
+
+  /* Game narrow phone */
+  .hud-value {
+    font-size: 18px;
+  }
+
+  .balance-board {
+    height: 200px;
+    border-radius: var(--radius-md);
+  }
+
+  .balance-plank {
+    height: 8px;
+    bottom: calc(28% + 16px - 4px);
+    transform-origin: center 4px;
+  }
+
+  .plank-surface::after {
+    width: 3px;
+    height: 3px;
+  }
+
+  .balance-btn {
+    padding: 8px;
+    font-size: 10px;
+    max-width: 130px;
+  }
+
+  .balance-btn i {
+    font-size: 9px;
+  }
+
+  .balance-fulcrum {
+    border-left-width: 10px;
+    border-right-width: 10px;
+    border-bottom-width: 16px;
+  }
+
+  .balance-pivot {
+    bottom: calc(28% + 16px);
+    width: 4px;
+    height: 4px;
+  }
+
+  .stack-brick {
+    width: 28px;
+    height: 8px;
+  }
+
+  .stack-brick.heavy {
+    width: 32px;
+    height: 10px;
+  }
+
+  .stack-brick.light {
+    width: 22px;
+    height: 6px;
+  }
+
+  .brick-offer {
+    padding: 10px 14px;
+    gap: 12px;
+  }
+
+  .offer-brick {
+    padding: 4px 12px;
+  }
+
+  .offer-weight {
+    font-size: 16px;
+  }
+
+  .offer-hint {
+    font-size: 10px;
+  }
+
+  .balance-arrow {
+    bottom: 26px;
+  }
+
+  .balance-angle {
+    font-size: 11px;
+    bottom: 10px;
+  }
+
+  .balance-pct {
+    font-size: 9px;
+  }
+
+  .game-intro {
+    font-size: 13px;
+  }
+
+  .result-modal {
+    padding: 32px 16px;
+  }
+
+  .result-angle-value {
+    font-size: 22px;
+  }
+
+  .result-message {
+    font-size: 12px;
+  }
+
+  /* Phone features */
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    max-width: 100%;
+  }
+
+  .feature-card {
+    padding: 18px 16px;
+  }
+
+  .features .section-label,
+  .features .section-title {
+    margin-bottom: 18px;
+  }
+
+  .feature-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 13px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+  }
+
+  .feature-name {
+    font-size: 9px;
+    letter-spacing: 2px;
+  }
+
+  .feature-tagline {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+
+  .feature-desc {
+    font-size: 11.5px;
+  }
+
+  /* Phone story */
+  .chapter-content {
+    padding: 20px 16px;
+    gap: 12px;
+  }
+
+  .ch-line {
+    font-size: 20px;
+  }
+
+  .ch-label {
+    font-size: 8px;
+    letter-spacing: 3px;
+  }
+
+  /* Phone hero */
+  .hero-content {
+    padding: 40px 16px 80px;
+  }
+
+  .hero-title {
+    font-size: 28px;
+  }
+
+  .hero-subtitle {
+    font-size: 13px;
+    margin-bottom: 28px;
+  }
+
+  /* Phone explore */
+  .explore-panel {
+    padding: 16px 0;
+  }
+
+  .showcase-viewer {
+    min-height: 240px;
+  }
+
+  .showcase-controls {
+    padding: 8px 12px;
+    gap: 6px;
+  }
+
+  .ctrl-btn {
+    padding: 6px 10px;
+    font-size: 10px;
+  }
+
+  .hotspot-info {
+    padding: 10px 12px;
+    font-size: 11px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .info-value {
+    font-size: 12px;
+  }
+
+  /* Phone testimonials */
+  .testimonial-card {
+    width: 260px;
+    padding: 20px;
+  }
+
+  .testimonial-text {
+    font-size: 13px;
+  }
+
+  .testimonial-author {
+    font-size: 11px;
+  }
+
+  /* Phone product */
+  .product-details {
+    padding: 24px 16px;
+  }
+
+  .product-name {
+    font-size: 24px;
+  }
+
+  .product-tagline {
+    font-size: 13px;
+  }
+
+  .product-price {
+    font-size: 28px;
+  }
+
+  .product-original-price {
+    font-size: 16px;
+  }
+
+  .product-specs {
+    padding: 24px 16px 0;
+    margin-top: 32px;
+  }
+
+  .specs-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-main-image {
+    aspect-ratio: 1/1;
+    border-radius: var(--radius-md);
+  }
+
+  .brick-3d-container {
+    width: 100%;
+    height: 300px;
+  }
+
+  .spec-item {
+    padding: 10px 12px;
+  }
+
+  .spec-label {
+    font-size: 9px;
+  }
+
+  .spec-value {
+    font-size: 13px;
   }
 }
 

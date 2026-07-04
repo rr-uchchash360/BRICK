@@ -8,7 +8,6 @@ const BRICK_GAME = (() => {
     bestAngle: 90,
     timeLeft: 30,
     totalPlaced: 0,
-    perfectCount: 0,
     leftWeight: 0,
     rightWeight: 0,
     timerInterval: null,
@@ -78,7 +77,6 @@ const BRICK_GAME = (() => {
     state.bestAngle = 90;
     state.timeLeft = 30;
     state.totalPlaced = 0;
-    state.perfectCount = 0;
     state.leftWeight = 0;
     state.rightWeight = 0;
 
@@ -149,7 +147,6 @@ const BRICK_GAME = (() => {
     if (state.totalPlaced > 1) {
       showFloatingText(tier.msg, side === 'left' ? 35 : 65, 50, tier.cls);
       if (tier.cls === 'perfect') {
-        state.perfectCount++;
         spawnParticles(side === 'left' ? 25 : 75, 50, 'gold', 10);
       }
     }
