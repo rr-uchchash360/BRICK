@@ -306,4 +306,5 @@ document.addEventListener('DOMContentLoaded', function() {
   initBrick('.hero-brick', false);
   initBrick('.showcase-brick-3d', false, 'showcase');
 });
+
 })();

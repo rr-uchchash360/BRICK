@@ -155,46 +155,63 @@ input::placeholder {
 }
 
 /* ----------------------------------------------
-   Interactive Cursor
+   Interactive Cursor — The Ember
    ---------------------------------------------- */
 .cursor {
   position: fixed;
   top: 0; left: 0;
   pointer-events: none;
   z-index: var(--z-cursor);
-  mix-blend-mode: difference;
 }
 
 .cursor-dot {
-  width: 8px; height: 8px;
-  background: white;
+  width: 6px; height: 6px;
+  background: #ff8833;
   border-radius: 50%;
   position: absolute;
   transform: translate(-50%, -50%);
-  transition: width 0.2s, height 0.2s, background 0.2s;
+  box-shadow: 0 0 6px rgba(255,136,51,0.6), 0 0 16px rgba(255,68,34,0.3);
+  transition: width 0.25s, height 0.25s, background 0.25s, box-shadow 0.25s;
 }
 
 .cursor-ring {
-  width: 40px; height: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  width: 36px; height: 36px;
   border-radius: 50%;
   position: absolute;
   transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s;
+  background: radial-gradient(circle, rgba(255,160,50,0.12) 0%, rgba(255,80,30,0.06) 40%, transparent 70%);
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
 }
 
 .cursor.hover .cursor-dot {
-  width: 12px; height: 12px;
-  background: var(--accent-red);
+  width: 10px; height: 10px;
+  background: #ffcc44;
+  box-shadow: 0 0 10px rgba(255,200,50,0.8), 0 0 30px rgba(255,100,30,0.5);
 }
+
 .cursor.hover .cursor-ring {
-  width: 60px; height: 60px;
-  border-color: var(--accent-red);
-  background: rgba(184, 58, 26, 0.1);
+  width: 56px; height: 56px;
+  background: radial-gradient(circle, rgba(255,200,80,0.2) 0%, rgba(255,100,40,0.1) 40%, transparent 70%);
 }
 
 .cursor.hidden {
   opacity: 0;
+}
+
+/* Ember trail particles */
+.cursor-ember {
+  position: fixed;
+  pointer-events: none;
+  z-index: calc(var(--z-cursor) - 1);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: emberFade 0.7s ease-out forwards;
+}
+
+@keyframes emberFade {
+  0%   { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+  60%  { opacity: 0.3; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.15); }
 }
 
 /* ----------------------------------------------

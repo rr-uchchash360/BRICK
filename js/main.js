@@ -136,11 +136,31 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('mousemove', (e) => {
       cursorX = e.clientX;
       cursorY = e.clientY;
+      spawnEmber(e.clientX, e.clientY);
       if (!cursorActive) {
         cursorActive = true;
         if (!cursorRafId) animateCursor();
       }
     }, { passive: true });
+
+    var lastEmberTime = 0;
+    function spawnEmber(x, y) {
+      var now = Date.now();
+      if (now - lastEmberTime < 25) return;
+      lastEmberTime = now;
+      var e = document.createElement('span');
+      e.className = 'cursor-ember';
+      var size = 2 + Math.random() * 3;
+      var colors = ['#ff8833', '#ff6633', '#ffcc44', '#ffaa44', '#ff4422'];
+      e.style.left = x + 'px';
+      e.style.top = y + 'px';
+      e.style.width = size + 'px';
+      e.style.height = size + 'px';
+      e.style.background = colors[Math.floor(Math.random() * colors.length)];
+      if (Math.random() > 0.5) e.style.boxShadow = '0 0 4px ' + e.style.background;
+      document.body.appendChild(e);
+      setTimeout(function() { if (e.parentNode) e.parentNode.removeChild(e); }, 700);
+    }
 
     function animateCursor() {
       var dx = Math.abs(cursorX - lastMoveX);
