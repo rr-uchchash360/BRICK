@@ -34,17 +34,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const loader = document.getElementById('loader');
   const loaderText = document.getElementById('loaderText');
   const ringFill = document.getElementById('ringFill');
+  const ringDot = document.getElementById('ringDot');
   const tempReading = document.getElementById('tempReading');
   const forgeGlow = document.getElementById('forgeGlow');
   const brickFaces = document.querySelectorAll('.loader-brick-face');
   const brickGlowInner = document.getElementById('brickGlowInner');
 
   const RING_CIRCUMFERENCE = 659.73;
+  const RING_RADIUS = 105;
+  const RING_CX = 120;
+  const RING_CY = 120;
 
   const kilnPhases = [
-    { text: 'Igniting',    temp: 200,  pct: 0.15, ringColor: '#4477bb',  tempColor: '#4477bb', glow: 'rgba(60,100,200,0.04)' },
-    { text: 'Smoldering',  temp: 500,  pct: 0.30, ringColor: '#6699cc',  tempColor: '#5588bb', glow: 'rgba(100,120,180,0.05)' },
-    { text: 'Heating',     temp: 800,  pct: 0.45, ringColor: '#cc8844',  tempColor: '#cc7733', glow: 'rgba(180,120,60,0.07)' },
+    { text: 'Igniting',    temp: 200,  pct: 0.15, ringColor: '#884422',  tempColor: '#884422', glow: 'rgba(120,60,20,0.05)' },
+    { text: 'Smoldering',  temp: 500,  pct: 0.30, ringColor: '#aa6633',  tempColor: '#995533', glow: 'rgba(160,90,40,0.06)' },
+    { text: 'Heating',     temp: 800,  pct: 0.45, ringColor: '#cc8844',  tempColor: '#cc7733', glow: 'rgba(200,120,50,0.07)' },
     { text: 'Firing',      temp: 1100, pct: 0.60, ringColor: '#cc5522',  tempColor: '#cc4422', glow: 'rgba(200,80,30,0.09)' },
     { text: 'Soaking',     temp: 1400, pct: 0.80, ringColor: '#cc3322',  tempColor: '#dd3322', glow: 'rgba(220,60,30,0.10)' },
     { text: 'Tempering',   temp: 1700, pct: 1.00, ringColor: '#ddaa44',  tempColor: '#eebb33', glow: 'rgba(240,180,50,0.12)' },
@@ -53,18 +57,49 @@ document.addEventListener('DOMContentLoaded', () => {
   let phaseIndex = 0;
   let loadDone = false;
   let loadTimer = null;
+  let currentTemp = 0;
+  let tempAnimId = null;
+
+  function animateTemp(target) {
+    if (tempAnimId) { cancelAnimationFrame(tempAnimId); tempAnimId = null; }
+    var start = currentTemp;
+    var diff = target - start;
+    var startTime = performance.now();
+    var duration = 600;
+
+    function tick(now) {
+      var t = Math.min(1, (now - startTime) / duration);
+      var eased = 1 - Math.pow(1 - t, 3);
+      currentTemp = Math.round(start + diff * eased);
+      if (tempReading) tempReading.textContent = currentTemp + '°';
+      if (t < 1) { tempAnimId = requestAnimationFrame(tick); }
+      else { tempAnimId = null; currentTemp = target; }
+    }
+    tempAnimId = requestAnimationFrame(tick);
+  }
+
+  function updateRingDot(pct) {
+    if (!ringDot) return;
+    var angle = pct * Math.PI * 2 - Math.PI / 2;
+    var dotX = RING_CX + RING_RADIUS * Math.cos(angle);
+    var dotY = RING_CY + RING_RADIUS * Math.sin(angle);
+    var container = ringDot.parentElement;
+    var rect = container.getBoundingClientRect();
+    ringDot.style.left = (dotX / 240 * 100) + '%';
+    ringDot.style.top = (dotY / 240 * 100) + '%';
+    ringDot.style.opacity = pct > 0 ? '1' : '0';
+  }
 
   function applyPhase(p) {
     if (loaderText) loaderText.textContent = p.text;
-    if (tempReading) {
-      tempReading.textContent = p.temp + '°';
-      tempReading.style.color = p.tempColor;
-    }
+    animateTemp(p.temp);
+    if (tempReading) tempReading.style.color = p.tempColor;
     if (ringFill) {
       var offset = RING_CIRCUMFERENCE * (1 - p.pct);
       ringFill.setAttribute('stroke-dashoffset', offset);
       ringFill.setAttribute('stroke', p.ringColor);
     }
+    updateRingDot(p.pct);
     if (forgeGlow) {
       forgeGlow.style.background = 'radial-gradient(ellipse at 50% 60%, ' + p.glow + ' 0%, transparent 60%)';
     }
@@ -92,13 +127,51 @@ document.addEventListener('DOMContentLoaded', () => {
       loadTimer = setTimeout(advanceLoader, 1000);
     } else {
       loadDone = true;
-      setTimeout(hideLoader, 500);
+      burstExit();
+    }
+  }
+
+  function burstExit() {
+    if (loader) loader.classList.add('loader-burst');
+    spawnBurstParticles();
+    setTimeout(hideLoader, 600);
+  }
+
+  function spawnBurstParticles() {
+    var colors = ['#ff8833', '#ff6633', '#ffcc44', '#ffaa44', '#ff4422'];
+    for (var i = 0; i < 30; i++) {
+      (function() {
+        var p = document.createElement('span');
+        p.className = 'cursor-ember';
+        var size = 3 + Math.random() * 5;
+        p.style.left = (window.innerWidth / 2 + (Math.random() - 0.5) * 60) + 'px';
+        p.style.top = (window.innerHeight / 2 + (Math.random() - 0.5) * 60) + 'px';
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.boxShadow = '0 0 6px ' + p.style.background;
+        p.style.animationDuration = (0.6 + Math.random() * 0.4) + 's';
+        var angle = Math.random() * Math.PI * 2;
+        var dist = 80 + Math.random() * 120;
+        var dx = Math.cos(angle) * dist;
+        var dy = Math.sin(angle) * dist;
+        p.style.setProperty('--dx', dx + 'px');
+        p.style.setProperty('--dy', dy + 'px');
+        p.style.animation = 'none';
+        p.animate([
+          { transform: 'translate(0,0) scale(1)', opacity: 1 },
+          { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(0.15)', opacity: 0 }
+        ], { duration: 700 + Math.random() * 300, easing: 'ease-out', fill: 'forwards' });
+        document.body.appendChild(p);
+        setTimeout(function() { if (p.parentNode) p.parentNode.removeChild(p); }, 1200);
+      })();
     }
   }
 
   function hideLoader() {
     if (loader && loader.classList.contains('hidden')) return;
     if (loadTimer) { clearTimeout(loadTimer); loadTimer = null; }
+    if (tempAnimId) { cancelAnimationFrame(tempAnimId); tempAnimId = null; }
     applyPhase(kilnPhases[kilnPhases.length - 1]);
     if (loader) {
       loader.classList.add('hidden');

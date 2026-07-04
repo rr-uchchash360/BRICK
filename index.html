@@ -6,6 +6,8 @@
   <meta name="description" content="The Brick That Chooses You. Crafted by time. Forged by fire. Reserved for visionaries.">
   <meta name="theme-color" content="#050505">
   <title>BRICK — The Ordinary That Became Extraordinary</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="alternate icon" href="assets/favicon.svg">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,11 +56,14 @@
       </div>
 
       <div class="ring-container">
+        <div class="heat-shimmer"></div>
+        <div class="heat-shimmer heat-shimmer-2"></div>
         <svg class="temp-ring" width="240" height="240" viewBox="0 0 240 240">
           <circle class="ring-bg" cx="120" cy="120" r="105" />
           <circle class="ring-fill" id="ringFill" cx="120" cy="120" r="105"
             stroke-dasharray="659.73" stroke-dashoffset="659.73" />
         </svg>
+        <div class="ring-dot" id="ringDot"></div>
         <div class="loader-brick">
           <div class="brick-glow-inner" id="brickGlowInner"></div>
           <div class="loader-brick-face"></div>
