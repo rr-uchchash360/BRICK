@@ -29,21 +29,96 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================
-  // LOADING SCREEN
+  // LOADING SCREEN — The Kiln
   // ============================================
   const loader = document.getElementById('loader');
+  const loaderText = document.getElementById('loaderText');
+  const ringFill = document.getElementById('ringFill');
+  const tempReading = document.getElementById('tempReading');
+  const forgeGlow = document.getElementById('forgeGlow');
+  const brickFaces = document.querySelectorAll('.loader-brick-face');
+  const brickGlowInner = document.getElementById('brickGlowInner');
 
-  function hideLoader() {
-    if (loader.classList.contains('hidden')) return;
-    loader.classList.add('hidden');
-    setTimeout(() => {
-      const cursor = document.querySelector('.cursor');
-      if (cursor) cursor.style.opacity = '1';
-    }, 300);
+  const RING_CIRCUMFERENCE = 659.73;
+
+  const kilnPhases = [
+    { text: 'Igniting',    temp: 200,  pct: 0.15, ringColor: '#4477bb',  tempColor: '#4477bb', glow: 'rgba(60,100,200,0.04)' },
+    { text: 'Smoldering',  temp: 500,  pct: 0.30, ringColor: '#6699cc',  tempColor: '#5588bb', glow: 'rgba(100,120,180,0.05)' },
+    { text: 'Heating',     temp: 800,  pct: 0.45, ringColor: '#cc8844',  tempColor: '#cc7733', glow: 'rgba(180,120,60,0.07)' },
+    { text: 'Firing',      temp: 1100, pct: 0.60, ringColor: '#cc5522',  tempColor: '#cc4422', glow: 'rgba(200,80,30,0.09)' },
+    { text: 'Soaking',     temp: 1400, pct: 0.80, ringColor: '#cc3322',  tempColor: '#dd3322', glow: 'rgba(220,60,30,0.10)' },
+    { text: 'Tempering',   temp: 1700, pct: 1.00, ringColor: '#ddaa44',  tempColor: '#eebb33', glow: 'rgba(240,180,50,0.12)' },
+  ];
+
+  let phaseIndex = 0;
+  let loadDone = false;
+  let loadTimer = null;
+
+  function applyPhase(p) {
+    if (loaderText) loaderText.textContent = p.text;
+    if (tempReading) {
+      tempReading.textContent = p.temp + '°';
+      tempReading.style.color = p.tempColor;
+    }
+    if (ringFill) {
+      var offset = RING_CIRCUMFERENCE * (1 - p.pct);
+      ringFill.setAttribute('stroke-dashoffset', offset);
+      ringFill.setAttribute('stroke', p.ringColor);
+    }
+    if (forgeGlow) {
+      forgeGlow.style.background = 'radial-gradient(ellipse at 50% 60%, ' + p.glow + ' 0%, transparent 60%)';
+    }
+    brickFaces.forEach(function(f) {
+      var t = Math.min(1, p.pct * 1.2);
+      var r = Math.round(50 + t * 70);
+      var g = Math.round(20 + t * 40);
+      var b = Math.round(16 - t * 10);
+      f.style.background = 'rgb(' + r + ',' + g + ',' + b + ')';
+    });
+    if (brickGlowInner) {
+      var glowIntensity = p.pct * 0.7;
+      brickGlowInner.style.background = 'radial-gradient(ellipse at 50% 50%, rgba(255,180,50,' + (glowIntensity * 0.6) + ') 0%, rgba(200,80,30,' + (glowIntensity * 0.3) + ') 40%, transparent 70%)';
+    }
+    if (tempReading) {
+      tempReading.classList.toggle('glow', p.temp >= 1100);
+    }
   }
 
-  window.addEventListener('load', () => setTimeout(hideLoader, 2000));
-  setTimeout(() => { if (loader && !loader.classList.contains('hidden')) hideLoader(); }, 4000);
+  function advanceLoader() {
+    if (loadDone) return;
+    if (phaseIndex < kilnPhases.length) {
+      applyPhase(kilnPhases[phaseIndex]);
+      phaseIndex++;
+      loadTimer = setTimeout(advanceLoader, 1000);
+    } else {
+      loadDone = true;
+      setTimeout(hideLoader, 500);
+    }
+  }
+
+  function hideLoader() {
+    if (loader && loader.classList.contains('hidden')) return;
+    if (loadTimer) { clearTimeout(loadTimer); loadTimer = null; }
+    applyPhase(kilnPhases[kilnPhases.length - 1]);
+    if (loader) {
+      loader.classList.add('hidden');
+      setTimeout(function() {
+        var cursor = document.querySelector('.cursor');
+        if (cursor) cursor.style.opacity = '1';
+      }, 300);
+    }
+    loadDone = true;
+  }
+
+  advanceLoader();
+
+  window.addEventListener('load', function() {
+    setTimeout(hideLoader, 1200);
+  });
+
+  setTimeout(function() {
+    if (loader && !loader.classList.contains('hidden')) hideLoader();
+  }, 7000);
 
   // ============================================
   // INTERACTIVE CURSOR

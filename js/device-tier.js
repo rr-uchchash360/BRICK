@@ -55,16 +55,16 @@
       '  -webkit-backdrop-filter: none !important;' +
       '}' +
       '.device-low .hero-canvas { display: none !important; }' +
-'.device-low .back-to-top { display: none !important; }' +
-'.device-low .showcase-hotspots { display: none !important; }' +
-'.device-low .testimonials-track { animation: none !important; }' +
-'.device-low .story-chapter .ch-line,' +
-'.device-low .story-chapter .ch-label {' +
-'  opacity: 1 !important;' +
-'  transform: none !important;' +
-'}' +
-'.device-low .cv-brick { opacity: 0.5 !important; }' +
-'.device-low .cv-earth { opacity: 0.2 !important; }';
+      '.device-low .back-to-top { display: none !important; }' +
+      '.device-low .showcase-hotspots { display: none !important; }' +
+      '.device-low .testimonials-track { animation: none !important; }' +
+      '.device-low .story-chapter .ch-line,' +
+      '.device-low .story-chapter .ch-label {' +
+      '  opacity: 1 !important;' +
+      '  transform: none !important;' +
+      '}' +
+      '.device-low .cv-brick { opacity: 0.5 !important; }' +
+      '.device-low .cv-earth { opacity: 0.2 !important; }';
     document.head.appendChild(s);
   }
 
