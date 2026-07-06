@@ -262,6 +262,66 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================
+  // SNAP SCROLL — Hero through Explore
+  // ============================================
+  function initSectionSnap() {
+    var snapSelectors = '#hero, .story-chapter, #explore';
+    var snapEls = document.querySelectorAll(snapSelectors);
+    if (snapEls.length < 2) { window._snapSectionCount = 0; return; }
+
+    var activeIdx = 0;
+
+    snapEls.forEach(function(el, i) {
+      el.classList.add('snap-section');
+      el.style.minHeight = '100vh';
+      if (i === 0) {
+        el.classList.add('snap-active');
+      } else {
+        el.classList.add('snap-inactive');
+      }
+    });
+
+    // Get the virtual scroll position from Lenis (or fall back to native)
+    function getScrollY() {
+      if (typeof lenis !== 'undefined' && typeof lenis.animatedScroll === 'number') {
+        return lenis.animatedScroll;
+      }
+      return window.pageYOffset || document.documentElement.scrollTop;
+    }
+
+    function updateActive() {
+      var sy = getScrollY();
+      var vh = window.innerHeight;
+      // Snap sections are each 100vh tall — round to the nearest section
+      var raw = sy / vh;
+      var idx = Math.round(raw);
+      idx = Math.max(0, Math.min(idx, snapEls.length - 1));
+
+      if (idx !== activeIdx) {
+        snapEls[activeIdx].classList.remove('snap-active');
+        snapEls[activeIdx].classList.add('snap-inactive');
+        activeIdx = idx;
+        snapEls[activeIdx].classList.remove('snap-inactive');
+        snapEls[activeIdx].classList.add('snap-active');
+      }
+    }
+
+    // Listen on Lenis scroll — this fires on every Lenis frame
+    if (typeof lenis !== 'undefined') {
+      lenis.on('scroll', updateActive);
+    }
+
+    // Also listen on native scroll / resize as fallback
+    window.addEventListener('scroll', updateActive, { passive: true });
+    window.addEventListener('resize', updateActive, { passive: true });
+
+    // Run once on init
+    updateActive();
+  }
+
+  initSectionSnap();
+
+  // ============================================
   // SCROLL PROGRESS BAR
   // ============================================
   const progressFill = document.getElementById('scrollProgressFill');
@@ -405,7 +465,8 @@ document.addEventListener('DOMContentLoaded', () => {
   heroTl
     .from('.title-line', { y: 120, opacity: 0, duration: 1.2, stagger: 0.2 })
     .from('.hero-subtitle', { y: 40, opacity: 0, duration: 1 }, '-=0.4')
-    .from('.hero-actions .btn', { y: 30, opacity: 0, scale: 0.95, duration: 0.8 }, '-=0.4');
+    .fromTo('.hero-actions .btn', { y: 30, opacity: 0, scale: 0.95 }, { y: 0, opacity: 1, scale: 1, duration: 0.8 }, '-=0.4')
+    .set('.hero-actions .btn', { clearProps: 'all' }, '+=0.1');
 
   // Features — staggered reveal (one-time)
   gsap.utils.toArray('.feature-card').forEach((card) => {
