@@ -1915,6 +1915,26 @@ input::placeholder {
   font-family: var(--font-alt);
 }
 
+.offer-brick.urgent {
+  animation: brickUrgent 0.5s ease-in-out infinite alternate;
+  border-color: rgba(255, 68, 34, 0.6);
+}
+
+@keyframes brickUrgent {
+  0%   { box-shadow: 0 0 4px rgba(255, 68, 34, 0.3); }
+  100% { box-shadow: 0 0 20px rgba(255, 68, 34, 0.7); }
+}
+
+.offer-hint.countdown {
+  color: var(--accent-red);
+  animation: hintPulse 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes hintPulse {
+  0%   { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
 .offer-hint {
   font-size: 11px;
   color: var(--text-muted);
@@ -2453,6 +2473,17 @@ input::placeholder {
   border-radius: 4px;
   font-size: 12px;
   font-weight: 600;
+}
+
+.product-vat-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  font-family: var(--font-alt);
+  padding: 3px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  opacity: 0.7;
 }
 
 .game-promo {
@@ -3138,6 +3169,7 @@ input::placeholder {
   opacity: 0;
   pointer-events: none;
   overflow-y: auto;
+  overscroll-behavior: contain;
   transition: all 0.4s cubic-bezier(0.65, 0, 0.35, 1);
   will-change: transform, opacity;
 }
@@ -3495,6 +3527,7 @@ input::placeholder {
   transition: all 0.6s cubic-bezier(0.65, 0, 0.35, 1);
   max-height: 90vh;
   overflow-y: auto;
+  overscroll-behavior: contain;
   width: 90%;
   max-width: 600px;
 }

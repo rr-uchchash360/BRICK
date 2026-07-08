@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var duration = 600;
 
     function tick(now) {
-      var t = Math.min(1, (now - startTime) / duration);
+      var t = Math.max(0, Math.min(1, (now - startTime) / duration));
       var eased = 1 - Math.pow(1 - t, 3);
       currentTemp = Math.round(start + diff * eased);
       if (tempReading) tempReading.textContent = currentTemp + '°';
@@ -872,7 +872,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     terms: {
       title: 'Terms of Service',
-      body: '<h5>Terms & Conditions</h5><p>By purchasing The Original Brick, you agree to the following terms:</p><ul><li>All sales are subject to availability</li><li>Ownership of the physical brick does not transfer intellectual property rights</li><li>BRICK reserves the right to cancel orders in case of technical errors</li><li>Prices are in Bangladeshi Taka (BDT) and include applicable VAT</li></ul><p>These terms are governed by the laws of the People\'s Republic of Bangladesh.</p>'
+      body: '<h5>Terms & Conditions</h5><p>By purchasing The Original Brick, you agree to the following terms:</p><ul><li>All sales are subject to availability</li><li>Ownership of the physical brick does not transfer intellectual property rights</li><li>BRICK reserves the right to cancel orders in case of technical errors</li><li>Prices are in Bangladeshi Taka (BDT). A 15% VAT is added at checkout.</li></ul><p>These terms are governed by the laws of the People\'s Republic of Bangladesh.</p>'
     },
     cookies: {
       title: 'Cookie Policy',

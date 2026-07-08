@@ -223,10 +223,6 @@
     <!-- CHAPTER 6: INVITATION -->
     <div class="story-chapter" id="chapter6">
       <div class="chapter-bg chapter-bg-invitation"></div>
-      <div class="chapter-visual" id="visual6">
-        <div class="cv-brick-glow"></div>
-        <div class="cv-brick"></div>
-      </div>
       <div class="chapter-content">
         <span class="ch-label">Epilogue</span>
         <p class="ch-line" data-idx="0">5,000 years of building the world.</p>
@@ -554,7 +550,7 @@
           <div class="balance-fulcrum"></div>
           <div class="balance-pivot"></div>
         </div>
-        <div class="balance-angle" id="balanceAngle">0° <span class="balance-pct">30%</span></div>
+        <div class="balance-angle" id="balanceAngle">0° <span class="balance-pct">50%</span></div>
         <div class="balance-limits">
           <span class="limit-label left">-90°</span>
           <span class="limit-label right">+90°</span>
@@ -570,10 +566,10 @@
           <span class="offer-weight" id="offerWeight">5</span>
           <span class="offer-unit">kg</span>
         </div>
-        <span class="offer-hint">Place this brick</span>
+        <span class="offer-hint" id="offerHint">Place this brick</span>
       </div>
 
-      <div class="balance-controls">
+      <div class="balance-controls" id="balanceControls" style="display:none">
         <button class="btn btn-outline balance-btn" id="placeLeft">
           <i class="fa-solid fa-arrow-left"></i> Left Side
         </button>
@@ -787,16 +783,17 @@
         <p class="product-tagline">One brick. Infinite meaning.</p>
 
         <div class="product-pricing">
-          <span class="product-price" id="productPrice">৳2,40,000</span>
-          <span class="product-original-price" id="productOriginalPrice">৳3,00,000</span>
+          <span class="product-price" id="productPrice">৳10,000</span>
+          <span class="product-original-price" id="productOriginalPrice">৳10,000</span>
           <span class="product-discount-badge" id="productDiscountBadge"></span>
+          <span class="product-vat-label">+15% VAT</span>
         </div>
 
         <div class="game-promo" id="gamePromo">
           <div class="game-promo-icon"><i class="fa-solid fa-gamepad"></i></div>
           <div class="game-promo-text">
             <span class="game-promo-title">Stack & Save</span>
-            <span class="game-promo-sub">Play the Brick Stacking game to earn up to <strong>30% off</strong></span>
+            <span class="game-promo-sub">Play the Brick Stacking game to earn up to <strong>50% off</strong></span>
           </div>
           <a href="#game" class="game-promo-btn" data-smooth>Play Now <i class="fa-solid fa-arrow-right"></i></a>
         </div>
@@ -1106,7 +1103,7 @@
             <span class="checkout-item-name">The Original Brick</span>
             <span class="checkout-item-qty">Qty: <span id="checkoutQty">1</span></span>
           </div>
-          <span class="checkout-item-price" id="checkoutPrice">৳2,40,000</span>
+          <span class="checkout-item-price" id="checkoutPrice">৳10,000</span>
         </div>
         <div class="checkout-summary-details">
           <div class="summary-row">
@@ -1122,7 +1119,7 @@
             <span>Free across Bangladesh</span>
           </div>
           <div class="summary-row">
-            <span>VAT</span>
+            <span>VAT (15%)</span>
             <span id="checkoutTax">৳0</span>
           </div>
         </div>

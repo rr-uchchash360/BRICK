@@ -7,9 +7,9 @@ const CART = (() => {
   let discount = 0;
   let quantity = 1;
 
-  const BASE_PRICE = 300000;
-  const FINAL_PRICE = 240000;
-  const TAX_RATE = 0.05;
+  const BASE_PRICE = 10000;
+  const FINAL_PRICE = 10000;
+  const TAX_RATE = 0.15;
 
   function fmtBDT(n) {
     return '৳' + Number(n).toLocaleString('en-IN');
