@@ -524,6 +524,64 @@
       Every brick has weight — and every decision has consequences. Place each brick on the left or right to keep the plank balanced. Let it tip past 90° and it's over.
     </p>
 
+    <div class="game-rules" id="gameRules">
+      <div class="game-rules-backdrop"></div>
+      <div class="game-rules-modal">
+        <div class="game-rules-header">
+          <div class="game-rules-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+          <h3 class="game-rules-title">How to Play</h3>
+          <p class="game-rules-sub">Keep the plank balanced — every brick, every decision matters.</p>
+        </div>
+
+        <div class="game-rules-list">
+          <div class="rule-card">
+            <div class="rule-card-icon"><i class="fa-solid fa-arrow-left"></i><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="rule-card-body">
+              <span class="rule-card-label">Place Bricks</span>
+              <span class="rule-card-text">Choose left or right side to keep the scale level. Each brick has a random weight (2&ndash;8 kg).</span>
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-icon"><i class="fa-solid fa-columns"></i></div>
+            <div class="rule-card-body">
+              <span class="rule-card-label">Column Limit</span>
+              <span class="rule-card-text">Bricks stack in columns of <strong>12</strong>. After that, a new column starts automatically.</span>
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-icon"><i class="fa-solid fa-hand"></i></div>
+            <div class="rule-card-body">
+              <span class="rule-card-label">No Repetition</span>
+              <span class="rule-card-text">You can&rsquo;t place on the same side more than <strong>3 times in a row</strong> &mdash; alternate or get locked out.</span>
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="rule-card-body">
+              <span class="rule-card-label">Tipping Point</span>
+              <span class="rule-card-text">If the plank tilts past <strong>90&deg;</strong>, the stack collapses and the game ends.</span>
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-icon"><i class="fa-solid fa-stopwatch"></i></div>
+            <div class="rule-card-body">
+              <span class="rule-card-label">Timer &amp; Auto-Place</span>
+              <span class="rule-card-text">You have <strong>30 seconds</strong>. If you don&rsquo;t act within <strong>3 seconds</strong>, the brick auto-places on the heavier side.</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary game-rules-start" id="gameRulesStart">
+          <i class="fa-solid fa-play"></i>
+          <span>Got it &mdash; Start!</span>
+        </button>
+      </div>
+    </div>
+
     <div class="game-container">
       <div class="game-hud">
         <div class="hud-item">

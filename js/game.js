@@ -23,6 +23,7 @@ const BRICK_GAME = (() => {
   let plankEl, angleEl, arrowFill, arrowIndicator, boardEl;
   let stackLeft, stackRight, offerBrick, offerWeight, offerHint;
   let placeLeftBtn, placeRightBtn, startBtn, balanceControls;
+  let rulesEl, rulesStartBtn;
   let currentWeight = 0;
   let brickTimerId = null;
   const MAX_ANGLE = 90;
@@ -45,19 +46,22 @@ const BRICK_GAME = (() => {
     placeRightBtn = document.getElementById('placeRight');
     startBtn = document.getElementById('gameStartBtn');
     balanceControls = document.getElementById('balanceControls');
+    rulesEl = document.getElementById('gameRules');
+    rulesStartBtn = document.getElementById('gameRulesStart');
 
     bestAngleEl.textContent = '0\u00B0';
 
     if (placeLeftBtn) placeLeftBtn.addEventListener('click', function() { placeBrick('left'); });
     if (placeRightBtn) placeRightBtn.addEventListener('click', function() { placeBrick('right'); });
-    if (startBtn) startBtn.addEventListener('click', startGame);
+    if (startBtn) startBtn.addEventListener('click', showRules);
+    if (rulesStartBtn) rulesStartBtn.addEventListener('click', function() { hideRules(); startGame(); });
 
     var retryBtn = document.getElementById('gameRetryBtn');
     if (retryBtn) retryBtn.addEventListener('click', function() {
       document.getElementById('gameResult').classList.remove('show');
       document.body.style.overflow = '';
       resetVisuals();
-      startGame();
+      showRules();
     });
   }
 
@@ -76,6 +80,16 @@ const BRICK_GAME = (() => {
     boardEl.classList.remove('tip');
     boardEl.querySelectorAll('.game-floating-text').forEach(function(el) { el.remove(); });
     boardEl.querySelectorAll('.game-particle').forEach(function(el) { el.remove(); });
+  }
+
+  /* ---- Rules Modal ---- */
+
+  function showRules() {
+    if (rulesEl) rulesEl.classList.add('show');
+  }
+
+  function hideRules() {
+    if (rulesEl) rulesEl.classList.remove('show');
   }
 
   function startGame() {
@@ -294,6 +308,7 @@ const BRICK_GAME = (() => {
     state.isPlaying = false;
     clearBrickTimer();
     currentWeight = 0;
+    hideRules();
     clearInterval(state.timerInterval);
     if (state.timerRafId) {
       cancelAnimationFrame(state.timerRafId);

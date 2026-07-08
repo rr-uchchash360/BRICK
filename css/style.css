@@ -1944,6 +1944,201 @@ input::placeholder {
   letter-spacing: 1px;
 }
 
+/* Game Rules Modal */
+.game-rules {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  visibility: hidden;
+}
+
+.game-rules.show {
+  opacity: 1;
+  pointer-events: all;
+  visibility: visible;
+}
+
+.game-rules-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 5, 5, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: var(--radius-lg);
+}
+
+.game-rules-modal {
+  position: relative;
+  z-index: 1;
+  max-width: 440px;
+  width: 90%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 0;
+  text-align: center;
+  transform: scale(0.92) translateY(16px);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.game-rules.show .game-rules-modal {
+  transform: scale(1) translateY(0);
+}
+
+.game-rules-header {
+  padding: 36px 32px 0;
+}
+
+.game-rules-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(212, 168, 67, 0.08);
+  border: 1px solid rgba(212, 168, 67, 0.15);
+  border-radius: 50%;
+  font-size: 22px;
+  color: var(--accent-gold);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.05s;
+}
+
+.game-rules.show .game-rules-icon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.game-rules-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 3px;
+  margin-bottom: 8px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.1s;
+}
+
+.game-rules.show .game-rules-title {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.game-rules-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 0;
+  letter-spacing: 0.3px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
+}
+
+.game-rules.show .game-rules-sub {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.game-rules-list {
+  padding: 20px 32px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rule-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  text-align: left;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.game-rules.show .rule-card {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.game-rules.show .rule-card:nth-child(1) { transition-delay: 0.2s; }
+.game-rules.show .rule-card:nth-child(2) { transition-delay: 0.25s; }
+.game-rules.show .rule-card:nth-child(3) { transition-delay: 0.3s; }
+.game-rules.show .rule-card:nth-child(4) { transition-delay: 0.35s; }
+.game-rules.show .rule-card:nth-child(5) { transition-delay: 0.4s; }
+
+.rule-card-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  background: rgba(212, 168, 67, 0.08);
+  border: 1px solid rgba(212, 168, 67, 0.12);
+  border-radius: var(--radius-sm);
+  color: var(--accent-gold);
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.rule-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.rule-card-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.rule-card-text {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.rule-card-text strong {
+  color: var(--accent-gold);
+  font-weight: 600;
+}
+
+.game-rules-start {
+  margin: 24px 32px 32px;
+  width: calc(100% - 64px);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.45s;
+}
+
+.game-rules.show .game-rules-start {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* Balance Controls */
 .balance-controls {
   display: flex;
@@ -4471,6 +4666,19 @@ input::placeholder {
     padding: 40px 24px;
   }
 
+  .game-rules-header {
+    padding: 28px 24px 0;
+  }
+
+  .game-rules-list {
+    padding: 16px 24px 0;
+  }
+
+  .game-rules-start {
+    margin: 20px 24px 28px;
+    width: calc(100% - 48px);
+  }
+
   .result-actions {
     flex-direction: column;
   }
@@ -4746,6 +4954,45 @@ input::placeholder {
   .balance-angle {
     font-size: 11px;
     bottom: 10px;
+  }
+
+  .game-rules-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+  }
+
+  .game-rules-title {
+    font-size: 20px;
+  }
+
+  .game-rules-header {
+    padding: 24px 20px 0;
+  }
+
+  .game-rules-list {
+    padding: 14px 20px 0;
+    gap: 6px;
+  }
+
+  .rule-card {
+    padding: 12px 14px;
+    gap: 12px;
+  }
+
+  .rule-card-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  .rule-card-text {
+    font-size: 11.5px;
+  }
+
+  .game-rules-start {
+    margin: 18px 20px 24px;
+    width: calc(100% - 40px);
   }
 
   .balance-pct {
