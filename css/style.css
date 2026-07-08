@@ -1289,7 +1289,7 @@ input::placeholder {
 
 /* ---------- Panel 2: X-Ray ---------- */
 .xray-viewer {
-  aspect-ratio: 1;
+  aspect-ratio: 5/3;
   background:
     radial-gradient(ellipse at 50% 50%, #0d0d0d, #070707);
   position: relative;
@@ -1329,7 +1329,7 @@ input::placeholder {
 
 .xray-brick-container {
   position: relative;
-  width: 180px; height: 90px;
+  width: 360px; height: 180px;
   border-radius: 6px;
   z-index: 2;
 }
