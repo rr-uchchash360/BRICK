@@ -1736,8 +1736,11 @@ input::placeholder {
   bottom: 100%;
   display: flex;
   flex-direction: column-reverse;
+  flex-wrap: wrap;
   align-items: center;
+  align-content: flex-start;
   gap: 2px;
+  max-height: 145px;
 }
 
 .stack-left {
@@ -1977,6 +1980,14 @@ input::placeholder {
 
 .balance-btn:active {
   transform: scale(0.97);
+}
+
+.balance-btn.locked {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+  border-color: var(--border-color);
+  color: var(--text-secondary);
 }
 
 .balance-btn i {
@@ -4507,6 +4518,10 @@ input::placeholder {
     height: 5px;
   }
 
+  .stack-area {
+    max-height: 130px;
+  }
+
   .stack-brick {
     width: 32px;
     height: 9px;
@@ -4686,6 +4701,10 @@ input::placeholder {
     bottom: calc(28% + 16px);
     width: 4px;
     height: 4px;
+  }
+
+  .stack-area {
+    max-height: 120px;
   }
 
   .stack-brick {

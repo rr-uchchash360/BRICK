@@ -15,6 +15,8 @@ const BRICK_GAME = (() => {
     timerLastTick: 0,
     discountMultiplier: 0,
     tier: null,
+    lastSide: null,
+    consecutiveCount: 0,
   };
 
   let timerEl, bestAngleEl, angleHudEl;
@@ -83,6 +85,8 @@ const BRICK_GAME = (() => {
     state.totalPlaced = 0;
     state.leftWeight = 0;
     state.rightWeight = 0;
+    state.lastSide = null;
+    state.consecutiveCount = 0;
 
     resetVisuals();
 
@@ -152,7 +156,30 @@ const BRICK_GAME = (() => {
     if (!state.isPlaying) return;
     if (currentWeight === 0) return;
     var side = state.leftWeight >= state.rightWeight ? 'left' : 'right';
+    if (state.consecutiveCount >= 3 && side === state.lastSide) {
+      side = side === 'left' ? 'right' : 'left';
+    }
     placeBrick(side);
+  }
+
+  /* ---- Side Lock (3-consecutive rule) ---- */
+
+  function updateSideButtons() {
+    if (!placeLeftBtn || !placeRightBtn) return;
+    placeLeftBtn.disabled = false;
+    placeRightBtn.disabled = false;
+    placeLeftBtn.classList.remove('locked');
+    placeRightBtn.classList.remove('locked');
+    if (state.consecutiveCount >= 3 && state.lastSide) {
+      var locked = state.lastSide;
+      if (locked === 'left') {
+        placeLeftBtn.disabled = true;
+        placeLeftBtn.classList.add('locked');
+      } else {
+        placeRightBtn.disabled = true;
+        placeRightBtn.classList.add('locked');
+      }
+    }
   }
 
   /* ---- Core Gameplay ---- */
@@ -171,6 +198,7 @@ const BRICK_GAME = (() => {
   function placeBrick(side) {
     if (!state.isPlaying) return;
     if (currentWeight === 0) return;
+    if (state.consecutiveCount >= 3 && side === state.lastSide) return;
 
     clearBrickTimer();
 
@@ -186,6 +214,15 @@ const BRICK_GAME = (() => {
       state.rightWeight += currentWeight;
       stackRight.appendChild(leftEl);
     }
+
+    if (side === state.lastSide) {
+      state.consecutiveCount++;
+    } else {
+      state.lastSide = side;
+      state.consecutiveCount = 1;
+    }
+
+    updateSideButtons();
 
     state.totalPlaced++;
 
