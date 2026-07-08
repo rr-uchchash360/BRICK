@@ -455,8 +455,10 @@ const CART = (() => {
 
     ownerNumber.textContent = ownerNum;
     certOwner.textContent = result.name;
-    certNumber.textContent = '#' + ownerNum;
-    certDate.textContent = today;
+    if (certNumber) certNumber.textContent = '#' + ownerNum;
+    if (certDate) certDate.textContent = today;
+    var certRef = document.getElementById('certNumberRef');
+    if (certRef) certRef.textContent = ownerNum;
 
     document.getElementById('tlConfirmed').textContent = 'Today at ' +
       now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
@@ -622,9 +624,9 @@ const CART = (() => {
   }
 
   function downloadCertificate() {
-    var name = certOwner.textContent;
-    var number = certNumber.textContent;
-    var date = certDate.textContent;
+    var name = certOwner ? certOwner.textContent : '';
+    var number = certNumber ? certNumber.textContent : '';
+    var date = certDate ? certDate.textContent : '';
     var orderNo = document.getElementById('confOrderNumber').textContent;
     if (!name || name === '—') { showNotification('No certificate data', 'Complete a purchase first'); return; }
 
@@ -641,150 +643,87 @@ const CART = (() => {
   }
 
   function generateProfessionalPdf(name, number, date, orderNo) {
-    var doc = new jspdf.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    var doc = new jspdf.jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
     var w = doc.internal.pageSize.getWidth();
     var h = doc.internal.pageSize.getHeight();
 
     var gold = [212, 168, 67];
-    var red = [198, 40, 40];
-    var dark = [20, 20, 20];
+    var dark = [42, 37, 32];
 
-    // Background
-    doc.setFillColor(250, 248, 242);
+    doc.setFillColor(248, 245, 238);
     doc.rect(0, 0, w, h, 'F');
 
-    // Outer decorative border
     doc.setDrawColor(gold[0], gold[1], gold[2]);
-    doc.setLineWidth(2);
-    doc.rect(8, 8, w - 16, h - 16);
-
-    // Inner border
-    doc.setDrawColor(gold[0], gold[1], gold[2]);
-    doc.setLineWidth(0.5);
+    doc.setLineWidth(1.2);
     doc.rect(14, 14, w - 28, h - 28);
 
-    // Corner ornaments (simple diamonds)
-    var cSize = 6;
-    [18, w - 18].forEach(function(cx) {
-      [18, h - 18].forEach(function(cy) {
-        doc.setFillColor(gold[0], gold[1], gold[2]);
-        doc.circle(cx, cy, cSize, 'F');
-      });
+    doc.setDrawColor(gold[0], gold[1], gold[2]);
+    doc.setLineWidth(0.3);
+    doc.rect(20, 20, w - 40, h - 40);
+
+    var cd = 18;
+    [[cd, cd], [w - cd, cd], [cd, h - cd], [w - cd, h - cd]].forEach(function(p) {
+      doc.setFillColor(gold[0], gold[1], gold[2]);
+      doc.circle(p[0], p[1], 2.5, 'F');
     });
 
-    // Top gold divider line
+    var cx = w / 2;
+    // top face — gold
+    doc.setFillColor(gold[0], gold[1], gold[2]);
     doc.setDrawColor(gold[0], gold[1], gold[2]);
-    doc.setLineWidth(1);
-    doc.line(50, 42, w - 50, 42);
+    doc.setLineWidth(0.3);
+    doc.triangle(cx-14, 27, cx, 23, cx, 31, 'FD');
+    doc.triangle(cx, 23, cx+14, 27, cx, 31, 'FD');
+    // front face — medium gold
+    doc.setFillColor(196, 154, 51);
+    doc.setDrawColor(196, 154, 51);
+    doc.triangle(cx-14, 27, cx, 31, cx, 39, 'FD');
+    doc.triangle(cx-14, 27, cx, 39, cx-14, 35, 'FD');
+    // right face — dark gold
+    doc.setFillColor(168, 132, 42);
+    doc.setDrawColor(168, 132, 42);
+    doc.triangle(cx, 31, cx+14, 27, cx+14, 35, 'FD');
+    doc.triangle(cx, 31, cx+14, 35, cx, 39, 'FD');
 
-    // Red seal emblem (centered, above title)
-    doc.setFillColor(red[0], red[1], red[2]);
-    doc.circle(w / 2, 32, 10, 'F');
-
-    // Title: "CERTIFICATE"
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(26);
-    doc.setTextColor(dark[0], dark[1], dark[2]);
-    doc.text('CERTIFICATE', w / 2, 62, { align: 'center' });
-
-    // Subtitle: "of Authenticity"
-    doc.setFont('times', 'italic');
-    doc.setFontSize(16);
-    doc.setTextColor(gold[0], gold[1], gold[2]);
-    doc.text('of Authenticity', w / 2, 76, { align: 'center' });
-
-    // Gold separator
     doc.setDrawColor(gold[0], gold[1], gold[2]);
-    doc.setLineWidth(0.7);
-    doc.line(70, 86, w - 70, 86);
+    doc.setLineWidth(0.5);
+    doc.line(90, 45, w - 90, 45);
 
-    // "This is to certify that"
     doc.setFont('times', 'italic');
     doc.setFontSize(13);
-    doc.setTextColor(100, 100, 100);
-    doc.text('This is to certify that', w / 2, 106, { align: 'center' });
+    doc.setTextColor(110, 110, 110);
+    doc.text('This is to certify that', w / 2, 64, { align: 'center' });
 
-    // Owner name
     doc.setFont('times', 'bold');
-    doc.setFontSize(28);
+    doc.setFontSize(32);
     doc.setTextColor(dark[0], dark[1], dark[2]);
-    doc.text(name, w / 2, 130, { align: 'center' });
+    doc.text(name || '', w / 2, 96, { align: 'center' });
 
-    // "is the exclusive owner of"
+    doc.setDrawColor(gold[0], gold[1], gold[2]);
+    doc.setLineWidth(0.3);
+    doc.line(w / 2 - 55, 102, w / 2 + 55, 102);
+    doc.line(w / 2 - 55, 106, w / 2 + 55, 106);
+
     doc.setFont('times', 'italic');
     doc.setFontSize(13);
-    doc.setTextColor(100, 100, 100);
-    doc.text('is the exclusive owner of', w / 2, 150, { align: 'center' });
+    doc.setTextColor(110, 110, 110);
+    doc.text('is the rightful owner of', w / 2, 128, { align: 'center' });
 
-    // Product name
     doc.setFont('times', 'bold');
-    doc.setFontSize(20);
-    doc.setTextColor(red[0], red[1], red[2]);
-    doc.text('The Original Brick', w / 2, 172, { align: 'center' });
+    doc.setFontSize(24);
+    doc.setTextColor(dark[0], dark[1], dark[2]);
+    doc.text('The Original Brick', w / 2, 154, { align: 'center' });
 
-    // Description line
     doc.setFont('times', 'italic');
     doc.setFontSize(11);
-    doc.setTextColor(120, 120, 120);
-    doc.text('A limited edition piece crafted by time. Forged by fire.', w / 2, 188, { align: 'center' });
+    doc.setTextColor(130, 130, 130);
+    doc.text('Limited edition of 100', w / 2, 170, { align: 'center' });
 
-    // Details table - centered layout
-    var detailX = w / 2;
-
-    // Order Number row
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(120, 120, 120);
-    doc.text('Order No.', detailX - 55, 215);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(dark[0], dark[1], dark[2]);
-    doc.text(orderNo, detailX + 55, 215, { align: 'right' });
-
-    // Certificate Number row
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(120, 120, 120);
-    doc.text('Certificate No.', detailX - 55, 228);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(dark[0], dark[1], dark[2]);
-    doc.text(number, detailX + 55, 228, { align: 'right' });
-
-    // Date row
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(120, 120, 120);
-    doc.text('Date Issued', detailX - 55, 241);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(dark[0], dark[1], dark[2]);
-    doc.text(date, detailX + 55, 241, { align: 'right' });
-
-    // Edition row
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(120, 120, 120);
-    doc.text('Edition', detailX - 55, 254);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(dark[0], dark[1], dark[2]);
-    doc.text('Limited — 1 of 100', detailX + 55, 254, { align: 'right' });
-
-    // Bottom gold line
     doc.setDrawColor(gold[0], gold[1], gold[2]);
-    doc.setLineWidth(0.7);
-    doc.line(60, 271, w - 60, 271);
+    doc.setLineWidth(0.4);
+    doc.line(70, 180, w - 70, 180);
 
-    // Footer motto
-    doc.setFont('times', 'italic');
-    doc.setFontSize(10);
-    doc.setTextColor(150, 150, 150);
-    doc.text('"The world has enough ordinary things."', w / 2, 287, { align: 'center' });
-
-    // Bottom brand
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(7);
-    doc.setTextColor(180, 180, 180);
-    doc.text('BRICK — Exclusive Limited Edition | Authenticated by BRICK', w / 2, 296, { align: 'center' });
-
-    doc.save('BRICK-Certificate-' + number.replace('#', '') + '.pdf');
+    doc.save('BRICK-Certificate-' + (number ? number.replace('#', '') : '') + '.pdf');
   }
 
   var toastTimer = null;
@@ -879,6 +818,15 @@ const CART = (() => {
     certDate = null;
     if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
   }
+
+  window.downloadTestCert = function() {
+    var sampleNum = String(Math.floor(Math.random() * 100) + 1).padStart(3, '0');
+    var sampleDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    var sampleOrder = 'BRK-' + new Date().getFullYear() + String(new Date().getMonth()+1).padStart(2,'0') + String(new Date().getDate()).padStart(2,'0') + '-' + String(Math.floor(Math.random() * 9000) + 1000);
+    if (typeof generateProfessionalPdf === 'function') {
+      generateProfessionalPdf('Test User', '#' + sampleNum, sampleDate, sampleOrder);
+    }
+  };
 
   const api = { init, destroy, removeItem, updateItemQty, toggleWishlist };
   window.CART = api;
