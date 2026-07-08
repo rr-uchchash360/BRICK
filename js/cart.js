@@ -464,13 +464,52 @@ const CART = (() => {
     document.getElementById('confOrderTotal').textContent =
       document.getElementById('checkoutTotal').textContent;
 
-    setTimeout(() => {
+    setTimeout(function () {
       confirmationModal.classList.add('show');
       confirmationOverlay.classList.add('show');
-      document.body.style.overflow = 'hidden';
+
+      document.body.dataset.scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = '-' + window.scrollY + 'px';
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
+
       createConfetti();
       items = [];
       updateCartUI();
+
+      var content = confirmationModal.querySelector('.confirmation-content');
+
+      if (typeof gsap !== 'undefined') {
+        var els = content ? content.children : [];
+        var animEls = [];
+        for (var i = 0; i < els.length; i++) {
+          var el = els[i];
+          if (el.classList.contains('confirmation-close')) continue;
+          if (el.classList.contains('confirmation-box')) continue;
+          if (el.classList.contains('confirmation-details')) {
+            var details = el;
+            var kids = details.children;
+            for (var j = 0; j < kids.length; j++) {
+              if (kids[j].id === 'downloadCert') continue;
+              animEls.push(kids[j]);
+            }
+            break;
+          }
+        }
+
+        var tl = gsap.timeline();
+        tl.fromTo('.confirmation-content', { scale: 0.92, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.7, ease: 'power3.out' }, 0);
+
+        animEls.forEach(function (el, idx) {
+          tl.fromTo(el, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0.3 + idx * 0.12);
+        });
+
+        tl.fromTo('#downloadCert', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, '-=0.1');
+      } else if (content) {
+        content.style.opacity = '1';
+      }
     }, 200);
 
     document.querySelectorAll('.checkout-form .form-input').forEach(function(el) {

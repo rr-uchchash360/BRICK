@@ -737,12 +737,47 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================
   const confirmOverlay = document.getElementById('confirmationOverlay');
   const confirmModal = document.getElementById('confirmationModal');
-  if (confirmOverlay) {
-    confirmOverlay.addEventListener('click', () => {
+  const confirmClose = document.getElementById('confirmationClose');
+  var confirmClosing = false;
+  function closeConfirmation() {
+    if (confirmClosing) return;
+    confirmClosing = true;
+
+    if (typeof gsap !== 'undefined') {
+      var exitTl = gsap.timeline({ onComplete: function () {
+        var content = document.querySelector('.confirmation-content');
+        if (content) content.style.opacity = '';
+        confirmModal.classList.remove('show');
+        confirmOverlay.classList.remove('show');
+        confirmClosing = false;
+        restoreBodyScroll();
+      }});
+      exitTl.to('.confirmation-content', { opacity: 0, scale: 0.95, duration: 0.25, ease: 'power2.in' }, 0);
+      exitTl.to('.confirmation-close', { opacity: 0, duration: 0.2, ease: 'power2.in' }, 0);
+    } else {
       confirmModal.classList.remove('show');
       confirmOverlay.classList.remove('show');
-      document.body.style.overflow = '';
-    });
+      confirmClosing = false;
+      restoreBodyScroll();
+    }
+  }
+
+  function restoreBodyScroll() {
+    var scrollY = parseInt(document.body.dataset.scrollY, 10) || 0;
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.width = '';
+    delete document.body.dataset.scrollY;
+    window.scrollTo(0, scrollY);
+  }
+
+  if (confirmOverlay) {
+    confirmOverlay.addEventListener('click', closeConfirmation);
+  }
+  if (confirmClose) {
+    confirmClose.addEventListener('click', closeConfirmation);
   }
 
   // ============================================
@@ -766,9 +801,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (confirmModal?.classList.contains('show')) {
-        confirmModal.classList.remove('show');
-        confirmOverlay.classList.remove('show');
-        document.body.style.overflow = '';
+        closeConfirmation();
       }
     }
   });
