@@ -24,7 +24,7 @@
   <ellipse cx="34" cy="54" rx="32" ry="7" fill="rgba(0,0,0,0.07)" filter="url(#shadowBlur)"/>
   <polygon points="12,51 38,57 56,51 30,45" fill="rgba(0,0,0,0.1)" filter="url(#contactBlur)"/>
 
-  <g transform="rotate(45 32 32)">
+  <g transform="rotate(-30 32 32)">
     <g stroke-linejoin="round" stroke-width="1.5">
       <polygon points="46,26 58,18 58,33 46,41" fill="url(#sideG)" stroke="url(#sideG)"/>
       <polygon points="4,26 16,18 58,18 46,26" fill="url(#topG)" stroke="url(#topG)"/>
