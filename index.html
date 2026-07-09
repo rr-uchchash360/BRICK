@@ -152,23 +152,42 @@
   <!-- SECTION 1: HERO -->
   <!-- ============================================ -->
   <section id="hero" class="section hero" data-section>
+    <div class="hero-bg-layer" id="heroBrickContainer"></div>
+
+    <div class="hero-overlay" aria-hidden="true"></div>
+
+    <div class="hero-ember-field" id="heroEmberField" aria-hidden="true"></div>
+
     <div class="hero-content">
-      <h1 class="hero-title">
+      <h1 class="hero-title" id="heroTitle">
         <span class="title-line">A Story</span>
         <span class="title-line accent">4.5 Billion Years</span>
         <span class="title-line">In the Making.</span>
       </h1>
 
-      <p class="hero-subtitle">
-        Before it built civilizations, it was just earth, water, and fire.
-      </p>
+      <div class="hero-subtitle-wrap">
+        <p class="hero-subtitle" id="heroSubtitle" data-taglines='[
+          "Before it built civilizations, it was just earth, water, and fire.",
+          "5,000 years of human progress. One brick.",
+          "The only object that outlasts every civilization it builds."
+        ]'>
+          Before it built civilizations, it was just earth, water, and fire.
+        </p>
+      </div>
 
       <div class="hero-actions">
-        <a href="#story" class="btn btn-primary" data-smooth>
+        <a href="#story" class="btn btn-primary hero-btn" data-smooth>
           <span>Witness the Journey</span>
           <i class="fa-solid fa-arrow-right"></i>
         </a>
       </div>
+    </div>
+
+    <div class="hero-scroll-indicator" id="heroScrollIndicator" aria-hidden="true">
+      <span class="scroll-label">Scroll to explore</span>
+      <span class="scroll-chevron">
+        <i class="fa-solid fa-chevron-down"></i>
+      </span>
     </div>
   </section>
 
@@ -176,6 +195,21 @@
   <!-- SECTION 2: THE STORY OF THE BRICK -->
   <!-- ============================================ -->
   <section id="story" class="section story" data-section>
+
+    <div class="chapter-progress" id="chapterProgress" role="navigation" aria-label="Story chapters">
+      <div class="chapter-progress-track">
+        <div class="chapter-progress-fill" id="chapterProgressFill"></div>
+      </div>
+      <div class="chapter-dots">
+        <button class="chapter-dot" data-chapter="prologue" aria-label="Prologue"><span class="dot-inner"></span><span class="dot-label">Prologue</span></button>
+        <button class="chapter-dot" data-chapter="chapter1" aria-label="Chapter I - Birth"><span class="dot-inner"></span><span class="dot-label">Birth</span></button>
+        <button class="chapter-dot" data-chapter="chapter2" aria-label="Chapter II - Transformation"><span class="dot-inner"></span><span class="dot-label">Fire</span></button>
+        <button class="chapter-dot" data-chapter="chapter3" aria-label="Chapter III - Journey"><span class="dot-inner"></span><span class="dot-label">Journey</span></button>
+        <button class="chapter-dot" data-chapter="chapter4" aria-label="Chapter IV - For Everyone"><span class="dot-inner"></span><span class="dot-label">Equal</span></button>
+        <button class="chapter-dot" data-chapter="chapter5" aria-label="Chapter V - Endurance"><span class="dot-inner"></span><span class="dot-label">Endure</span></button>
+        <button class="chapter-dot" data-chapter="chapter6" aria-label="Epilogue"><span class="dot-inner"></span><span class="dot-label">Epilogue</span></button>
+      </div>
+    </div>
 
     <!-- CHAPTER 0: PROLOGUE -->
     <div class="story-chapter" id="prologue">
@@ -185,73 +219,92 @@
       </div>
       <div class="chapter-content">
         <span class="ch-label">Prologue</span>
-        <p class="ch-line" data-idx="0">Before the brick,</p>
-        <p class="ch-line accent" data-idx="1">there was the Earth.</p>
+        <p class="ch-line" data-idx="0">Granite and feldspar,</p>
+        <p class="ch-line" data-idx="1">weathered by wind and rain,</p>
+        <p class="ch-line accent" data-idx="2">became clay over millennia.</p>
       </div>
     </div>
 
     <!-- CHAPTER 1: BIRTH -->
     <div class="story-chapter" id="chapter1">
       <div class="chapter-bg chapter-bg-birth"></div>
+      <div class="chapter-visual" id="visual1">
+        <div class="cv-clay"></div>
+      </div>
       <div class="chapter-content">
         <span class="ch-label">Chapter I — Birth</span>
-        <p class="ch-line" data-idx="0">Deep within the Earth,</p>
-        <p class="ch-line" data-idx="1">over millions of years,</p>
-        <p class="ch-line accent" data-idx="2">clay was born.</p>
+        <p class="ch-line" data-idx="0">Clay is dug from the earth,</p>
+        <p class="ch-line" data-idx="1">screened, mixed with water,</p>
+        <p class="ch-line accent" data-idx="2">extruded and cut to shape.</p>
       </div>
     </div>
 
     <!-- CHAPTER 2: TRANSFORMATION -->
     <div class="story-chapter" id="chapter2">
       <div class="chapter-bg chapter-bg-fire"></div>
+      <div class="chapter-visual" id="visual2">
+        <div class="cv-fire"></div>
+      </div>
       <div class="chapter-content">
         <span class="ch-label">Chapter II — Transformation</span>
-        <p class="ch-line" data-idx="0">Mesopotamia, 3500 BCE.</p>
-        <p class="ch-line" data-idx="1">Mud met fire.</p>
-        <p class="ch-line accent" data-idx="2">The first man-made stone.</p>
+        <p class="ch-line" data-idx="0">Green bricks dried in the sun,</p>
+        <p class="ch-line" data-idx="1">then fired at 1,800&deg;F.</p>
+        <p class="ch-line accent" data-idx="2">Vitrified into artificial stone.</p>
       </div>
     </div>
 
     <!-- CHAPTER 3: JOURNEY -->
     <div class="story-chapter" id="chapter3">
       <div class="chapter-bg chapter-bg-journey"></div>
+      <div class="chapter-visual" id="visual3">
+        <div class="cv-road"></div>
+      </div>
       <div class="chapter-content">
         <span class="ch-label">Chapter III — Journey</span>
-        <p class="ch-line" data-idx="0">Ziggurats. Aqueducts.</p>
-        <p class="ch-line" data-idx="1">Cathedrals. Skyscrapers.</p>
-        <p class="ch-line accent" data-idx="2">Every age. Every civilization.</p>
+        <p class="ch-line" data-idx="0">From the kiln to the barge,</p>
+        <p class="ch-line" data-idx="1">the train, the truck.</p>
+        <p class="ch-line accent" data-idx="2">Stacked and shipped worldwide.</p>
       </div>
     </div>
 
     <!-- CHAPTER 4: FOR EVERYONE -->
     <div class="story-chapter" id="chapter4">
       <div class="chapter-bg chapter-bg-equal"></div>
+      <div class="chapter-visual" id="visual4">
+        <div class="cv-hands"></div>
+      </div>
       <div class="chapter-content">
         <span class="ch-label">Chapter IV — For Everyone</span>
-        <p class="ch-line" data-idx="0">Rich or poor.</p>
-        <p class="ch-line" data-idx="1">East or West.</p>
-        <p class="ch-line accent" data-idx="2">The brick never discriminated.</p>
+        <p class="ch-line" data-idx="0">Pyramids. Aqueducts.</p>
+        <p class="ch-line" data-idx="1">Row houses. Skylines.</p>
+        <p class="ch-line accent" data-idx="2">The brick built everything.</p>
       </div>
     </div>
 
     <!-- CHAPTER 5: ENDURANCE -->
     <div class="story-chapter" id="chapter5">
       <div class="chapter-bg chapter-bg-test"></div>
+      <div class="chapter-visual" id="visual5">
+        <div class="cv-weathered"></div>
+      </div>
       <div class="chapter-content">
         <span class="ch-label">Chapter V — Endurance</span>
-        <p class="ch-line" data-idx="0">Everything fades.</p>
-        <p class="ch-line" data-idx="1">The smartphone. The watch. The car.</p>
-        <p class="ch-line accent" data-idx="2">The brick outlasts civilizations.</p>
+        <p class="ch-line" data-idx="0">Concrete crumbles in decades.</p>
+        <p class="ch-line" data-idx="1">Steel rusts. Wood rots.</p>
+        <p class="ch-line accent" data-idx="2">Fired clay lasts millennia.</p>
       </div>
     </div>
 
     <!-- CHAPTER 6: INVITATION -->
     <div class="story-chapter" id="chapter6">
       <div class="chapter-bg chapter-bg-invitation"></div>
+      <div class="chapter-visual" id="visual6">
+        <div class="cv-polished"></div>
+      </div>
       <div class="chapter-content">
         <span class="ch-label">Epilogue</span>
-        <p class="ch-line" data-idx="0">5,000 years of building the world.</p>
-        <p class="ch-line accent" data-idx="1">One brick set aside for you.</p>
+        <p class="ch-line" data-idx="0">13 billion bricks per year.</p>
+        <p class="ch-line accent" data-idx="1">This one came to your hands.</p>
         <a href="#explore" class="btn btn-primary" data-smooth>
           <span>Explore the Brick</span>
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -328,7 +381,7 @@
               <span class="hotspot-dot"></span>
               <div class="hotspot-info">
                 <strong>Weight</strong>
-                <span>2.3 kg — substantial yet portable</span>
+                <span>3.2 kg — substantial yet portable</span>
               </div>
             </div>
             <div class="hotspot" style="top:30%;left:70%;" data-detail="durability">
@@ -346,7 +399,7 @@
             <span class="detail-icon"><i class="fa-solid fa-ruler"></i></span>
             <div class="detail-text">
               <span class="detail-label">Dimensions</span>
-              <span class="detail-value">240 × 115 × 71 mm</span>
+              <span class="detail-value">10 × 5 × 3 in</span>
             </div>
           </div>
           <div class="showcase-detail">
@@ -516,7 +569,7 @@
         </div>
         <h3 class="feature-name">Tangible</h3>
         <p class="feature-tagline">Grounded.</p>
-        <p class="feature-desc">In a world of abstraction and screens, here is something you can hold. 2.3 kg of undeniable presence. Real, in every sense.</p>
+        <p class="feature-desc">In a world of abstraction and screens, here is something you can hold. 3.2 kg of undeniable presence. Real, in every sense.</p>
       </div>
 
       <div class="feature-card" data-delay="0.5">
@@ -941,7 +994,7 @@
         </div>
         <div class="spec-item">
           <span class="spec-label">Dimensions</span>
-          <span class="spec-value">240 × 115 × 71 mm</span>
+          <span class="spec-value">10 × 5 × 3 in</span>
         </div>
         <div class="spec-item">
           <span class="spec-label">Weight</span>

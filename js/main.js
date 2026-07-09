@@ -13,6 +13,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
   // ============================================
+  // HERO EMBER PARTICLE FIELD
+  // ============================================
+  if (tier !== 'low') {
+    var emberField = document.getElementById('heroEmberField');
+    if (emberField) {
+      var emberColors = ['#ff8833', '#ff6633', '#ffcc44', '#ffaa44', '#ff4422'];
+      for (var i = 0; i < 25; i++) {
+        var e = document.createElement('span');
+        e.className = 'hero-ember';
+        e.style.left = (Math.random() * 100) + '%';
+        e.style.width = e.style.height = (2 + Math.random() * 4) + 'px';
+        e.style.background = emberColors[Math.floor(Math.random() * emberColors.length)];
+        e.style.animationDuration = (8 + Math.random() * 12) + 's';
+        e.style.animationDelay = (Math.random() * 15) + 's';
+        e.style.opacity = '0';
+        emberField.appendChild(e);
+      }
+    }
+  }
+
+  // ============================================
   // LOADING SCREEN — The Kiln
   // ============================================
   const loader = document.getElementById('loader');
@@ -413,56 +434,146 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================
 
   // ============================================
-  // STORY — Minimal Chapter Animations
+  // STORY — Cinematic Chapter Animations (scrub-based)
   // ============================================
 
   if (shouldAnimate) {
 
   const chapters = document.querySelectorAll('.story-chapter');
+  var chapterIds = ['prologue', 'chapter1', 'chapter2', 'chapter3', 'chapter4', 'chapter5', 'chapter6'];
+  var chapterProgress = document.getElementById('chapterProgress');
+  var chapterDots = chapterProgress ? chapterProgress.querySelectorAll('.chapter-dot') : [];
+  var chapterProgressFill = document.getElementById('chapterProgressFill');
 
-  function animateChapter(triggerId) {
-    const chapter = document.getElementById(triggerId);
+  // Chapter progress bar visibility
+  ScrollTrigger.create({
+    trigger: '#story',
+    start: 'top bottom',
+    end: 'bottom top',
+    onUpdate: function(self) {
+      if (chapterProgress) {
+        if (self.progress > 0 && self.progress < 1) {
+          chapterProgress.classList.add('visible');
+        } else {
+          chapterProgress.classList.remove('visible');
+        }
+      }
+    }
+  });
+
+  // Scroll-linked chapter text reveals with scrub
+  chapterIds.forEach(function(id) {
+    var chapter = document.getElementById(id);
     if (!chapter) return;
-    const label = chapter.querySelector('.ch-label');
-    const lines = chapter.querySelectorAll('.ch-line');
-    const btn = chapter.querySelector('.btn');
+    var label = chapter.querySelector('.ch-label');
+    var lines = chapter.querySelectorAll('.ch-line');
+    var btn = chapter.querySelector('.btn');
+    var visual = chapter.querySelector('.chapter-visual');
 
     ScrollTrigger.create({
-      trigger: '#' + triggerId,
-      start: 'top 35%',
-      end: 'bottom 65%',
-      onEnter: () => {
-        gsap.to(label, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' });
-        gsap.to(lines, { y: 0, opacity: 1, duration: 1, stagger: 0.3, ease: 'power3.out', delay: 0.15 });
-        if (btn) gsap.to(btn, { y: 0, opacity: 1, duration: 0.6, delay: 0.6, ease: 'power3.out' });
-      },
-      onLeaveBack: () => {
-        gsap.set(label, { y: 8, opacity: 0 });
-        gsap.set(lines, { y: 20, opacity: 0 });
-        if (btn) gsap.set(btn, { y: 10, opacity: 0 });
+      trigger: '#' + id,
+      start: 'top 40%',
+      end: 'top 10%',
+      scrub: 1.2,
+      onUpdate: function(self) {
+        var p = self.progress;
+        if (label) {
+          label.style.opacity = Math.min(1, p * 2);
+          label.style.transform = 'translateY(' + (8 - p * 8) + 'px)';
+        }
+        lines.forEach(function(line, i) {
+          var d = p - i * 0.15;
+          if (d > 0) {
+            line.style.opacity = Math.min(1, d * 2.5);
+            line.style.transform = 'translateY(' + (20 - d * 20) + 'px)';
+          } else {
+            line.style.opacity = '0';
+            line.style.transform = 'translateY(20px)';
+          }
+        });
+        if (btn) {
+          btn.style.opacity = Math.min(1, (p - 0.5) * 3);
+          btn.style.transform = 'translateY(' + (10 - Math.min(1, (p - 0.5) * 3) * 10) + 'px)';
+        }
+        if (visual) {
+          visual.style.opacity = Math.min(1, p * 2);
+        }
       }
     });
-  }
+  });
 
-  animateChapter('prologue');
-  animateChapter('chapter1');
-  animateChapter('chapter2');
-  animateChapter('chapter3');
-  animateChapter('chapter4');
-  animateChapter('chapter5');
-  animateChapter('chapter6');
-
-  // Chapter parallax background shifts
-  chapters.forEach((chapter) => {
-    const bg = chapter.querySelector('.chapter-bg');
+  // Chapter transition: blur/scale on the background between chapters
+  chapters.forEach(function(chapter) {
+    var bg = chapter.querySelector('.chapter-bg');
     if (!bg) return;
     ScrollTrigger.create({
       trigger: chapter,
       start: 'top bottom',
       end: 'bottom top',
-      onUpdate: (self) => {
-        gsap.set(bg, { scale: 1 + self.progress * 0.015 });
+      onUpdate: function(self) {
+        var p = self.progress;
+        var blur = Math.sin(p * Math.PI) * 3;
+        bg.style.filter = 'blur(' + blur + 'px)';
+        bg.style.transform = 'scale(' + (1 + p * 0.02) + ')';
       }
+    });
+  });
+
+  // Background gradient evolution across chapters
+  var storySection = document.getElementById('story');
+  if (storySection) {
+    var storyBgColors = [
+      '#0a0a0f',
+      '#1a0a00',
+      '#2a0500',
+      '#000814',
+      '#0a1a08',
+      '#1a0005',
+      '#1a0a00'
+    ];
+    ScrollTrigger.create({
+      trigger: '#story',
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: 1,
+      onUpdate: function(self) {
+        var p = self.progress * (storyBgColors.length - 1);
+        var idx = Math.floor(p);
+        var frac = p - idx;
+        var idx2 = Math.min(idx + 1, storyBgColors.length - 1);
+        var c1 = storyBgColors[idx];
+        var c2 = storyBgColors[idx2];
+        if (c1 && c2 && storySection) {
+          storySection.style.background = 'linear-gradient(to bottom, ' + c1 + ', ' + c2 + ')';
+          storySection.style.transition = 'background 0.3s ease';
+        }
+      }
+    });
+  }
+
+  // Chapter progress dot tracking
+  chapterIds.forEach(function(id, i) {
+    ScrollTrigger.create({
+      trigger: '#' + id,
+      start: 'top center',
+      end: 'bottom center',
+      onUpdate: function(self) {
+        if (self.isActive && chapterDots[i]) {
+          chapterDots.forEach(function(d) { d.classList.remove('active'); });
+          chapterDots[i].classList.add('active');
+          if (chapterProgressFill) {
+            chapterProgressFill.style.height = ((i + self.progress) / chapterIds.length * 100) + '%';
+          }
+        }
+      }
+    });
+  });
+
+  // Chapter dot click navigation
+  chapterDots.forEach(function(dot) {
+    dot.addEventListener('click', function() {
+      var target = document.getElementById(dot.dataset.chapter);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
     });
   });
 
@@ -474,13 +585,96 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (shouldAnimate) {
 
-  // Hero entrance
-  const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-  heroTl
-    .from('.title-line', { y: 120, opacity: 0, duration: 1.2, stagger: 0.2 })
-    .from('.hero-subtitle', { y: 40, opacity: 0, duration: 1 }, '-=0.4')
-    .fromTo('.hero-actions .btn', { y: 30, opacity: 0, scale: 0.95 }, { y: 0, opacity: 1, scale: 1, duration: 0.8 }, '-=0.4')
-    .set('.hero-actions .btn', { clearProps: 'all' }, '+=0.1');
+  // Hero entrance — split characters
+  const heroTitle = document.getElementById('heroTitle');
+  if (heroTitle) {
+    const lines = heroTitle.querySelectorAll('.title-line');
+    lines.forEach(function(line) {
+      var text = line.textContent.trim();
+      line.textContent = '';
+      for (var i = 0; i < text.length; i++) {
+        var ch = document.createElement('span');
+        ch.className = 'char';
+        ch.textContent = text[i] === ' ' ? '\u00A0' : text[i];
+        line.appendChild(ch);
+      }
+    });
+    var allChars = heroTitle.querySelectorAll('.char');
+    gsap.to(allChars, {
+      y: 0, opacity: 1, rotateX: 0,
+      duration: 1.0,
+      stagger: 0.025,
+      ease: 'power4.out',
+      delay: 0.3,
+    });
+  }
+
+  // Hero subtitle
+  gsap.set('.hero-subtitle.active', { opacity: 0 });
+  gsap.to('.hero-subtitle.active', { opacity: 1, duration: 1.2, delay: 1.6, ease: 'power2.out' });
+
+  // Hero actions button
+  gsap.fromTo('.hero-btn', { y: 30, opacity: 0, scale: 0.95 }, { y: 0, opacity: 1, scale: 1, duration: 1, delay: 2.0, ease: 'power3.out' });
+
+  // Scroll indicator
+  gsap.to('#heroScrollIndicator', { opacity: 1, duration: 1, delay: 2.8, ease: 'power2.out' });
+  window.addEventListener('scroll', function() {
+    var hero = document.getElementById('hero');
+    var indicator = document.getElementById('heroScrollIndicator');
+    if (hero && indicator) {
+      var heroBottom = hero.getBoundingClientRect().bottom;
+      indicator.style.opacity = heroBottom < 100 ? '0' : '';
+    }
+  }, { passive: true });
+
+  // Tagline cycling
+  var subtitleEl = document.getElementById('heroSubtitle');
+  if (subtitleEl) {
+    var taglines;
+    try { taglines = JSON.parse(subtitleEl.dataset.taglines); } catch(e) { taglines = null; }
+    if (taglines && taglines.length > 1) {
+      var tagIdx = 0;
+      setInterval(function() {
+        tagIdx = (tagIdx + 1) % taglines.length;
+        var current = subtitleEl;
+        var nextText = taglines[tagIdx];
+        if (current.textContent !== nextText) {
+          gsap.to(current, { opacity: 0, duration: 0.4, ease: 'power2.in', onComplete: function() {
+            current.textContent = nextText;
+            gsap.to(current, { opacity: 1, duration: 0.6, ease: 'power2.out' });
+          }});
+        }
+      }, 4000);
+    }
+  }
+
+  // Magnetic button effect
+  var heroBtn = document.querySelector('.hero-btn');
+  if (heroBtn && !isTouchDevice) {
+    var btnRect, btnCX, btnCY;
+    function updateBtnRect() {
+      btnRect = heroBtn.getBoundingClientRect();
+      btnCX = btnRect.left + btnRect.width / 2;
+      btnCY = btnRect.top + btnRect.height / 2;
+    }
+    updateBtnRect();
+    window.addEventListener('resize', updateBtnRect);
+    document.addEventListener('mousemove', function(e) {
+      var dx = e.clientX - btnCX;
+      var dy = e.clientY - btnCY;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 120 && dist > 0) {
+        var pull = (1 - dist / 120) * 8;
+        var angle = Math.atan2(dy, dx);
+        heroBtn.style.transform = 'translate(' + (Math.cos(angle) * pull) + 'px, ' + (Math.sin(angle) * pull) + 'px)';
+      } else {
+        heroBtn.style.transform = '';
+      }
+    });
+    heroBtn.addEventListener('mouseleave', function() {
+      heroBtn.style.transform = '';
+    });
+  }
 
   // Features — staggered reveal (one-time)
   gsap.utils.toArray('.feature-card').forEach((card) => {

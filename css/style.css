@@ -763,23 +763,142 @@ input::placeholder {
   position: relative;
   overflow: hidden;
 }
-
 .hero-overlay {
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 40%, transparent 30%, rgba(5,5,5,0.6) 80%),
-    var(--bg-primary);
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, transparent 30%, rgba(5,5,5,0.6) 80%);
+}
+
+.hero-bg-layer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 75vw;
+  height: 75vw;
+  max-width: 800px;
+  max-height: 800px;
+  z-index: 0;
+}
+.device-low .hero-bg-layer { display: none; }
+.hero-bg-layer canvas {
+  cursor: grab !important;
+}
+.hero-bg-layer canvas:active {
+  cursor: grabbing !important;
+}
+
+/* Hero ember particle field */
+.hero-ember-field {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.hero-ember {
+  position: absolute;
+  bottom: -10px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #ff8833;
+  opacity: 0;
+  animation: emberFloat linear infinite;
+}
+@keyframes emberFloat {
+  0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+  10%  { opacity: 0.6; }
+  50%  { opacity: 0.4; }
+  90%  { opacity: 0.1; }
+  100% { transform: translateY(-100vh) translateX(40px) scale(0.3); opacity: 0; }
 }
 
 .hero-content {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   text-align: center;
   max-width: 900px;
   padding: 40px;
+}
+
+/* Split character animation */
+.hero-title .char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(80px) rotateX(-60deg);
+}
+
+/* Subtitle cycling */
+.hero-subtitle-wrap {
+  position: relative;
+  height: 60px;
+  margin-bottom: 40px;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.hero-subtitle {
+  position: absolute;
+  inset: 0;
+  font-size: clamp(14px, 1.4vw, 18px);
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 480px;
+  margin: 0 auto;
+  font-weight: 300;
+  letter-spacing: 1px;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.hero-subtitle.active {
+  opacity: 1;
+}
+
+/* Magnetic button */
+.hero-btn {
+  position: relative;
+  will-change: transform;
+}
+
+/* Scroll indicator */
+.hero-scroll-indicator {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  pointer-events: none;
+}
+.scroll-label {
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: var(--font-alt);
+}
+.scroll-chevron {
+  color: var(--accent-gold);
+  font-size: 14px;
+  animation: scrollBounce 2s ease-in-out infinite;
+}
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(6px); opacity: 1; }
+}
+
+.hero-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .hero-title {
@@ -803,23 +922,17 @@ input::placeholder {
 }
 
 .title-line.accent {
-  background: linear-gradient(135deg, var(--accent-red), var(--accent-gold));
+  background: linear-gradient(135deg, #fff8f0, var(--accent-gold-light));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   letter-spacing: 0;
 }
-
-.hero-subtitle {
-  font-size: clamp(14px, 1.4vw, 18px);
-  color: var(--text-secondary);
-  line-height: 1.7;
-  margin-bottom: 40px;
-  max-width: 480px;
-  margin-left: auto;
-  margin-right: auto;
-  font-weight: 300;
-  letter-spacing: 1px;
+.title-line.accent .char {
+  background: linear-gradient(135deg, #fff8f0, var(--accent-gold-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .hero-actions {
@@ -877,6 +990,275 @@ input::placeholder {
   border-radius: 6px;
   box-shadow: 0 0 40px rgba(184,58,26,0.3), inset 0 1px 0 rgba(255,255,255,0.08);
   opacity: 0.7;
+}
+
+/* Chapter visual: clay blob (Birth) */
+.cv-clay {
+  width: 140px;
+  height: 120px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: radial-gradient(ellipse at 40% 35%, #7a5230, #4a2e1a);
+  box-shadow: 0 0 60px rgba(122,82,48,0.2);
+  opacity: 0.35;
+  animation: clayPulse 4s ease-in-out infinite;
+}
+@keyframes clayPulse {
+  0%, 100% { border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; }
+  50% { border-radius: 45% 55% 55% 45% / 55% 45% 55% 45%; }
+}
+
+/* Chapter visual: fire (Transformation) */
+.cv-fire {
+  position: relative;
+  width: 100px;
+  height: 160px;
+  opacity: 0.4;
+}
+.cv-fire::before,
+.cv-fire::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 100px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: radial-gradient(ellipse at center bottom, #ff5522, #cc3300, transparent);
+  animation: fireFlicker 1.5s ease-in-out infinite alternate;
+}
+.cv-fire::after {
+  width: 40px;
+  height: 70px;
+  background: radial-gradient(ellipse at center bottom, #ffcc44, #ff8833, transparent);
+  animation-delay: 0.3s;
+  animation-duration: 1.2s;
+}
+@keyframes fireFlicker {
+  0% { transform: translateX(-50%) scaleY(1) scaleX(0.9); opacity: 0.7; }
+  100% { transform: translateX(-50%) scaleY(1.15) scaleX(1.1); opacity: 1; }
+}
+
+/* Chapter visual: road (Journey) */
+.cv-road {
+  position: relative;
+  width: 200px;
+  height: 120px;
+  opacity: 0.3;
+  overflow: hidden;
+}
+.cv-road::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(to top, var(--accent-gold), transparent);
+  animation: roadRise 3s ease-out infinite;
+}
+.cv-road::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 1px solid rgba(212,168,67,0.15);
+  animation: roadExpand 4s ease-out infinite;
+}
+@keyframes roadRise {
+  0% { height: 0; opacity: 0; }
+  30% { opacity: 1; }
+  100% { height: 100%; opacity: 0.3; }
+}
+@keyframes roadExpand {
+  0% { width: 20px; height: 20px; opacity: 0; }
+  30% { opacity: 0.4; }
+  100% { width: 200px; height: 200px; opacity: 0; }
+}
+
+/* Chapter visual: hands (For Everyone) */
+.cv-hands {
+  position: relative;
+  width: 140px;
+  height: 100px;
+  opacity: 0.3;
+}
+.cv-hands::before,
+.cv-hands::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 50px;
+  height: 70px;
+  border-radius: 20px 20px 10px 10px;
+  background: rgba(200,160,120,0.2);
+  border: 1px solid rgba(200,160,120,0.15);
+}
+.cv-hands::before {
+  left: 10px;
+  transform: rotate(-10deg);
+}
+.cv-hands::after {
+  right: 10px;
+  transform: rotate(10deg);
+}
+
+/* Chapter visual: weathered brick (Endurance) */
+.cv-weathered {
+  width: 160px;
+  height: 80px;
+  background: linear-gradient(135deg, #4a2e1a, #2a1a0a, #4a2e1a);
+  border-radius: 4px;
+  opacity: 0.35;
+  position: relative;
+  overflow: hidden;
+}
+.cv-weathered::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(45deg, transparent 40%, rgba(0,0,0,0.3) 42%, transparent 44%),
+    linear-gradient(-45deg, transparent 40%, rgba(0,0,0,0.2) 42%, transparent 44%);
+  animation: crackle 6s ease-in-out infinite;
+}
+@keyframes crackle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+/* Chapter visual: polished brick (Epilogue) */
+.cv-polished {
+  width: 140px;
+  height: 70px;
+  background: linear-gradient(135deg, #a04020, #c86030, #a04020);
+  border-radius: 6px;
+  opacity: 0.5;
+  box-shadow:
+    0 0 40px rgba(212,168,67,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+  position: relative;
+}
+.cv-polished::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 10%;
+  width: 80%;
+  height: 20px;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent);
+  border-radius: 2px;
+}
+
+/* ============================================
+   STORY — Chapter Progress Bar
+   ============================================ */
+.chapter-progress {
+  position: fixed;
+  top: 0;
+  right: 32px;
+  z-index: 100;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.chapter-progress.visible {
+  opacity: 1;
+}
+.chapter-progress-track {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 50vh;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+.chapter-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  background: linear-gradient(to bottom, var(--accent-gold), var(--accent-red));
+  transition: height 0.15s ease;
+}
+.chapter-dots {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  z-index: 1;
+}
+.chapter-dot {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  pointer-events: auto;
+  padding: 0;
+}
+.dot-inner {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  transition: all 0.4s ease;
+}
+.chapter-dot:hover .dot-inner,
+.chapter-dot.active .dot-inner {
+  background: var(--accent-gold);
+  box-shadow: 0 0 10px rgba(212,168,67,0.4);
+  width: 8px;
+  height: 8px;
+}
+.chapter-dot.active .dot-inner {
+  background: var(--accent-gold);
+  box-shadow: 0 0 14px rgba(212,168,67,0.6);
+}
+.dot-label {
+  position: absolute;
+  right: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: var(--font-alt);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.chapter-dot:hover .dot-label {
+  opacity: 0.7;
+}
+.chapter-dot.active .dot-label {
+  opacity: 1;
+  color: var(--accent-gold);
+}
+
+@media (max-width: 768px) {
+  .chapter-progress { display: none; }
 }
 
 /* ============================================
@@ -4605,9 +4987,12 @@ input::placeholder {
     font-size: clamp(36px, 10vw, 56px);
   }
 
+  .hero-subtitle-wrap {
+    height: 50px;
+    margin-bottom: 32px;
+  }
   .hero-subtitle {
     font-size: 14px;
-    margin-bottom: 32px;
   }
 
   .section {
@@ -5126,9 +5511,12 @@ input::placeholder {
     font-size: 28px;
   }
 
+  .hero-subtitle-wrap {
+    height: 44px;
+    margin-bottom: 28px;
+  }
   .hero-subtitle {
     font-size: 13px;
-    margin-bottom: 28px;
   }
 
   /* Phone explore */
