@@ -94,6 +94,10 @@ function initBrick(selector, isGold, controlKey, camDist) {
   camera.position.set(4.8, 2.2, 7.0).normalize().multiplyScalar(camDist);
   camera.lookAt(0, 0, 0);
 
+  var halfDiag = Math.sqrt(brickW*brickW + brickH*brickH + brickD*brickD) / 2;
+  var minZoomDist = Math.round(halfDiag * 2);
+  var maxZoomDist = Math.round(halfDiag * 30);
+
   var geo = new RoundedBoxGeometry(brickW, brickH, brickD, bTier === 'high' ? 2 : 1, 0.3);
   if (bTier !== 'low') displaceVertices(geo, bTier === 'mid' ? 0.01 : 0.02);
 
@@ -277,11 +281,11 @@ function initBrick(selector, isGold, controlKey, camDist) {
       return autoRotate;
     },
     zoomIn: function() {
-      camDist = Math.max(camDist * 0.85, 3);
+      camDist = Math.max(camDist * 0.85, minZoomDist);
       camera.position.setLength(camDist);
     },
     zoomOut: function() {
-      camDist = Math.min(camDist / 0.85, 20);
+      camDist = Math.min(camDist / 0.85, maxZoomDist);
       camera.position.setLength(camDist);
     },
     resetView: function() {

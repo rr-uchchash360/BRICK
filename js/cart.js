@@ -65,9 +65,7 @@ const CART = (() => {
     var addBtn = document.getElementById('addToCartBtn');
     if (addBtn) addBtn.addEventListener('click', addToCart);
 
-    var wishBtn = document.getElementById('wishlistBtn');
-    if (wishBtn) wishBtn.addEventListener('click', toggleWishlist);
-    loadWishlistState();
+
 
     document.getElementById('qtyIncrease').addEventListener('click', () => {
       quantity = Math.min(quantity + 1, 5);
@@ -767,39 +765,6 @@ const CART = (() => {
     }, 3000);
   }
 
-  var wishlist = [];
-
-  function toggleWishlist() {
-    var btn = document.getElementById('wishlistBtn');
-    var icon = btn.querySelector('i');
-    var text = btn.querySelector('span');
-    var idx = wishlist.indexOf('original-brick');
-    if (idx > -1) {
-      wishlist.splice(idx, 1);
-      icon.className = 'fa-regular fa-heart';
-      text.textContent = 'Wishlist';
-    } else {
-      wishlist.push('original-brick');
-      icon.className = 'fa-solid fa-heart';
-      icon.style.color = 'var(--accent-red-bright)';
-      text.textContent = 'Saved';
-      showNotification('Saved to Wishlist', 'The Original Brick');
-    }
-    try { localStorage.setItem('brickWishlist', JSON.stringify(wishlist)); } catch(e) {}
-  }
-
-  function loadWishlistState() {
-    try {
-      var saved = localStorage.getItem('brickWishlist');
-      if (saved) wishlist = JSON.parse(saved);
-      if (wishlist.indexOf('original-brick') > -1) {
-        document.getElementById('wishlistBtn').querySelector('i').className = 'fa-solid fa-heart';
-        document.getElementById('wishlistBtn').querySelector('i').style.color = 'var(--accent-red-bright)';
-        document.getElementById('wishlistBtn').querySelector('span').textContent = 'Saved';
-      }
-    } catch(e) {}
-  }
-
   function destroy() {
     items = [];
     discount = 0;
@@ -838,7 +803,7 @@ const CART = (() => {
     }
   };
 
-  const api = { init, destroy, removeItem, updateItemQty, toggleWishlist };
+  const api = { init, destroy, removeItem, updateItemQty };
   window.CART = api;
   return api;
 })();

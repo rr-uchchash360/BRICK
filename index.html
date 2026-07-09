@@ -349,10 +349,11 @@
             <button class="showcase-btn" id="resetView" aria-label="Reset view">
               <i class="fa-solid fa-expand"></i>
             </button>
+            <span class="controls-hint">Drag to rotate &middot; Scroll to zoom</span>
             <div class="showcase-spacer"></div>
-            <button class="zoom-btn" id="zoomIn" aria-label="Zoom in"><i class="fa-solid fa-plus"></i></button>
-            <div class="zoom-level"><span id="zoomLevel">1.0</span>x</div>
             <button class="zoom-btn" id="zoomOut" aria-label="Zoom out"><i class="fa-solid fa-minus"></i></button>
+            <div class="zoom-level"><span id="zoomLevel">1.0</span>x</div>
+            <button class="zoom-btn" id="zoomIn" aria-label="Zoom in"><i class="fa-solid fa-plus"></i></button>
           </div>
 
           <div class="showcase-hotspots">
@@ -360,38 +361,40 @@
               <span class="hotspot-dot"></span>
               <div class="hotspot-info">
                 <strong>Material</strong>
-                <span>Premium fired clay, aged to perfection</span>
+                <span>Fired clay — transformed by heat into a ceramic that will never return to mud.</span>
               </div>
             </div>
             <div class="hotspot" style="top:55%;left:65%;" data-detail="craftsmanship">
               <span class="hotspot-dot"></span>
               <div class="hotspot-info">
-                <strong>Craftsmanship</strong>
-                <span>Hand-finished by master artisans</span>
+                <strong>Surface</strong>
+                <span>Matte texture with natural grain — no two faces are identical.</span>
               </div>
             </div>
             <div class="hotspot" style="top:40%;left:45%;" data-detail="texture">
               <span class="hotspot-dot"></span>
               <div class="hotspot-info">
-                <strong>Texture</strong>
-                <span>Matte surface with natural variations</span>
+                <strong>Firing Marks</strong>
+                <span>Subtle color variations from the kiln — the fingerprint of its making.</span>
               </div>
             </div>
             <div class="hotspot" style="top:70%;left:30%;" data-detail="weight">
               <span class="hotspot-dot"></span>
               <div class="hotspot-info">
                 <strong>Weight</strong>
-                <span>3.2 kg — substantial yet portable</span>
+                <span>3.2 kg — the satisfying heft of something built to last.</span>
               </div>
             </div>
             <div class="hotspot" style="top:30%;left:70%;" data-detail="durability">
               <span class="hotspot-dot"></span>
               <div class="hotspot-info">
                 <strong>Durability</strong>
-                <span>Engineered to outlast civilizations</span>
+                <span>Rated for 10,000 PSI compressive strength — stronger than concrete.</span>
               </div>
             </div>
           </div>
+
+          <div class="interact-hint">Drag to rotate &bull; Scroll to zoom</div>
         </div>
 
         <div class="showcase-info" id="showcaseInfo">
@@ -410,31 +413,38 @@
             </div>
           </div>
           <div class="showcase-detail">
-            <span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span>
+            <span class="detail-icon"><i class="fa-solid fa-temperature-high"></i></span>
             <div class="detail-text">
-              <span class="detail-label">Material</span>
-              <span class="detail-value">Fired Clay</span>
+              <span class="detail-label">Firing Temp</span>
+              <span class="detail-value">1,800&deg;F &mdash; vitrification point</span>
             </div>
           </div>
           <div class="showcase-detail">
-            <span class="detail-icon"><i class="fa-solid fa-paint-roller"></i></span>
+            <span class="detail-icon"><i class="fa-solid fa-shield-halved"></i></span>
             <div class="detail-text">
-              <span class="detail-label">Finish</span>
-              <span class="detail-value">Matte Textured</span>
+              <span class="detail-label">Compressive Strength</span>
+              <span class="detail-value">10,000+ PSI</span>
             </div>
           </div>
           <div class="showcase-detail">
-            <span class="detail-icon"><i class="fa-solid fa-globe"></i></span>
+            <span class="detail-icon"><i class="fa-solid fa-water"></i></span>
             <div class="detail-text">
-              <span class="detail-label">Origin</span>
-              <span class="detail-value">Earth</span>
+              <span class="detail-label">Water Absorption</span>
+              <span class="detail-value">&lt; 7% &mdash; highly frost resistant</span>
+            </div>
+          </div>
+          <div class="showcase-detail">
+            <span class="detail-icon"><i class="fa-solid fa-clock"></i></span>
+            <div class="detail-text">
+              <span class="detail-label">Estimated Lifespan</span>
+              <span class="detail-value">500+ years in structure</span>
             </div>
           </div>
           <div class="showcase-detail-fill" id="showcaseDetailFill">
-            <span class="detail-icon" id="fillIcon"><i class="fa-solid fa-info"></i></span>
+            <span class="detail-icon" id="fillIcon"><i class="fa-solid fa-hand"></i></span>
             <div class="detail-text">
-              <span class="detail-label" id="fillLabel">Hover a hotspot</span>
-              <span class="detail-value" id="fillValue">Explore the brick's details</span>
+              <span class="detail-label" id="fillLabel">Interact with the brick</span>
+              <span class="detail-value" id="fillValue">Hover a gold dot to learn more about each detail.</span>
             </div>
           </div>
         </div>
@@ -455,55 +465,67 @@
               <div class="xray-layer xray-layer-4"></div>
             </div>
             <div class="xray-labels" id="xrayLabels">
-              <div class="xray-label" style="top:20%;left:30%;" data-idx="0">
+              <div class="xray-label" style="top:18%;left:28%;" data-idx="0">
                 <span class="xray-dot"></span>
-                <span class="xray-text">Compressed Earth Core</span>
+                <span class="xray-text"><strong>Vitrified Crust</strong><span>Outer layer glassified at 1,800&deg;F — waterproof, harder than granite.</span></span>
               </div>
-              <div class="xray-label" style="top:50%;left:60%;" data-idx="1">
+              <div class="xray-label" style="top:38%;left:62%;" data-idx="1">
                 <span class="xray-dot"></span>
-                <span class="xray-text">Mineral Reinforcement</span>
+                <span class="xray-text"><strong>Sintered Transition</strong><span>Partially fused zone where heat partially melted mineral grains into a solid mesh.</span></span>
               </div>
-              <div class="xray-label" style="top:75%;left:40%;" data-idx="2">
+              <div class="xray-label" style="top:58%;left:30%;" data-idx="2">
                 <span class="xray-dot"></span>
-                <span class="xray-text">Fired Shell</span>
+                <span class="xray-text"><strong>Densified Matrix</strong><span>Highly compacted clay with reduced porosity — the load-bearing heart of the brick.</span></span>
+              </div>
+              <div class="xray-label" style="top:78%;left:55%;" data-idx="3">
+                <span class="xray-dot"></span>
+                <span class="xray-text"><strong>Compressed Core</strong><span>Unmelted clay center, compacted under 10 tons of pressure during forming.</span></span>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="showcase-info">
-          <div class="xray-controls" style="grid-column:1/-1;">
-            <button class="btn btn-outline" id="xrayToggle">
+          <div class="xray-controls-overlay">
+            <button class="btn btn-outline xray-toggle-btn" id="xrayToggle">
               <i class="fa-solid fa-grip-lines-vertical"></i>
               <span id="xrayToggleText">Reveal Layers</span>
             </button>
           </div>
+        </div>
+
+        <div class="showcase-info">
           <div class="showcase-detail-fill">
-            <span class="detail-icon"><i class="fa-solid fa-circle-info"></i></span>
+            <span class="detail-icon"><i class="fa-solid fa-microscope"></i></span>
             <div class="detail-text">
-              <span class="detail-label">Caption</span>
-              <span class="detail-value">Legendary engineering. Visible only to those who look closer.</span>
-            </div>
-          </div>
-          <div class="showcase-detail">
-            <span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span>
-            <div class="detail-text">
-              <span class="detail-label">Compressed Earth Core</span>
-              <span class="detail-value">Dense clay compacted over millennia</span>
-            </div>
-          </div>
-          <div class="showcase-detail">
-            <span class="detail-icon"><i class="fa-solid fa-gem"></i></span>
-            <div class="detail-text">
-              <span class="detail-label">Mineral Reinforcement</span>
-              <span class="detail-value">Natural aggregates for structural integrity</span>
+              <span class="detail-label">Cross-Section Analysis</span>
+              <span class="detail-value">A single firing transforms raw clay into a multi-zone ceramic composite. Click <strong>Reveal Layers</strong> to peel back the structure.</span>
             </div>
           </div>
           <div class="showcase-detail">
             <span class="detail-icon"><i class="fa-solid fa-fire"></i></span>
             <div class="detail-text">
-              <span class="detail-label">Fired Shell</span>
-              <span class="detail-value">Vitrified surface hardened by extreme heat</span>
+              <span class="detail-label">Vitrified Crust</span>
+              <span class="detail-value">Outer layer glassified at 1,800&deg;F &mdash; waterproof, harder than granite.</span>
+            </div>
+          </div>
+          <div class="showcase-detail">
+            <span class="detail-icon"><i class="fa-solid fa-wave-square"></i></span>
+            <div class="detail-text">
+              <span class="detail-label">Sintered Transition</span>
+              <span class="detail-value">Partially fused zone where heat partially melted mineral grains into a solid mesh.</span>
+            </div>
+          </div>
+          <div class="showcase-detail">
+            <span class="detail-icon"><i class="fa-solid fa-grip"></i></span>
+            <div class="detail-text">
+              <span class="detail-label">Densified Matrix</span>
+              <span class="detail-value">Highly compacted clay with reduced porosity &mdash; the load-bearing heart of the brick.</span>
+            </div>
+          </div>
+          <div class="showcase-detail">
+            <span class="detail-icon"><i class="fa-solid fa-layer-group"></i></span>
+            <div class="detail-text">
+              <span class="detail-label">Compressed Core</span>
+              <span class="detail-value">Unmelted clay center, compacted under 10 tons of pressure during forming.</span>
             </div>
           </div>
         </div>
@@ -926,10 +948,10 @@
         </div>
 
         <div class="game-promo" id="gamePromo">
-          <div class="game-promo-icon"><i class="fa-solid fa-gamepad"></i></div>
+          <div class="game-promo-icon"><i class="fa-solid fa-scale-balanced"></i></div>
           <div class="game-promo-text">
-            <span class="game-promo-title">Stack & Save</span>
-            <span class="game-promo-sub">Play the Brick Stacking game to earn up to <strong>50% off</strong></span>
+            <span class="game-promo-title">Balance & Save</span>
+            <span class="game-promo-sub">Play the Brick Balance game to earn up to <strong>50% off</strong></span>
           </div>
           <a href="#game" class="game-promo-btn" data-smooth>Play Now <i class="fa-solid fa-arrow-right"></i></a>
         </div>
@@ -944,28 +966,26 @@
           </div>
         </div>
 
-        <div class="product-quantity">
-          <span class="quantity-label">Quantity</span>
-          <div class="quantity-selector">
-            <button class="qty-btn" id="qtyDecrease" aria-label="Decrease quantity">
-              <i class="fa-solid fa-minus"></i>
-            </button>
-            <span class="qty-value" id="qtyValue">1</span>
-            <button class="qty-btn" id="qtyIncrease" aria-label="Increase quantity">
-              <i class="fa-solid fa-plus"></i>
+        <div class="product-action-row">
+          <div class="product-quantity">
+            <span class="quantity-label">Quantity</span>
+            <div class="quantity-selector">
+              <button class="qty-btn" id="qtyDecrease" aria-label="Decrease quantity">
+                <i class="fa-solid fa-minus"></i>
+              </button>
+              <span class="qty-value" id="qtyValue">1</span>
+              <button class="qty-btn" id="qtyIncrease" aria-label="Increase quantity">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="product-actions">
+            <button class="btn btn-primary" id="addToCartBtn">
+              <i class="fa-solid fa-cart-shopping"></i>
+              <span>Add to Cart</span>
             </button>
           </div>
-        </div>
-
-        <div class="product-actions">
-          <button class="btn btn-outline" id="wishlistBtn" aria-label="Add to wishlist">
-            <i class="fa-regular fa-heart"></i>
-            <span>Wishlist</span>
-          </button>
-          <button class="btn btn-primary" id="addToCartBtn">
-            <i class="fa-solid fa-cart-shopping"></i>
-            <span>Add to Cart</span>
-          </button>
         </div>
 
         <div class="product-meta">
@@ -989,28 +1009,60 @@
       <h4 class="specs-title">Specifications</h4>
       <div class="specs-grid">
         <div class="spec-item">
-          <span class="spec-label">Material</span>
-          <span class="spec-value">Fired clay, hand-finished</span>
+          <span class="spec-icon"><i class="fa-solid fa-layer-group"></i></span>
+          <div class="spec-text">
+            <span class="spec-label">Material</span>
+            <span class="spec-value">Fired clay, hand-finished</span>
+          </div>
         </div>
         <div class="spec-item">
-          <span class="spec-label">Dimensions</span>
-          <span class="spec-value">10 × 5 × 3 in</span>
+          <span class="spec-icon"><i class="fa-solid fa-ruler"></i></span>
+          <div class="spec-text">
+            <span class="spec-label">Dimensions</span>
+            <span class="spec-value">10 × 5 × 3 in</span>
+          </div>
         </div>
         <div class="spec-item">
-          <span class="spec-label">Weight</span>
-          <span class="spec-value">3.2 kg</span>
+          <span class="spec-icon"><i class="fa-solid fa-weight-scale"></i></span>
+          <div class="spec-text">
+            <span class="spec-label">Weight</span>
+            <span class="spec-value">3.2 kg</span>
+          </div>
         </div>
         <div class="spec-item">
-          <span class="spec-label">Origin</span>
-          <span class="spec-value">Bangladesh</span>
+          <span class="spec-icon"><i class="fa-solid fa-globe"></i></span>
+          <div class="spec-text">
+            <span class="spec-label">Origin</span>
+            <span class="spec-value">Bangladesh</span>
+          </div>
         </div>
         <div class="spec-item">
-          <span class="spec-label">Edition</span>
-          <span class="spec-value">Limited — 100 pieces</span>
+          <span class="spec-icon"><i class="fa-solid fa-crown"></i></span>
+          <div class="spec-text">
+            <span class="spec-label">Edition</span>
+            <span class="spec-value">Limited — 100 pieces</span>
+          </div>
         </div>
         <div class="spec-item">
-          <span class="spec-label">Certification</span>
-          <span class="spec-value">Certificate of Authenticity</span>
+          <span class="spec-icon"><i class="fa-solid fa-certificate"></i></span>
+          <div class="spec-text">
+            <span class="spec-label">Certification</span>
+            <span class="spec-value">Certificate of Authenticity</span>
+          </div>
+        </div>
+        <div class="spec-item">
+          <span class="spec-icon"><i class="fa-solid fa-temperature-high"></i></span>
+          <div class="spec-text">
+            <span class="spec-label">Firing Temp</span>
+            <span class="spec-value">1,800&deg;F</span>
+          </div>
+        </div>
+        <div class="spec-item">
+          <span class="spec-icon"><i class="fa-solid fa-trophy"></i></span>
+          <div class="spec-text">
+            <span class="spec-label">Compressive Strength</span>
+            <span class="spec-value">10,000+ PSI</span>
+          </div>
         </div>
       </div>
     </div>

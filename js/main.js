@@ -790,11 +790,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const fillValue = document.getElementById('fillValue');
 
   const hotspotData = {
-    material: { icon: '<i class="fa-solid fa-layer-group"></i>', label: 'Material', value: 'Premium fired clay, aged to perfection' },
-    craftsmanship: { icon: '<i class="fa-solid fa-hand"></i>', label: 'Craftsmanship', value: 'Hand-finished by master artisans' },
-    texture: { icon: '<i class="fa-solid fa-border-all"></i>', label: 'Texture', value: 'Matte surface with natural variations' },
-    weight: { icon: '<i class="fa-solid fa-weight-scale"></i>', label: 'Weight', value: '2.3 kg — substantial yet portable' },
-    durability: { icon: '<i class="fa-solid fa-shield-halved"></i>', label: 'Durability', value: 'Engineered to outlast civilizations' },
+    material: { icon: '<i class="fa-solid fa-layer-group"></i>', label: 'Material', value: 'Fired clay — transformed by heat into a ceramic that will never return to mud.' },
+    craftsmanship: { icon: '<i class="fa-solid fa-hand"></i>', label: 'Surface', value: 'Matte texture with natural grain — no two faces are identical.' },
+    texture: { icon: '<i class="fa-solid fa-border-all"></i>', label: 'Firing Marks', value: 'Subtle color variations from the kiln — the fingerprint of its making.' },
+    weight: { icon: '<i class="fa-solid fa-weight-scale"></i>', label: 'Weight', value: '3.2 kg — the satisfying heft of something built to last.' },
+    durability: { icon: '<i class="fa-solid fa-shield-halved"></i>', label: 'Durability', value: 'Rated for 10,000 PSI compressive strength — stronger than concrete.' },
   };
 
   hotspotDots.forEach(dot => {
