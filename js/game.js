@@ -382,16 +382,30 @@ const BRICK_GAME = (() => {
     var tierNameEl = document.getElementById('tierName');
     var tierSubEl = document.getElementById('tierSub');
     var rewardValueEl = document.getElementById('rewardValue');
+    var rewardPctEl = document.getElementById('rewardPct');
+    var rewardBarEl = document.getElementById('rewardBarFill');
     var messageEl = document.getElementById('resultMessage');
     var resultBestEl = document.getElementById('resultBest');
     var resultFinalEl = document.getElementById('resultFinal');
+    var resultBricksEl = document.getElementById('resultBricks');
+    var resultTimeEl = document.getElementById('resultTime');
+    var gaugeFillEl = document.getElementById('gaugeFill');
+    var gaugeNeedleEl = document.getElementById('gaugeNeedle');
 
     tierNameEl.textContent = tier;
     if (tierSubEl) tierSubEl.textContent = tierSub;
-    if (rewardValueEl) rewardValueEl.innerHTML = '<span class="reward-pct">' + discount + '</span>% Discount';
+    if (rewardPctEl) rewardPctEl.textContent = discount;
+    if (rewardValueEl) rewardValueEl.style.display = 'flex';
     messageEl.textContent = message;
     if (resultBestEl) resultBestEl.textContent = Math.round(bestAngle) + '\u00B0';
     if (resultFinalEl) resultFinalEl.textContent = Math.round(finalAngle) + '\u00B0';
+    if (resultBricksEl) resultBricksEl.textContent = state.totalPlaced;
+    if (resultTimeEl) resultTimeEl.textContent = (30 - state.timeLeft) + 's';
+
+    var pct = 1 - Math.min(finalAngle / 90, 1);
+    if (gaugeFillEl) gaugeFillEl.style.width = (pct * 100) + '%';
+    if (gaugeNeedleEl) gaugeNeedleEl.style.left = (pct * 100) + '%';
+    if (rewardBarEl) rewardBarEl.style.width = (discount / 50) * 100 + '%';
 
     var tierColors = {
       'PLATINUM': '#E5E4E2', 'DIAMOND': '#B9F2FF',
@@ -402,6 +416,8 @@ const BRICK_GAME = (() => {
     tierNameEl.style.color = tColor;
     var tierIconEl = document.querySelector('.tier-icon');
     if (tierIconEl) tierIconEl.style.color = tColor;
+    var tierBadgeEl = document.getElementById('tierBadge');
+    if (tierBadgeEl) tierBadgeEl.style.borderColor = tColor;
 
     var modal = document.getElementById('gameResult');
     modal.classList.add('show');

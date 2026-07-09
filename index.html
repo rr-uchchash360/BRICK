@@ -877,37 +877,69 @@
       <div class="result-backdrop"></div>
       <div class="result-modal">
         <div class="result-tier" id="resultTier">
-          <div class="tier-icon" id="tierIcon">
-            <i class="fa-solid fa-scale-balanced"></i>
+          <div class="tier-badge" id="tierBadge">
+            <div class="tier-icon" id="tierIcon">
+              <i class="fa-solid fa-scale-balanced"></i>
+            </div>
+            <span class="tier-name" id="tierName">Bronze</span>
           </div>
-          <span class="tier-name" id="tierName">Bronze</span>
           <span class="tier-sub" id="tierSub">Novice Balancer</span>
         </div>
-        <div class="result-angles">
-          <div class="result-angle-item">
-            <span class="result-angle-value" id="resultBest">0°</span>
-            <span class="result-angle-label">Best</span>
+
+        <div class="result-gauge" id="resultGauge">
+          <div class="gauge-track">
+            <div class="gauge-fill" id="gaugeFill"></div>
+            <div class="gauge-needle" id="gaugeNeedle">
+              <div class="needle-dot"></div>
+              <div class="needle-line"></div>
+            </div>
           </div>
-          <div class="result-angle-item">
-            <span class="result-angle-value" id="resultFinal">0°</span>
-            <span class="result-angle-label">Final</span>
+          <div class="gauge-labels">
+            <span>90&deg;</span>
+            <span>Perfect</span>
           </div>
         </div>
+
+        <div class="result-stats">
+          <div class="result-stat">
+            <span class="stat-value" id="resultBest">0&deg;</span>
+            <span class="stat-label">Best Balance</span>
+          </div>
+          <div class="result-stat">
+            <span class="stat-value" id="resultFinal">0&deg;</span>
+            <span class="stat-label">Final Angle</span>
+          </div>
+          <div class="result-stat">
+            <span class="stat-value" id="resultBricks">0</span>
+            <span class="stat-label">Bricks Placed</span>
+          </div>
+          <div class="result-stat">
+            <span class="stat-value" id="resultTime">0s</span>
+            <span class="stat-label">Time Survived</span>
+          </div>
+        </div>
+
         <div class="result-reward">
           <span class="reward-label">Your Reward</span>
-          <span class="reward-value" id="rewardValue">
-            <span class="reward-pct">5</span>% Discount
-          </span>
+          <div class="reward-value" id="rewardValue">
+            <span class="reward-pct" id="rewardPct">0</span>
+            <span class="reward-suffix">% Discount</span>
+          </div>
+          <div class="reward-bar">
+            <div class="reward-bar-fill" id="rewardBarFill"></div>
+          </div>
         </div>
+
         <div class="result-divider"></div>
         <p class="result-message" id="resultMessage">Not bad. The brick acknowledges your effort.</p>
         <div class="result-actions">
-          <button class="btn btn-outline" id="gameRetryBtn">
-            <i class="fa-solid fa-rotate"></i> Try Again
+          <button class="btn btn-retry" id="gameRetryBtn">
+            <i class="fa-solid fa-rotate"></i>
+            <span>Try Again</span>
           </button>
-          <a href="#product" class="btn btn-primary" data-smooth>
+          <a href="#product" class="btn btn-claim" data-smooth>
+            <i class="fa-solid fa-cart-shopping"></i>
             <span>Claim Your Brick</span>
-            <i class="fa-solid fa-arrow-right"></i>
           </a>
         </div>
       </div>
