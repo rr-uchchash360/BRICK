@@ -201,10 +201,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
 
     var lastEmberTime = 0;
+    var emberCount = 0;
+    var MAX_EMBERS = 30;
     function spawnEmber(x, y) {
       var now = Date.now();
-      if (now - lastEmberTime < 25) return;
+      if (now - lastEmberTime < 25 || emberCount >= MAX_EMBERS) return;
       lastEmberTime = now;
+      emberCount++;
       var e = document.createElement('span');
       e.className = 'cursor-ember';
       var size = 2 + Math.random() * 3;
@@ -216,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.style.background = colors[Math.floor(Math.random() * colors.length)];
       if (Math.random() > 0.5) e.style.boxShadow = '0 0 4px ' + e.style.background;
       document.body.appendChild(e);
-      setTimeout(function() { if (e.parentNode) e.parentNode.removeChild(e); }, 700);
+      setTimeout(function() { if (e.parentNode) e.parentNode.removeChild(e); emberCount--; }, 700);
     }
 
     function animateCursor() {

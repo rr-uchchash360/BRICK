@@ -620,6 +620,17 @@ const CART = (() => {
     container.appendChild(fragment);
   }
 
+  function loadJsPdf() {
+    return new Promise(function(resolve, reject) {
+      if (typeof jspdf !== 'undefined') { resolve(); return; }
+      var s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+      s.onload = resolve;
+      s.onerror = reject;
+      document.body.appendChild(s);
+    });
+  }
+
   function downloadCertificate() {
     var name = certOwner ? certOwner.textContent : '';
     var number = certNumber ? certNumber.textContent : '';
@@ -629,14 +640,16 @@ const CART = (() => {
 
     showNotification('Generating certificate…', 'Preparing your PDF');
 
-    setTimeout(function() {
+    loadJsPdf().then(function() {
       try {
         generateProfessionalPdf(name, number, date, orderNo);
         showNotification('Certificate ready', 'Your PDF has been downloaded');
       } catch(e) {
         showNotification('PDF generation failed', 'Please try again');
       }
-    }, 200);
+    }).catch(function() {
+      showNotification('PDF library failed to load', 'Check your internet connection');
+    });
   }
 
   function generateProfessionalPdf(name, number, date, orderNo) {

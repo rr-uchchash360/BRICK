@@ -9,6 +9,20 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="format-detection" content="telephone=no">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="BRICK — The Ordinary That Became Extraordinary">
+  <meta property="og:description" content="The Brick That Chooses You. Crafted by time. Forged by fire. Reserved for visionaries.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://brick.pages.dev">
+  <meta property="og:image" content="assets/og-image.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BRICK — The Ordinary That Became Extraordinary">
+  <meta name="twitter:description" content="The Brick That Chooses You. Crafted by time. Forged by fire. Reserved for visionaries.">
+  <meta name="twitter:image" content="assets/og-image.svg">
+
   <title>BRICK — The Ordinary That Became Extraordinary</title>
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="alternate icon" href="assets/favicon.svg">
@@ -42,6 +56,9 @@
   <script src="js/device-tier.js"></script>
 </head>
 <body>
+
+  <!-- Skip-to-content link for keyboard/AT users -->
+  <a href="#hero" class="skip-link" data-smooth>Skip to content</a>
 
   <!-- ============================================ -->
   <!-- LOADING SCREEN — The Kiln -->
@@ -135,8 +152,6 @@
   <!-- SECTION 1: HERO -->
   <!-- ============================================ -->
   <section id="hero" class="section hero" data-section>
-    <div class="hero-canvas" id="heroCanvas" aria-hidden="true"></div>
-
     <div class="hero-content">
       <h1 class="hero-title">
         <span class="title-line">A Story</span>
@@ -331,14 +346,14 @@
             <span class="detail-icon"><i class="fa-solid fa-ruler"></i></span>
             <div class="detail-text">
               <span class="detail-label">Dimensions</span>
-              <span class="detail-value">215 × 102.5 × 65 mm</span>
+              <span class="detail-value">240 × 115 × 71 mm</span>
             </div>
           </div>
           <div class="showcase-detail">
             <span class="detail-icon"><i class="fa-solid fa-weight-scale"></i></span>
             <div class="detail-text">
               <span class="detail-label">Weight</span>
-              <span class="detail-value">2.3 kg</span>
+              <span class="detail-value">3.2 kg</span>
             </div>
           </div>
           <div class="showcase-detail">
@@ -767,10 +782,10 @@
 
       <div class="balance-controls" id="balanceControls" style="display:none">
         <button class="btn btn-outline balance-btn" id="placeLeft">
-          <i class="fa-solid fa-arrow-left"></i> Left Side
+          <i class="fa-solid fa-arrow-left"></i> Left Side <kbd class="btn-kbd">←</kbd>
         </button>
         <button class="btn btn-outline balance-btn" id="placeRight">
-          Right Side <i class="fa-solid fa-arrow-right"></i>
+          <kbd class="btn-kbd">→</kbd> Right Side <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
 
@@ -1416,7 +1431,6 @@
   <!-- ============================================ -->
   <!-- SCRIPTS (deferred for faster initial paint) -->
   <!-- ============================================ -->
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script defer src="js/three-brick.js"></script>
   <script defer src="js/game.js"></script>
   <script defer src="js/cart.js"></script>

@@ -27,7 +27,25 @@ const BRICK_GAME = (() => {
   let brickTimerId = null;
   const MAX_ANGLE = 90;
 
+  var paused = false;
+
   function init() {
+    document.addEventListener('visibilitychange', function() {
+      if (!state.isPlaying) return;
+      if (document.hidden) {
+        paused = true;
+        if (state.timerRafId) {
+          cancelAnimationFrame(state.timerRafId);
+          state.timerRafId = null;
+        }
+        clearBrickTimer();
+      } else if (paused) {
+        paused = false;
+        state.timerLastTick = Date.now();
+        startTimerLoop();
+        startBrickTimer();
+      }
+    });
     timerEl = document.getElementById('gameTimer');
     bestAngleEl = document.getElementById('gameBestAngle');
     angleHudEl = document.getElementById('gameAngle');
@@ -58,6 +76,12 @@ const BRICK_GAME = (() => {
       placeRightBtn.addEventListener('click', function() { placeBrick('right'); });
       placeRightBtn.addEventListener('touchend', function(e) { e.preventDefault(); placeBrick('right'); });
     }
+    document.addEventListener('keydown', function(e) {
+      if (!state.isPlaying) return;
+      if (e.key === 'ArrowLeft' || e.key === 'a') { e.preventDefault(); placeBrick('left'); }
+      if (e.key === 'ArrowRight' || e.key === 'd') { e.preventDefault(); placeBrick('right'); }
+    });
+
     if (startBtn) startBtn.addEventListener('click', showRules);
     if (rulesStartBtn) rulesStartBtn.addEventListener('click', function() { hideRules(); startGame(); });
 
@@ -96,6 +120,24 @@ const BRICK_GAME = (() => {
     if (rulesEl) rulesEl.classList.remove('show');
   }
 
+  function startTimerLoop() {
+    if (state.timerRafId) cancelAnimationFrame(state.timerRafId);
+    function timerLoop() {
+      if (!state.isPlaying) return;
+      var now = Date.now();
+      var elapsed = now - state.timerLastTick;
+      if (elapsed >= 1000) {
+        state.timerLastTick = now - (elapsed - 1000);
+        state.timeLeft--;
+        timerEl.textContent = state.timeLeft;
+        if (state.timeLeft <= 5) timerEl.classList.add('warning');
+        if (state.timeLeft <= 0) { endGame(); return; }
+      }
+      state.timerRafId = requestAnimationFrame(timerLoop);
+    }
+    timerLoop();
+  }
+
   function startGame() {
     state.isPlaying = true;
     state.bestAngle = 90;
@@ -119,21 +161,7 @@ const BRICK_GAME = (() => {
     if (state.timerRafId) cancelAnimationFrame(state.timerRafId);
 
     state.timerLastTick = Date.now();
-
-    function timerLoop() {
-      if (!state.isPlaying) return;
-      var now = Date.now();
-      var elapsed = now - state.timerLastTick;
-      if (elapsed >= 1000) {
-        state.timerLastTick = now - (elapsed - 1000);
-        state.timeLeft--;
-        timerEl.textContent = state.timeLeft;
-        if (state.timeLeft <= 5) timerEl.classList.add('warning');
-        if (state.timeLeft <= 0) { endGame(); return; }
-      }
-      state.timerRafId = requestAnimationFrame(timerLoop);
-    }
-    timerLoop();
+    startTimerLoop();
 
     generateBrick();
   }
@@ -325,22 +353,22 @@ const BRICK_GAME = (() => {
     var discount = finalTier.pct;
     var tier, tierSub, message;
 
-    if (discount >= 50) {
+    if (discount >= 45) {
       tier = 'PLATINUM'; tierSub = 'Grand Master';
       message = 'Perfect equilibrium. Your instincts are unmatched.';
-    } else if (discount >= 40) {
+    } else if (discount >= 35) {
       tier = 'DIAMOND'; tierSub = 'Master Balancer';
       message = 'Exceptional poise under pressure. Truly impressive.';
-    } else if (discount >= 30) {
+    } else if (discount >= 25) {
       tier = 'GOLD'; tierSub = 'Artisan';
       message = 'Steady hands and a sharp mind. The brick approves.';
-    } else if (discount >= 20) {
+    } else if (discount >= 15) {
       tier = 'SILVER'; tierSub = 'Apprentice';
       message = 'You\'re learning the art of equilibrium. Keep going.';
-    } else if (discount >= 10) {
+    } else if (discount >= 8) {
       tier = 'BRONZE'; tierSub = 'Novice Balancer';
       message = 'A solid start. Every brick teaches something.';
-    } else if (discount >= 5) {
+    } else if (discount >= 4) {
       tier = 'IRON'; tierSub = 'Beginner';
       message = 'The scales are unforgiving. Try again with patience.';
     } else {
