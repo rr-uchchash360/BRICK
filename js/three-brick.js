@@ -74,12 +74,13 @@ function initBrick(selector, isGold, controlKey) {
   var w = Math.max(rect.width, 200);
   var h = Math.max(rect.height, 160);
 
+  var bTier = window.DEVICE_TIER || 'high';
   var renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, bTier === 'high' ? 1.5 : 1.0));
   renderer.setSize(w, h);
-  renderer.outputEncoding = THREE.sRGBEncoding;
+  if (typeof THREE.sRGBEncoding !== 'undefined') renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 0.7;
+  renderer.toneMappingExposure = bTier === 'low' ? 0.5 : 0.7;
   renderer.domElement.style.display = 'block';
   renderer.domElement.style.cursor = 'grab';
   renderer.domElement.style.touchAction = 'none';
@@ -90,8 +91,8 @@ function initBrick(selector, isGold, controlKey) {
   camera.position.set(4.8, 2.2, 7.0);
   camera.lookAt(0, 0, 0);
 
-  var geo = new RoundedBoxGeometry(2.0, 0.6, 1.0, 2, 0.065);
-  displaceVertices(geo, 0.004);
+  var geo = new RoundedBoxGeometry(2.0, 0.6, 1.0, bTier === 'high' ? 2 : 1, 0.065);
+  if (bTier !== 'low') displaceVertices(geo, bTier === 'mid' ? 0.002 : 0.004);
 
   var mat;
   if (isGold) {
@@ -300,10 +301,10 @@ function initBrick(selector, isGold, controlKey) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  if (!envMap) envMap = buildEnvMap(512);
+  var dTier = window.DEVICE_TIER || 'high';
+  if (!envMap) envMap = buildEnvMap(dTier === 'low' ? 64 : dTier === 'mid' ? 128 : 512);
 
   initBrick('#productBrickContainer', false);
-  initBrick('.hero-brick', false);
   initBrick('.showcase-brick-3d', false, 'showcase');
 });
 

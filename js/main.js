@@ -5,28 +5,12 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   // ============================================
-  // LENIS — Smooth Scrolling
+  // DEVICE TIER
   // ============================================
   const tier = window.DEVICE_TIER || 'high';
-  const isLowTier = tier === 'low';
   const shouldAnimate = tier !== 'low';
-
-  const lenis = new Lenis({
-    duration: isLowTier ? 0.5 : 1.2,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    orientation: 'vertical',
-    smoothWheel: !isLowTier,
-    wheelMultiplier: 0.8,
-    touchMultiplier: 1.5,
-  });
-
-  if (!isLowTier) {
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
-    gsap.ticker.lagSmoothing(0);
-  }
+  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
   // ============================================
   // LOADING SCREEN — The Kiln
@@ -196,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================
   // INTERACTIVE CURSOR
   // ============================================
-  const cursor = window.DEVICE_TIER === 'low' ? null : document.getElementById('cursor');
+  const cursor = (window.DEVICE_TIER === 'low' || isTouchDevice) ? null : document.getElementById('cursor');
   if (cursor) {
     const cursorDot = cursor.querySelector('.cursor-dot');
     const cursorRing = cursor.querySelector('.cursor-ring');
@@ -262,9 +246,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================
-  // SNAP SCROLL — Hero through Explore
+  // SNAP SCROLL — Hero through Explore (disabled on mobile touch devices)
   // ============================================
   function initSectionSnap() {
+    if (isTouchDevice && isMobile) return;
     var snapSelectors = '#hero, .story-chapter, #explore';
     var snapEls = document.querySelectorAll(snapSelectors);
     if (snapEls.length < 2) { window._snapSectionCount = 0; return; }
@@ -281,11 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Get the virtual scroll position from Lenis (or fall back to native)
     function getScrollY() {
-      if (typeof lenis !== 'undefined' && typeof lenis.animatedScroll === 'number') {
-        return lenis.animatedScroll;
-      }
       return window.pageYOffset || document.documentElement.scrollTop;
     }
 
@@ -306,12 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Listen on Lenis scroll — this fires on every Lenis frame
-    if (typeof lenis !== 'undefined') {
-      lenis.on('scroll', updateActive);
-    }
-
-    // Also listen on native scroll / resize as fallback
+    // Listen on native scroll / resize
     window.addEventListener('scroll', updateActive, { passive: true });
     window.addEventListener('resize', updateActive, { passive: true });
 
@@ -322,21 +298,49 @@ document.addEventListener('DOMContentLoaded', () => {
   initSectionSnap();
 
   // ============================================
+  // BODY SCROLL LOCK (iOS-safe)
+  // ============================================
+  function lockBodyScroll() {
+    var sy = window.scrollY;
+    document.body.dataset.scrollY = sy;
+    document.body.style.position = 'fixed';
+    document.body.style.top = '-' + sy + 'px';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
+  }
+  function unlockBodyScroll() {
+    var sy = parseInt(document.body.dataset.scrollY, 10) || 0;
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.width = '';
+    delete document.body.dataset.scrollY;
+    window.scrollTo(0, sy);
+  }
+  window.lockBodyScroll = lockBodyScroll;
+  window.unlockBodyScroll = unlockBodyScroll;
+
+  // ============================================
   // SCROLL PROGRESS BAR
   // ============================================
   const progressFill = document.getElementById('scrollProgressFill');
   let scrollTicking = false;
-  window.addEventListener('scroll', () => {
+  function updateScrollProgress() {
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    progressFill.style.width = Math.min(100, (window.scrollY / docHeight) * 100) + '%';
+  }
+  function onScrollTick() {
     if (!scrollTicking) {
-      requestAnimationFrame(() => {
-        const scrollTop = window.scrollY;
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        progressFill.style.width = ((scrollTop / docHeight) * 100) + '%';
+      requestAnimationFrame(function () {
+        updateScrollProgress();
         scrollTicking = false;
       });
       scrollTicking = true;
     }
-  });
+  }
+  window.addEventListener('scroll', onScrollTick, { passive: true });
 
   // ============================================
   // NAVIGATION
@@ -345,9 +349,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const menuToggle = document.getElementById('menuToggle');
   const mobileMenu = document.getElementById('mobileMenu');
 
-  window.addEventListener('scroll', () => {
-    if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 50);
-  }, { passive: true });
+  function getScrollTop() {
+    return window.scrollY;
+  }
+  function onNavScroll() {
+    if (navbar) navbar.classList.toggle('scrolled', getScrollTop() > 50);
+  }
+  window.addEventListener('scroll', onNavScroll, { passive: true });
 
   if (menuToggle) {
     menuToggle.addEventListener('click', () => {
@@ -372,12 +380,14 @@ document.addEventListener('DOMContentLoaded', () => {
     var gameResult = document.getElementById('gameResult');
     if (gameResult && gameResult.classList.contains('show')) {
       gameResult.classList.remove('show');
-      document.body.style.overflow = '';
+      if (typeof unlockBodyScroll === 'function') unlockBodyScroll();
     }
     var target = link.getAttribute('href');
     if (target && target.startsWith('#')) {
       var el = document.querySelector(target);
-      if (el) lenis.scrollTo(el, { duration: 1.5 });
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   });
 
@@ -386,11 +396,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================
   const backToTop = document.getElementById('backToTop');
   if (backToTop) {
-    window.addEventListener('scroll', () => {
-      backToTop.classList.toggle('show', window.scrollY > 500);
-    }, { passive: true });
+    function onBackToTopScroll() {
+      backToTop.classList.toggle('show', getScrollTop() > 500);
+    }
+    window.addEventListener('scroll', onBackToTopScroll, { passive: true });
     backToTop.addEventListener('click', () => {
-      lenis.scrollTo('#hero', { duration: 1.5 });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 
@@ -499,7 +510,7 @@ document.addEventListener('DOMContentLoaded', () => {
     trigger: '.game', start: 'top 70%', once: true,
     onEnter: () => {
       gsap.from('.game-hud', { y: 30, opacity: 0, duration: 0.8, ease: 'power3.out' });
-      gsap.from('.game-board', { scale: 0.95, opacity: 0, duration: 0.8, delay: 0.2, ease: 'power3.out' });
+      gsap.from('.game-container', { scale: 0.95, opacity: 0, duration: 0.8, delay: 0.2, ease: 'power3.out' });
       gsap.from('.game-controls', { y: 20, opacity: 0, duration: 0.6, delay: 0.4, ease: 'power3.out' });
     },
   });
@@ -750,7 +761,7 @@ document.addEventListener('DOMContentLoaded', () => {
         confirmModal.classList.remove('show');
         confirmOverlay.classList.remove('show');
         confirmClosing = false;
-        restoreBodyScroll();
+        if (typeof unlockBodyScroll === 'function') unlockBodyScroll();
       }});
       exitTl.to('.confirmation-content', { opacity: 0, scale: 0.95, duration: 0.25, ease: 'power2.in' }, 0);
       exitTl.to('.confirmation-close', { opacity: 0, duration: 0.2, ease: 'power2.in' }, 0);
@@ -758,19 +769,8 @@ document.addEventListener('DOMContentLoaded', () => {
       confirmModal.classList.remove('show');
       confirmOverlay.classList.remove('show');
       confirmClosing = false;
-      restoreBodyScroll();
+      if (typeof unlockBodyScroll === 'function') unlockBodyScroll();
     }
-  }
-
-  function restoreBodyScroll() {
-    var scrollY = parseInt(document.body.dataset.scrollY, 10) || 0;
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.left = '';
-    document.body.style.right = '';
-    document.body.style.width = '';
-    delete document.body.dataset.scrollY;
-    window.scrollTo(0, scrollY);
   }
 
   if (confirmOverlay) {
@@ -871,7 +871,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================
   // RESIZE
   // ============================================
-  window.addEventListener('resize', () => lenis.resize());
+
 
   // ============================================
   // FOOTER MODAL
@@ -920,14 +920,14 @@ document.addEventListener('DOMContentLoaded', () => {
     footerModalBody.innerHTML = content.body;
     footerModal.classList.add('show');
     footerModalOverlay.classList.add('show');
-    document.body.style.overflow = 'hidden';
+    if (typeof lockBodyScroll === 'function') lockBodyScroll();
   }
 
   function closeFooterModal() {
     if (!footerModal || !footerModalOverlay) return;
     footerModal.classList.remove('show');
     footerModalOverlay.classList.remove('show');
-    document.body.style.overflow = '';
+    if (typeof unlockBodyScroll === 'function') unlockBodyScroll();
   }
 
   document.querySelectorAll('[data-footer]').forEach(function(link) {

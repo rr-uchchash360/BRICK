@@ -10,7 +10,6 @@ const BRICK_GAME = (() => {
     totalPlaced: 0,
     leftWeight: 0,
     rightWeight: 0,
-    timerInterval: null,
     timerRafId: null,
     timerLastTick: 0,
     discountMultiplier: 0,
@@ -51,17 +50,22 @@ const BRICK_GAME = (() => {
 
     bestAngleEl.textContent = '0\u00B0';
 
-    if (placeLeftBtn) placeLeftBtn.addEventListener('click', function() { placeBrick('left'); });
-    if (placeRightBtn) placeRightBtn.addEventListener('click', function() { placeBrick('right'); });
+    if (placeLeftBtn) {
+      placeLeftBtn.addEventListener('click', function() { placeBrick('left'); });
+      placeLeftBtn.addEventListener('touchend', function(e) { e.preventDefault(); placeBrick('left'); });
+    }
+    if (placeRightBtn) {
+      placeRightBtn.addEventListener('click', function() { placeBrick('right'); });
+      placeRightBtn.addEventListener('touchend', function(e) { e.preventDefault(); placeBrick('right'); });
+    }
     if (startBtn) startBtn.addEventListener('click', showRules);
     if (rulesStartBtn) rulesStartBtn.addEventListener('click', function() { hideRules(); startGame(); });
 
     var retryBtn = document.getElementById('gameRetryBtn');
     if (retryBtn) retryBtn.addEventListener('click', function() {
       document.getElementById('gameResult').classList.remove('show');
-      document.body.style.overflow = '';
-      resetVisuals();
-      showRules();
+      if (typeof unlockBodyScroll === 'function') unlockBodyScroll();
+      startGame();
     });
   }
 
@@ -112,7 +116,6 @@ const BRICK_GAME = (() => {
     startBtn.style.display = 'none';
     if (balanceControls) balanceControls.style.display = '';
 
-    clearInterval(state.timerInterval);
     if (state.timerRafId) cancelAnimationFrame(state.timerRafId);
 
     state.timerLastTick = Date.now();
@@ -309,7 +312,6 @@ const BRICK_GAME = (() => {
     clearBrickTimer();
     currentWeight = 0;
     hideRules();
-    clearInterval(state.timerInterval);
     if (state.timerRafId) {
       cancelAnimationFrame(state.timerRafId);
       state.timerRafId = null;
@@ -375,7 +377,7 @@ const BRICK_GAME = (() => {
 
     var modal = document.getElementById('gameResult');
     modal.classList.add('show');
-    document.body.style.overflow = 'hidden';
+    if (typeof lockBodyScroll === 'function') lockBodyScroll();
 
     startBtn.style.display = '';
     if (balanceControls) balanceControls.style.display = 'none';

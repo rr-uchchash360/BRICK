@@ -79,6 +79,9 @@ html {
   scroll-behavior: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -1068,7 +1071,6 @@ input::placeholder {
   overflow: hidden;
 }
 
-.hero-brick canvas,
 .showcase-brick-3d canvas,
 .brick-3d-container canvas {
   display: block;
@@ -3780,6 +3782,7 @@ input::placeholder {
   position: relative;
   width: 94%;
   max-width: 520px;
+  max-height: calc(100vh - 20px);
   margin: 10px auto;
   padding: 32px 32px 24px;
   text-align: center;
@@ -3788,6 +3791,8 @@ input::placeholder {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg), var(--shadow-glow), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   opacity: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .confirmation-close {
@@ -4874,7 +4879,7 @@ input::placeholder {
   }
 
   .balance-board {
-    height: 200px;
+    height: 220px;
     border-radius: var(--radius-md);
   }
 
@@ -4882,6 +4887,8 @@ input::placeholder {
     height: 8px;
     bottom: calc(28% + 16px - 4px);
     transform-origin: center 4px;
+    left: 4%;
+    width: 92%;
   }
 
   .plank-surface::after {
@@ -4890,25 +4897,27 @@ input::placeholder {
   }
 
   .balance-btn {
-    padding: 8px;
-    font-size: 10px;
-    max-width: 130px;
+    flex: 1;
+    max-width: 50%;
+    padding: 12px 8px;
+    font-size: 11px;
+    min-height: 44px;
   }
 
   .balance-btn i {
-    font-size: 9px;
+    font-size: 11px;
   }
 
   .balance-fulcrum {
-    border-left-width: 10px;
-    border-right-width: 10px;
-    border-bottom-width: 16px;
+    border-left-width: 12px;
+    border-right-width: 12px;
+    border-bottom-width: 18px;
   }
 
   .balance-pivot {
-    bottom: calc(28% + 16px);
-    width: 4px;
-    height: 4px;
+    bottom: calc(28% + 18px);
+    width: 5px;
+    height: 5px;
   }
 
   .stack-area {
@@ -4949,11 +4958,17 @@ input::placeholder {
 
   .balance-arrow {
     bottom: 26px;
+    left: 8%;
+    right: 8%;
   }
 
   .balance-angle {
     font-size: 11px;
     bottom: 10px;
+  }
+
+  .balance-controls {
+    gap: 8px;
   }
 
   .game-rules-icon {
@@ -5182,6 +5197,228 @@ input::placeholder {
   }
 }
 
+/* ============================================
+   MOBILE OPTIMIZATION — Enhanced Touch UX
+   ============================================ */
+@media (hover: none) and (pointer: coarse) {
+  .cursor {
+    display: none !important;
+  }
+
+  body:not(.device-low) {
+    cursor: auto;
+  }
+
+  .btn,
+  .nav-icon-btn,
+  .mobile-link,
+  .footer-link,
+  .social-link,
+  .hotspot-dot,
+  .qty-btn,
+  .balance-btn,
+  .showcase-btn,
+  .zoom-btn,
+  .game-promo-btn,
+  .back-to-top {
+    cursor: pointer;
+  }
+
+  .showcase-btn,
+  .zoom-btn,
+  .qty-btn,
+  .nav-icon-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .hotspot-dot {
+    width: 20px;
+    height: 20px;
+  }
+
+  .hotspot-info {
+    white-space: normal;
+    min-width: 140px;
+  }
+
+  .testimonials-track {
+    animation: none;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    gap: 16px;
+    padding-bottom: 12px;
+  }
+
+  .testimonials-track::-webkit-scrollbar {
+    height: 3px;
+  }
+
+  .testimonials-track::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+  }
+
+  .testimonial-card {
+    scroll-snap-align: start;
+  }
+
+  .game-promo {
+    flex-wrap: wrap;
+  }
+
+  .game-promo-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (pointer: coarse) {
+  .form-input,
+  .btn,
+  select,
+  .qty-btn {
+    font-size: 16px !important;
+  }
+
+  .stack-area {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mobile-menu-inner {
+    gap: 32px;
+  }
+
+  .mobile-link {
+    font-size: 28px;
+    padding: 8px 16px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .balance-board {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .balance-btn,
+  .game-rules-start,
+  .showcase-btn,
+  .zoom-btn,
+  .qty-btn {
+    touch-action: manipulation;
+  }
+}
+
+/* ============================================
+   MOBILE OPTIMIZATION — Small Screen Fixes
+   ============================================ */
+@media (max-width: 360px) {
+  .hero-title {
+    font-size: 24px;
+  }
+
+  .section-title {
+    font-size: 22px;
+  }
+
+  .balance-board {
+    height: 190px;
+    border-radius: 12px;
+  }
+
+  .balance-plank {
+    height: 7px;
+    bottom: calc(28% + 14px - 3.5px);
+    transform-origin: center 3.5px;
+  }
+
+  .balance-fulcrum {
+    border-left-width: 8px;
+    border-right-width: 8px;
+    border-bottom-width: 14px;
+  }
+
+  .balance-pivot {
+    bottom: calc(28% + 14px);
+    width: 4px;
+    height: 4px;
+  }
+
+  .balance-btn {
+    font-size: 10px;
+    padding: 10px 6px;
+    min-height: 40px;
+  }
+
+  .hud-item {
+    min-width: 60px;
+  }
+
+  .hud-value {
+    font-size: 16px;
+  }
+
+  .stack-area {
+    max-height: 100px;
+  }
+
+  .stack-brick {
+    width: 24px;
+    height: 7px;
+  }
+
+  .stack-brick.heavy {
+    width: 28px;
+    height: 8px;
+  }
+
+  .stack-brick.light {
+    width: 18px;
+    height: 5px;
+  }
+
+  .product-name {
+    font-size: 20px;
+  }
+
+  .product-price {
+    font-size: 24px;
+  }
+
+  .btn {
+    padding: 12px 20px;
+    font-size: 12px;
+  }
+
+  .navbar-inner {
+    padding: 0 12px;
+  }
+
+  .navbar-logo {
+    font-size: 16px;
+    letter-spacing: 4px;
+  }
+
+  .nav-icon-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .game-container {
+    max-width: 100%;
+  }
+
+  .product-main-image {
+    aspect-ratio: 3/2;
+  }
+
+  .brick-3d-container {
+    height: 220px;
+  }
+}
+
 /* ----------------------------------------------
    NOTIFICATION TOAST
    ---------------------------------------------- */
@@ -5304,7 +5541,6 @@ input::placeholder {
     transform: none;
   }
 
-  .hero-canvas,
   .back-to-top {
     display: none !important;
   }

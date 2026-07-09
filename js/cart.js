@@ -236,18 +236,20 @@ const CART = (() => {
   }
 
   function toggleCart() {
-    const show = !cartPanel.classList.contains('show');
+    var show = !cartPanel.classList.contains('show');
     cartPanel.classList.toggle('show');
     cartOverlay.classList.toggle('show');
-    document.body.style.overflow = show ? 'hidden' : '';
-    if (!show && checkoutPanel.classList.contains('show')) {
-      document.body.style.overflow = 'hidden';
+    if (show) {
+      if (typeof lockBodyScroll === 'function') lockBodyScroll();
+    } else {
+      if (typeof unlockBodyScroll === 'function' && !checkoutPanel.classList.contains('show')) unlockBodyScroll();
     }
   }
 
   function openCheckout() {
     if (items.length === 0) return;
-    toggleCart();
+    cartPanel.classList.remove('show');
+    cartOverlay.classList.remove('show');
     resetCheckoutSteps();
 
     const subtotal = items.reduce((sum, i) => sum + (i.price * i.qty), 0);
@@ -265,14 +267,14 @@ const CART = (() => {
 
     checkoutPanel.classList.add('show');
     checkoutOverlay.classList.add('show');
-    document.body.style.overflow = 'hidden';
+    if (typeof lockBodyScroll === 'function') lockBodyScroll();
   }
 
   function closeCheckout() {
     checkoutPanel.classList.remove('show');
     checkoutOverlay.classList.remove('show');
-    if (!cartPanel.classList.contains('show')) {
-      document.body.style.overflow = '';
+    if (!cartPanel.classList.contains('show') && typeof unlockBodyScroll === 'function') {
+      unlockBodyScroll();
     }
   }
 
@@ -470,12 +472,7 @@ const CART = (() => {
       confirmationModal.classList.add('show');
       confirmationOverlay.classList.add('show');
 
-      document.body.dataset.scrollY = window.scrollY;
-      document.body.style.position = 'fixed';
-      document.body.style.top = '-' + window.scrollY + 'px';
-      document.body.style.left = '0';
-      document.body.style.right = '0';
-      document.body.style.width = '100%';
+      if (typeof lockBodyScroll === 'function') lockBodyScroll();
 
       createConfetti();
       items = [];
@@ -578,7 +575,7 @@ const CART = (() => {
       if (!email.val) { showFieldError(email.el, 'Email address is required'); if (!errors.length) errors.push(email.el); }
       else if (!emailRegex.test(email.val)) { showFieldError(email.el, 'Enter a valid email address (e.g. name@domain.com)'); if (!errors.length) errors.push(email.el); }
 
-      if (phone.val && !/^(?:\+8801[3-9]\d{8}|01[3-9]\d{8})$/.test(phone.val.replace(/[\s\-]/g, ''))) {
+      if (phone.val && !/^(?:\+8801[3-9]\d{8}|01[3-9]\d{8})$/.test(phone.val.replace(/[\s\-]/g, '')) && phone.val.length > 0) {
         showFieldError(phone.el, 'Enter a valid Bangladeshi number (e.g. 01XXX-XXXXXX)'); if (!errors.length) errors.push(phone.el);
       }
     }
