@@ -10,6 +10,24 @@ const CART = (() => {
   const BASE_PRICE = 10000;
   const FINAL_PRICE = 10000;
   const TAX_RATE = 0.15;
+  const TOTAL_STOCK = 100;
+
+  function getRemainingStock() {
+    var val = localStorage.getItem('brickStock');
+    if (val === null) {
+      var init = Math.floor(Math.random() * 13) + 1;
+      localStorage.setItem('brickStock', String(init));
+      return init;
+    }
+    return parseInt(val, 10);
+  }
+  function setRemainingStock(n) {
+    localStorage.setItem('brickStock', String(n));
+  }
+  function updateStockDisplay() {
+    var el = document.getElementById('stockCount');
+    if (el) el.textContent = getRemainingStock();
+  }
 
   function fmtBDT(n) {
     return '৳' + Number(n).toLocaleString('en-IN');
@@ -50,6 +68,7 @@ const CART = (() => {
 
     loadDiscount();
     updateCartUI();
+    updateStockDisplay();
     switchPayment('bkash');
 
     var toggle = document.getElementById('cartToggle');
@@ -442,7 +461,12 @@ const CART = (() => {
 
     closeCheckout();
 
-    const ownerNum = String(Math.floor(Math.random() * 100) + 1).padStart(3, '0');
+    var remaining = getRemainingStock();
+    var orderSeq = TOTAL_STOCK - remaining;
+    setRemainingStock(Math.max(0, remaining - 1));
+    updateStockDisplay();
+
+    const ownerNum = String(orderSeq).padStart(3, '0');
     const today = new Date().toLocaleDateString('en-US', {
       year: 'numeric', month: 'long', day: 'numeric'
     });
@@ -450,15 +474,14 @@ const CART = (() => {
     const dateStr = now.getFullYear().toString() +
       String(now.getMonth() + 1).padStart(2, '0') +
       String(now.getDate()).padStart(2, '0');
-    const seq = String(Math.floor(Math.random() * 9000) + 1000);
-    const orderNumber = 'BRK-' + dateStr + '-' + seq;
+    const orderNumber = 'BRK-' + dateStr + '-' + String(orderSeq).padStart(3, '0');
 
     ownerNumber.textContent = ownerNum;
     certOwner.textContent = result.name;
-    if (certNumber) certNumber.textContent = '#' + ownerNum;
+    if (certNumber) certNumber.textContent = dateStr + '-' + ownerNum;
     if (certDate) certDate.textContent = today;
     var certRef = document.getElementById('certNumberRef');
-    if (certRef) certRef.textContent = ownerNum;
+    if (certRef) certRef.textContent = dateStr + '-' + ownerNum;
 
     document.getElementById('tlConfirmed').textContent = 'Today at ' +
       now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
@@ -654,84 +677,111 @@ const CART = (() => {
     var doc = new jspdf.jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
     var w = doc.internal.pageSize.getWidth();
     var h = doc.internal.pageSize.getHeight();
+    var c = [184, 58, 26];
 
-    var gold = [212, 168, 67];
-    var dark = [42, 37, 32];
-
-    doc.setFillColor(248, 245, 238);
+    // Background
+    doc.setFillColor(245, 242, 237);
     doc.rect(0, 0, w, h, 'F');
 
-    doc.setDrawColor(gold[0], gold[1], gold[2]);
-    doc.setLineWidth(1.2);
-    doc.rect(14, 14, w - 28, h - 28);
-
-    doc.setDrawColor(gold[0], gold[1], gold[2]);
-    doc.setLineWidth(0.3);
-    doc.rect(20, 20, w - 40, h - 40);
-
-    var cd = 18;
-    [[cd, cd], [w - cd, cd], [cd, h - cd], [w - cd, h - cd]].forEach(function(p) {
-      doc.setFillColor(gold[0], gold[1], gold[2]);
-      doc.circle(p[0], p[1], 2.5, 'F');
-    });
-
-    var cx = w / 2;
-    // top face — gold
-    doc.setFillColor(gold[0], gold[1], gold[2]);
-    doc.setDrawColor(gold[0], gold[1], gold[2]);
-    doc.setLineWidth(0.3);
-    doc.triangle(cx-14, 27, cx, 23, cx, 31, 'FD');
-    doc.triangle(cx, 23, cx+14, 27, cx, 31, 'FD');
-    // front face — medium gold
-    doc.setFillColor(196, 154, 51);
-    doc.setDrawColor(196, 154, 51);
-    doc.triangle(cx-14, 27, cx, 31, cx, 39, 'FD');
-    doc.triangle(cx-14, 27, cx, 39, cx-14, 35, 'FD');
-    // right face — dark gold
-    doc.setFillColor(168, 132, 42);
-    doc.setDrawColor(168, 132, 42);
-    doc.triangle(cx, 31, cx+14, 27, cx+14, 35, 'FD');
-    doc.triangle(cx, 31, cx+14, 35, cx, 39, 'FD');
-
-    doc.setDrawColor(gold[0], gold[1], gold[2]);
+    // Frame
+    var pad = 8;
+    doc.setDrawColor(c[0], c[1], c[2]);
     doc.setLineWidth(0.5);
-    doc.line(90, 45, w - 90, 45);
+    doc.rect(pad, pad, w - pad * 2, h - pad * 2);
+    doc.setLineWidth(1);
+    var cl = 12, off = 6;
+    doc.line(off, off + cl, off, off); doc.line(off, off, off + cl, off);
+    doc.line(w - off - cl, off, w - off, off); doc.line(w - off, off, w - off, off + cl);
+    doc.line(off, h - off - cl, off, h - off); doc.line(off, h - off, off + cl, h - off);
+    doc.line(w - off - cl, h - off, w - off, h - off); doc.line(w - off, h - off, w - off, h - off - cl);
 
+    // --- Content (vertically centered as a group) ---
+    // BRICK
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(20);
+    doc.setTextColor(c[0], c[1], c[2]);
+    doc.text('BRICK', w / 2, 40, { align: 'center' });
+
+    // Main divider
+    doc.setDrawColor(c[0], c[1], c[2]);
+    doc.setLineWidth(0.8);
+    doc.line(w / 2 - 20, 46, w / 2 + 20, 46);
+
+    // Title
+    doc.setFont('times', 'normal');
+    doc.setFontSize(14);
+    doc.setTextColor(42, 37, 32);
+    doc.text('Certificate of Authenticity', w / 2, 56, { align: 'center' });
+    doc.setDrawColor(c[0], c[1], c[2]);
+    doc.setLineWidth(0.5);
+    doc.line(w / 2 - 14, 61, w / 2 + 14, 61);
+
+    // "This is to certify that"
     doc.setFont('times', 'italic');
     doc.setFontSize(13);
-    doc.setTextColor(110, 110, 110);
-    doc.text('This is to certify that', w / 2, 64, { align: 'center' });
+    doc.setTextColor(122, 112, 104);
+    doc.text('This is to certify that', w / 2, 76, { align: 'center' });
 
+    // Owner name
+    var nameStr = name || '';
     doc.setFont('times', 'bold');
-    doc.setFontSize(32);
-    doc.setTextColor(dark[0], dark[1], dark[2]);
-    doc.text(name || '', w / 2, 96, { align: 'center' });
-
-    doc.setDrawColor(gold[0], gold[1], gold[2]);
-    doc.setLineWidth(0.3);
-    doc.line(w / 2 - 55, 102, w / 2 + 55, 102);
-    doc.line(w / 2 - 55, 106, w / 2 + 55, 106);
-
-    doc.setFont('times', 'italic');
-    doc.setFontSize(13);
-    doc.setTextColor(110, 110, 110);
-    doc.text('is the rightful owner of', w / 2, 128, { align: 'center' });
-
-    doc.setFont('times', 'bold');
-    doc.setFontSize(24);
-    doc.setTextColor(dark[0], dark[1], dark[2]);
-    doc.text('The Original Brick', w / 2, 154, { align: 'center' });
-
-    doc.setFont('times', 'italic');
-    doc.setFontSize(11);
-    doc.setTextColor(130, 130, 130);
-    doc.text('Limited edition of 100', w / 2, 170, { align: 'center' });
-
-    doc.setDrawColor(gold[0], gold[1], gold[2]);
+    doc.setFontSize(28);
+    doc.setTextColor(26, 21, 16);
+    var nw = doc.getTextWidth(nameStr);
+    var nBoxW = Math.min(Math.max(nw + 24, 70), 220);
+    var ny = 92;
+    doc.setFillColor(252, 250, 245);
+    doc.rect(w / 2 - nBoxW / 2, ny - 7, nBoxW, 18, 'F');
+    doc.setDrawColor(c[0], c[1], c[2]);
     doc.setLineWidth(0.4);
-    doc.line(70, 180, w - 70, 180);
+    doc.line(w / 2 - nBoxW / 2, ny - 7, w / 2 + nBoxW / 2, ny - 7);
+    doc.line(w / 2 - nBoxW / 2, ny + 11, w / 2 + nBoxW / 2, ny + 11);
+    doc.text(nameStr, w / 2, ny + 7, { align: 'center' });
 
-    doc.save('BRICK-Certificate-' + (number ? number.replace('#', '') : '') + '.pdf');
+    // "is the rightful owner of"
+    doc.setFont('times', 'italic');
+    doc.setFontSize(13);
+    doc.setTextColor(122, 112, 104);
+    doc.text('is the rightful owner of', w / 2, 116, { align: 'center' });
+
+    // Product
+    doc.setFont('times', 'bold');
+    doc.setFontSize(22);
+    doc.setTextColor(42, 37, 32);
+    doc.text('The Original Brick', w / 2, 133, { align: 'center' });
+
+    // Limited edition
+    doc.setFont('times', 'italic');
+    doc.setFontSize(10);
+    doc.setTextColor(154, 144, 136);
+    doc.text('Limited edition of 100', w / 2, 140, { align: 'center' });
+
+    // --- Bottom separator (close after content) ---
+    doc.setDrawColor(c[0], c[1], c[2]);
+    doc.setLineWidth(0.3);
+    doc.line(45, 151, w - 45, 151);
+
+    // --- Bottom section ---
+    var bY = 161;
+    doc.setFont('times', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(154, 144, 136);
+    doc.text('Certificate Number', 40, bY - 1, { align: 'center' });
+    doc.setFont('courier', 'normal');
+    doc.setFontSize(11);
+    doc.setTextColor(74, 69, 64);
+    doc.text(number || '', 40, bY + 5, { align: 'center' });
+
+    doc.setFont('times', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(154, 144, 136);
+    doc.text('Date', w - 40, bY - 1, { align: 'center' });
+    doc.setFont('courier', 'normal');
+    doc.setFontSize(11);
+    doc.setTextColor(74, 69, 64);
+    doc.text(date || '', w - 40, bY + 5, { align: 'center' });
+
+    doc.save('BRICK-Certificate-' + (number || '') + '.pdf');
   }
 
   var toastTimer = null;
@@ -795,12 +845,24 @@ const CART = (() => {
   }
 
   window.downloadTestCert = function() {
+    showNotification('Generating certificate…', 'Preparing your PDF');
+    var now = new Date();
+    var dateStr = now.getFullYear().toString() +
+      String(now.getMonth() + 1).padStart(2, '0') +
+      String(now.getDate()).padStart(2, '0');
     var sampleNum = String(Math.floor(Math.random() * 100) + 1).padStart(3, '0');
-    var sampleDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    var sampleOrder = 'BRK-' + new Date().getFullYear() + String(new Date().getMonth()+1).padStart(2,'0') + String(new Date().getDate()).padStart(2,'0') + '-' + String(Math.floor(Math.random() * 9000) + 1000);
-    if (typeof generateProfessionalPdf === 'function') {
-      generateProfessionalPdf('Test User', '#' + sampleNum, sampleDate, sampleOrder);
-    }
+    var sampleDate = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    var sampleOrder = 'BRK-' + dateStr + '-' + String(Math.floor(Math.random() * 9000) + 1000);
+    loadJsPdf().then(function() {
+      try {
+        generateProfessionalPdf('Test User', dateStr + '-' + sampleNum, sampleDate, sampleOrder);
+        showNotification('Certificate ready', 'Your PDF has been downloaded');
+      } catch(e) {
+        showNotification('PDF generation failed', 'Please try again');
+      }
+    }).catch(function() {
+      showNotification('PDF library failed to load', 'Check your internet connection');
+    });
   };
 
   const api = { init, destroy, removeItem, updateItemQty };

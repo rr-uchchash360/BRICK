@@ -4620,23 +4620,23 @@ input::placeholder {
   padding: 0;
   margin-bottom: 20px;
   background: #f5f2ed;
-  border-radius: var(--radius-md);
   overflow: hidden;
-  box-shadow: 0 4px 30px rgba(0,0,0,0.4), inset 0 0 60px rgba(212, 168, 67, 0.04);
+  box-shadow: 0 4px 30px rgba(0,0,0,0.4), inset 0 0 60px rgba(184, 58, 26, 0.04);
 }
 
 .cert-bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, #f8f5ef 0%, #f2eee7 50%, #f5f2ed 100%);
+  background: #f5f2ed;
   pointer-events: none;
 }
 
+/* --- Frame --- */
 .cert-border-top, .cert-border-bottom {
   position: absolute;
-  left: 18px; right: 18px;
+  left: 16px; right: 16px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, #d4a843, transparent);
+  background: var(--accent-red);
   pointer-events: none;
   z-index: 2;
 }
@@ -4645,9 +4645,9 @@ input::placeholder {
 
 .cert-border-left, .cert-border-right {
   position: absolute;
-  top: 18px; bottom: 18px;
+  top: 16px; bottom: 16px;
   width: 1px;
-  background: linear-gradient(180deg, transparent, #d4a843, transparent);
+  background: var(--accent-red);
   pointer-events: none;
   z-index: 2;
 }
@@ -4656,143 +4656,176 @@ input::placeholder {
 
 .cert-corner {
   position: absolute;
-  width: 18px;
-  height: 18px;
-  border-color: #d4a843;
+  width: 16px;
+  height: 16px;
+  border-color: var(--accent-red);
   border-style: solid;
   pointer-events: none;
   z-index: 3;
 }
-.cert-corner.tl { top: 6px; left: 6px; border-width: 1.5px 0 0 1.5px; border-radius: 3px 0 0 0; }
-.cert-corner.tr { top: 6px; right: 6px; border-width: 1.5px 1.5px 0 0; border-radius: 0 3px 0 0; }
-.cert-corner.bl { bottom: 6px; left: 6px; border-width: 0 0 1.5px 1.5px; border-radius: 0 0 0 3px; }
-.cert-corner.br { bottom: 6px; right: 6px; border-width: 0 1.5px 1.5px 0; border-radius: 0 0 3px 0; }
+.cert-corner.tl { top: 6px; left: 6px; border-width: 1.5px 0 0 1.5px; }
+.cert-corner.tr { top: 6px; right: 6px; border-width: 1.5px 1.5px 0 0; }
+.cert-corner.bl { bottom: 6px; left: 6px; border-width: 0 0 1.5px 1.5px; }
+.cert-corner.br { bottom: 6px; right: 6px; border-width: 0 1.5px 1.5px 0; }
 
+/* --- Body --- */
 .cert-body {
   position: relative;
   z-index: 1;
   text-align: center;
-  padding: 32px 30px 28px;
+  padding: 28px 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.cert-top {
-  margin-bottom: 18px;
+.cert-body-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
+/* --- Brand --- */
 .cert-brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
 }
-.cert-brand svg {
-  display: block;
-  margin: 0 auto;
+.cert-brand-text {
+  display: flex;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--accent-red);
+}
+.cert-brand-text span {
+  display: inline-block;
+  margin-right: 6px;
+}
+.cert-brand-text span:last-child {
+  margin-right: 0;
+}
+.cert-brand-dot {
+  width: 7px;
+  height: 7px;
+  background: #1a1510;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+  margin-left: 6px;
+  margin-bottom: 1px;
 }
 
-.cert-gold-bar {
-  width: 50px;
-  height: 1.5px;
-  margin: 10px auto 0;
-  background: #d4a843;
+/* --- Dividers --- */
+.cert-divider {
+  width: 80px;
+  height: 2px;
+  margin: 8px auto 14px;
+  background: var(--accent-red);
 }
 
-.cert-gold-bar-short {
-  width: 30px;
+.cert-divider-short {
+  width: 40px;
   height: 1px;
-  margin: 18px auto;
-  background: rgba(212, 168, 67, 0.3);
+  margin: 14px auto;
+  background: rgba(184, 58, 26, 0.25);
 }
 
+/* --- Title --- */
 .cert-title {
   font-family: 'Times New Roman', serif;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 400;
-  letter-spacing: 4px;
+  letter-spacing: 5px;
   color: #2a2520;
-  margin: 0 0 20px;
+  margin: 0;
   text-transform: uppercase;
 }
 
+/* --- Body text --- */
 .cert-sub {
   font-family: 'Times New Roman', serif;
-  font-size: 13px;
+  font-size: 14px;
   color: #7a7068;
   font-style: italic;
   margin: 0;
-  line-height: 1.9;
+  line-height: 1.8;
 }
 
+/* --- Owner name --- */
 .cert-name {
   font-family: 'Times New Roman', serif;
-  font-size: 26px;
-  font-weight: 400;
+  font-size: 28px;
+  font-weight: 700;
   color: #1a1510;
   letter-spacing: 4px;
   text-transform: uppercase;
-  margin: 8px 0;
-  padding: 12px 20px;
-  border-top: 1px solid rgba(212, 168, 67, 0.2);
-  border-bottom: 1px solid rgba(212, 168, 67, 0.2);
-  background: rgba(212, 168, 67, 0.03);
+  margin: 8px auto;
+  padding: 10px 24px;
+  display: inline-block;
+  border-top: 1px solid rgba(184, 58, 26, 0.2);
+  border-bottom: 1px solid rgba(184, 58, 26, 0.2);
+  background: rgba(184, 58, 26, 0.025);
 }
 
+/* --- Product --- */
 .cert-product {
   font-family: 'Times New Roman', serif;
-  font-size: 18px;
-  font-weight: 400;
+  font-size: 24px;
+  font-weight: 700;
   color: #2a2520;
-  letter-spacing: 3px;
+  letter-spacing: 4px;
   text-transform: uppercase;
-  margin: 10px 0 4px;
+  margin: 12px 0 4px;
 }
 
 .cert-limit {
   font-family: 'Times New Roman', serif;
-  font-size: 11px;
+  font-size: 10px;
   color: #9a9088;
   font-style: italic;
-  margin: 0 0 22px;
+  margin: 0;
 }
 
+/* --- Bottom section --- */
 .cert-bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 18px;
-  border-top: 1px solid rgba(212, 168, 67, 0.15);
+  width: 100%;
+  margin-top: 12px;
+  padding-top: 8px;
+  padding-bottom: 0;
+  border-top: 1px solid rgba(184, 58, 26, 0.12);
 }
 
 .cert-label {
   display: block;
   font-family: 'Times New Roman', serif;
-  font-size: 9px;
+  font-size: 8px;
   color: #9a9088;
-  letter-spacing: 2px;
+  letter-spacing: 2.5px;
   text-transform: uppercase;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 
 .cert-value {
   display: block;
   font-family: 'Courier New', monospace;
-  font-size: 11px;
+  font-size: 10px;
   color: #4a4540;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .cert-right {
   text-align: right;
 }
 
-.cert-seal {
-  text-align: center;
-  flex: 0 0 auto;
-  padding: 0 20px;
-}
 
-.cert-seal-icon {
-  font-size: 20px;
-  color: #d4a843;
-  opacity: 0.3;
-}
 
 /* Confetti */
 .confetti-container {
