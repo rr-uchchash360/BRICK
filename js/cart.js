@@ -38,7 +38,7 @@ const CART = (() => {
   let checkoutPanel, checkoutOverlay;
   let checkoutQty, checkoutPrice, checkoutSubtotal, checkoutDiscount, checkoutTax, checkoutTotal;
   let confirmationModal, confirmationOverlay;
-  let ownerNumber, certOwner, certNumber, certDate;
+  let ownerNumber;
 
   function init() {
     cartPanel = document.getElementById('cartPanel');
@@ -62,9 +62,6 @@ const CART = (() => {
     confirmationModal = document.getElementById('confirmationModal');
     confirmationOverlay = document.getElementById('confirmationOverlay');
     ownerNumber = document.getElementById('ownerNumber');
-    certOwner = document.getElementById('certOwner');
-    certNumber = document.getElementById('certNumber');
-    certDate = document.getElementById('certDate');
 
     loadDiscount();
     updateCartUI();
@@ -477,11 +474,13 @@ const CART = (() => {
     const orderNumber = 'BRK-' + dateStr + '-' + String(orderSeq).padStart(3, '0');
 
     ownerNumber.textContent = ownerNum;
-    certOwner.textContent = result.name;
-    if (certNumber) certNumber.textContent = dateStr + '-' + ownerNum;
-    if (certDate) certDate.textContent = today;
-    var certRef = document.getElementById('certNumberRef');
-    if (certRef) certRef.textContent = dateStr + '-' + ownerNum;
+    var certBtn = document.getElementById('downloadCert');
+    if (certBtn) {
+      certBtn.dataset.certName = result.name;
+      certBtn.dataset.certNumber = dateStr + '-' + ownerNum;
+      certBtn.dataset.certDate = today;
+      certBtn.dataset.certOrder = orderNumber;
+    }
 
     document.getElementById('tlConfirmed').textContent = 'Today at ' +
       now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
@@ -512,7 +511,6 @@ const CART = (() => {
             var details = el;
             var kids = details.children;
             for (var j = 0; j < kids.length; j++) {
-              if (kids[j].id === 'downloadCert') continue;
               animEls.push(kids[j]);
             }
             break;
@@ -525,8 +523,6 @@ const CART = (() => {
         animEls.forEach(function (el, idx) {
           tl.fromTo(el, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0.3 + idx * 0.12);
         });
-
-        tl.fromTo('#downloadCert', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, '-=0.1');
       } else if (content) {
         content.style.opacity = '1';
       }
@@ -653,11 +649,13 @@ const CART = (() => {
   }
 
   function downloadCertificate() {
-    var name = certOwner ? certOwner.textContent : '';
-    var number = certNumber ? certNumber.textContent : '';
-    var date = certDate ? certDate.textContent : '';
-    var orderNo = document.getElementById('confOrderNumber').textContent;
-    if (!name || name === '—') { showNotification('No certificate data', 'Complete a purchase first'); return; }
+    var btn = document.getElementById('downloadCert');
+    if (!btn) return;
+    var name = btn.dataset.certName || '';
+    var number = btn.dataset.certNumber || '';
+    var date = btn.dataset.certDate || '';
+    var orderNo = btn.dataset.certOrder || '';
+    if (!name || !number) { showNotification('No certificate data', 'Complete a purchase first'); return; }
 
     showNotification('Generating certificate…', 'Preparing your PDF');
 
@@ -680,7 +678,7 @@ const CART = (() => {
     var c = [184, 58, 26];
 
     // Background
-    doc.setFillColor(245, 242, 237);
+    doc.setFillColor(240, 216, 206);
     doc.rect(0, 0, w, h, 'F');
 
     // Frame
@@ -730,7 +728,7 @@ const CART = (() => {
     var nw = doc.getTextWidth(nameStr);
     var nBoxW = Math.min(Math.max(nw + 24, 70), 220);
     var ny = 92;
-    doc.setFillColor(252, 250, 245);
+    doc.setFillColor(244, 221, 212);
     doc.rect(w / 2 - nBoxW / 2, ny - 7, nBoxW, 18, 'F');
     doc.setDrawColor(c[0], c[1], c[2]);
     doc.setLineWidth(0.4);
@@ -838,32 +836,8 @@ const CART = (() => {
     confirmationModal = null;
     confirmationOverlay = null;
     ownerNumber = null;
-    certOwner = null;
-    certNumber = null;
-    certDate = null;
     if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
   }
-
-  window.downloadTestCert = function() {
-    showNotification('Generating certificate…', 'Preparing your PDF');
-    var now = new Date();
-    var dateStr = now.getFullYear().toString() +
-      String(now.getMonth() + 1).padStart(2, '0') +
-      String(now.getDate()).padStart(2, '0');
-    var sampleNum = String(Math.floor(Math.random() * 100) + 1).padStart(3, '0');
-    var sampleDate = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    var sampleOrder = 'BRK-' + dateStr + '-' + String(Math.floor(Math.random() * 9000) + 1000);
-    loadJsPdf().then(function() {
-      try {
-        generateProfessionalPdf('Test User', dateStr + '-' + sampleNum, sampleDate, sampleOrder);
-        showNotification('Certificate ready', 'Your PDF has been downloaded');
-      } catch(e) {
-        showNotification('PDF generation failed', 'Please try again');
-      }
-    }).catch(function() {
-      showNotification('PDF library failed to load', 'Check your internet connection');
-    });
-  };
 
   const api = { init, destroy, removeItem, updateItemQty };
   window.CART = api;

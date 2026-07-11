@@ -6,7 +6,7 @@ const BRICK_GAME = (() => {
   const state = {
     isPlaying: false,
     bestAngle: 90,
-    timeLeft: 30,
+    timeLeft: 20,
     totalPlaced: 0,
     leftWeight: 0,
     rightWeight: 0,
@@ -141,7 +141,7 @@ const BRICK_GAME = (() => {
   function startGame() {
     state.isPlaying = true;
     state.bestAngle = 90;
-    state.timeLeft = 30;
+    state.timeLeft = 20;
     state.totalPlaced = 0;
     state.leftWeight = 0;
     state.rightWeight = 0;
@@ -400,7 +400,7 @@ const BRICK_GAME = (() => {
     if (resultBestEl) resultBestEl.textContent = Math.round(bestAngle) + '\u00B0';
     if (resultFinalEl) resultFinalEl.textContent = Math.round(finalAngle) + '\u00B0';
     if (resultBricksEl) resultBricksEl.textContent = state.totalPlaced;
-    if (resultTimeEl) resultTimeEl.textContent = (30 - state.timeLeft) + 's';
+    if (resultTimeEl) resultTimeEl.textContent = (20 - state.timeLeft) + 's';
 
     var pct = 1 - Math.min(finalAngle / 90, 1);
     if (gaugeFillEl) gaugeFillEl.style.width = (pct * 100) + '%';

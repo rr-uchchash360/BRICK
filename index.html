@@ -798,7 +798,7 @@
             <div class="rule-card-icon"><i class="fa-solid fa-stopwatch"></i></div>
             <div class="rule-card-body">
               <span class="rule-card-label">Timer &amp; Auto-Place</span>
-              <span class="rule-card-text">You have <strong>30 seconds</strong>. If you don&rsquo;t act within <strong>3 seconds</strong>, the brick auto-places on the heavier side.</span>
+              <span class="rule-card-text">You have <strong>20 seconds</strong>. If you don&rsquo;t act within <strong>3 seconds</strong>, the brick auto-places on the heavier side.</span>
             </div>
           </div>
         </div>
@@ -818,7 +818,7 @@
         </div>
         <div class="hud-item">
           <span class="hud-label">Time</span>
-          <span class="hud-value" id="gameTimer">30</span>
+          <span class="hud-value" id="gameTimer">20</span>
         </div>
         <div class="hud-item">
           <span class="hud-label">Best</span>
@@ -1431,65 +1431,12 @@
             </div>
           </div>
 
-          <div class="certificate" id="certificate">
+          <button class="btn btn-primary" id="downloadCert" style="margin-top:16px;width:100%">
+            <i class="fa-solid fa-download"></i>
+            <span>Download Certificate</span>
+          </button>
 
-          <div class="cert-bg"></div>
-
-          <div class="cert-border-top"></div>
-          <div class="cert-border-bottom"></div>
-          <div class="cert-border-left"></div>
-          <div class="cert-border-right"></div>
-
-          <div class="cert-corner tl"></div>
-          <div class="cert-corner tr"></div>
-          <div class="cert-corner bl"></div>
-          <div class="cert-corner br"></div>
-
-          <div class="cert-body">
-
-            <div class="cert-body-top">
-
-              <div class="cert-brand">
-                <span class="cert-brand-text"><span>B</span><span>R</span><span>I</span><span>C</span><span>K</span></span>
-                <span class="cert-brand-dot"></span>
-              </div>
-              <div class="cert-divider"></div>
-
-              <h1 class="cert-title">Certificate of Authenticity</h1>
-
-              <div class="cert-divider-short"></div>
-
-              <p class="cert-sub">This is to certify that</p>
-
-              <h2 class="cert-name" id="certOwner">—</h2>
-
-              <p class="cert-sub">is the rightful owner of</p>
-
-              <h3 class="cert-product">The Original Brick</h3>
-              <p class="cert-limit">Limited edition of 100</p>
-
-            </div>
-
-            <div class="cert-bottom">
-              <div class="cert-left">
-                <span class="cert-label">Certificate Number</span>
-                <span class="cert-value" id="certNumber">—</span>
-              </div>
-              <div class="cert-right">
-                <span class="cert-label">Date</span>
-                <span class="cert-value" id="certDate">—</span>
-              </div>
-            </div>
-
-            <div style="display:none" id="certNumberRef"></div>
-
-          </div>
         </div>
-
-        <button class="btn btn-primary" id="downloadCert">
-          <i class="fa-solid fa-download"></i>
-          <span>Download Certificate</span>
-        </button>
       </div>
     </div>
   </div>
