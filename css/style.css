@@ -3672,65 +3672,101 @@ input::placeholder {
 /* Order Timeline */
 .order-timeline {
   margin: 16px 0 20px;
-  padding: 16px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(184, 58, 26, 0.03));
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  position: relative;
+  text-align: left;
+}
+
+.order-timeline::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 24px;
+  bottom: 22px;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(184, 58, 26, 0.18), rgba(184, 58, 26, 0.04));
+  border-radius: 1px;
 }
 
 .timeline-step {
   display: flex;
-  gap: 12px;
+  gap: 14px;
   position: relative;
-  padding-bottom: 14px;
+  padding: 0 0 20px 0;
 }
 
 .timeline-step:last-child {
   padding-bottom: 0;
 }
 
-.timeline-step::before {
-  content: '';
-  position: absolute;
-  left: 7.5px;
-  top: 20px;
-  bottom: 0;
-  width: 1px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.03));
-}
-
-.timeline-step:last-child::before {
-  display: none;
-}
-
 .tl-dot {
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  background: var(--bg-primary);
+  border: 2px solid rgba(184, 58, 26, 0.12);
+  background: rgba(184, 58, 26, 0.03);
   flex-shrink: 0;
-  margin-top: 3px;
-  transition: all var(--transition-medium);
+  transition: all 0.4s ease;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.timeline-step.completed .tl-dot {
+  border-color: #4CAF50;
+  background: #4CAF50;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.25);
+}
+
+.timeline-step.completed .tl-dot::after {
+  content: '\2713';
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.timeline-step.completed .tl-title {
+  color: var(--text-primary);
 }
 
 .timeline-step.active .tl-dot {
   border-color: var(--accent-red);
   background: var(--accent-red);
-  box-shadow: 0 0 12px rgba(184, 58, 26, 0.4), 0 0 4px rgba(184, 58, 26, 0.2);
+  box-shadow: 0 0 16px rgba(184, 58, 26, 0.35), 0 0 6px rgba(184, 58, 26, 0.15);
 }
 
 .timeline-step.active .tl-dot::after {
   content: '';
-  position: absolute;
-  inset: -4px;
+  width: 8px;
+  height: 8px;
+  background: #fff;
   border-radius: 50%;
-  border: 1px solid rgba(184, 58, 26, 0.2);
-  animation: dotRipple 2s ease-out infinite;
+  animation: activeDot 1.4s ease-in-out infinite;
 }
 
-@keyframes dotRipple {
+@keyframes activeDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.6); opacity: 0.6; }
+}
+
+.timeline-step.active .tl-dot::before {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(184, 58, 26, 0.2);
+  animation: pulseRing 2s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes pulseRing {
   0% { transform: scale(1); opacity: 1; }
   100% { transform: scale(1.6); opacity: 0; }
 }
@@ -3738,26 +3774,30 @@ input::placeholder {
 .tl-content {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 1px;
+  padding: 1px 0 0 0;
 }
 
 .tl-title {
   font-size: 13px;
   font-weight: 600;
-  transition: color var(--transition-fast);
+  color: var(--text-primary);
+  line-height: 1.3;
 }
 
 .tl-sub {
-  font-size: 12px;
+  font-size: 11.5px;
   color: var(--text-muted);
+  line-height: 1.4;
 }
 
-.timeline-step.active .tl-title {
-  color: var(--text-primary);
+.timeline-step:not(.active):not(.completed) .tl-title {
+  color: rgba(255, 255, 255, 0.35);
 }
 
-.timeline-step:not(.active) .tl-title {
-  color: var(--text-muted);
+.timeline-step:not(.active):not(.completed) .tl-dot {
+  border-color: rgba(184, 58, 26, 0.08);
+  background: transparent;
 }
 
 /* ----------------------------------------------
@@ -4432,12 +4472,13 @@ input::placeholder {
 }
 
 .confirmation-content {
+  --conf-pad-x: 32px;
   position: relative;
   width: 94%;
   max-width: 520px;
   max-height: calc(100vh - 20px);
   margin: 10px auto;
-  padding: 32px 32px 24px;
+  padding: 32px var(--conf-pad-x) 24px;
   text-align: center;
   background: linear-gradient(180deg, rgba(10, 10, 10, 0.98) 0%, rgba(5, 5, 5, 0.98) 100%);
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -5344,7 +5385,8 @@ input::placeholder {
     border-radius: 0;
     border: none;
     box-shadow: none;
-    padding: 40px 20px 28px;
+    --conf-pad-x: 20px;
+    padding: 40px var(--conf-pad-x) 28px;
     margin: 0;
     max-width: 100%;
   }
