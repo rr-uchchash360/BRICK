@@ -3416,6 +3416,11 @@ input::placeholder {
   margin-bottom: 0;
 }
 
+.product-action-row .product-actions .btn {
+  height: 48px;
+  padding: 0 28px;
+}
+
 .quantity-label {
   font-size: 11px;
   letter-spacing: 2px;
@@ -3434,7 +3439,7 @@ input::placeholder {
 }
 
 .qty-btn {
-  width: 44px; height: 44px;
+  width: 48px; height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3448,7 +3453,7 @@ input::placeholder {
 }
 
 .qty-value {
-  width: 48px;
+  width: 44px;
   text-align: center;
   font-family: var(--font-display);
   font-size: 18px;

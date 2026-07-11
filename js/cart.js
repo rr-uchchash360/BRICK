@@ -22,11 +22,14 @@ const CART = (() => {
     return parseInt(val, 10);
   }
   function setRemainingStock(n) {
+    n = Math.max(2, n);
     localStorage.setItem('brickStock', String(n));
   }
   function updateStockDisplay() {
     var el = document.getElementById('stockCount');
     if (el) el.textContent = getRemainingStock();
+    var bar = document.querySelector('.stock-bar-fill');
+    if (bar) bar.style.width = ((TOTAL_STOCK - getRemainingStock()) / TOTAL_STOCK * 100).toFixed(0) + '%';
   }
 
   function fmtBDT(n) {

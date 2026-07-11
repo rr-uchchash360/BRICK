@@ -990,11 +990,10 @@
 
         <div class="product-stock">
           <div class="stock-bar">
-            <div class="stock-bar-fill" style="width: 93%;"></div>
+            <div class="stock-bar-fill"></div>
           </div>
           <div class="stock-status">
-            <span class="stock-badge">Authentic</span>
-            <span class="stock-text">Only <strong id="stockCount">7</strong> remaining</span>
+            <span class="stock-text">Authentic BRICK — Only <strong id="stockCount">7</strong> remaining</span>
           </div>
         </div>
 
@@ -1251,7 +1250,7 @@
             </div>
             <div class="form-group">
               <label for="checkoutTxID">Transaction ID (TNX ID)</label>
-               <input type="text" id="checkoutTxID" class="form-input txid-input" placeholder="e.g. A7B8C9D0E1" inputmode="text" pattern="[A-Za-z0-9]{10}">
+               <input type="text" id="checkoutTxID" class="form-input txid-input" placeholder="e.g. A7B8C9D0E1" inputmode="text" pattern="[A-Za-z0-9]{10}" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')">
             </div>
           </div>
 
@@ -1268,7 +1267,7 @@
             </div>
             <div class="form-group">
               <label for="checkoutTxIDNagad">Transaction ID (TNX ID)</label>
-               <input type="text" id="checkoutTxIDNagad" class="form-input txid-input" placeholder="e.g. A7B8C9D0E1" inputmode="text" pattern="[A-Za-z0-9]{10}">
+               <input type="text" id="checkoutTxIDNagad" class="form-input txid-input" placeholder="e.g. A7B8C9D0E1" inputmode="text" pattern="[A-Za-z0-9]{10}" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')">
             </div>
           </div>
 
